@@ -54,21 +54,158 @@ ul {
   font-weight: bold;
 }
 
-/* Hamburger Menu */
+/* ============================
+   Hamburger Button Styling - FIXED VERSION
+   ============================ */
+
+/* Make sure the hamburger is visible on mobile */
+@media (max-width: 768px) {
+  /* Force the hamburger to display on mobile */
+  .hamburger {
+    display: flex !important; /* Use !important to override any other styles */
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1100;
+    position: relative; /* Ensure it's positioned properly */
+  }
+
+  /* Hamburger bars style - WHITE initially */
+  .hamburger .bar {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: #fff !important; /* WHITE bars initially */
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.3s ease,
+      background-color 0.3s ease;
+    transform-origin: center;
+  }
+
+  /* When active, transform to form an X with balanced arms AND change color to midnight blue */
+  .hamburger.active .bar {
+    background-color: #191970 !important; /* Change to MIDNIGHT BLUE when active */
+  }
+
+  .hamburger.active .bar:nth-child(1) {
+    transform: translateY(10px) rotate(45deg);
+  }
+  .hamburger.active .bar:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger.active .bar:nth-child(3) {
+    transform: translateY(-10px) rotate(-45deg);
+  }
+
+  /* Mobile navigation menu styling */
+  .nav {
+    display: none; /* Initially hidden */
+    position: fixed;
+    top: 0;
+    right: -100%; /* Start off-screen to the right */
+    width: 33%; /* Take up one-third of the screen width */
+    height: 100vh;
+    background-color: #fff; /* White background */
+    color: #191970; /* Midnight blue text */
+    padding: 80px 1rem 1rem; /* Add padding at the top for the header */
+    transition: right 0.3s ease; /* Smooth transition */
+    z-index: 1000;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1); /* Lighter shadow for white background */
+  }
+
+  /* When the nav has 'active' class, slide it in from the right */
+  .nav.active {
+    display: block;
+    right: 0; /* Slide in to visible area */
+  }
+
+  .nav ul {
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .nav li {
+    width: 100%;
+    text-align: left;
+    border-bottom: 1px solid rgba(25, 25, 112, 0.1); /* Lighter border with midnight blue */
+    padding-bottom: 0.5rem;
+  }
+
+  .nav li:last-child {
+    border-bottom: none;
+  }
+
+  .nav li a {
+    display: block;
+    padding: 0.5rem 0;
+    font-size: 1.1rem;
+    color: #191970 !important; /* Force midnight blue text with !important */
+    transition: color 0.3s ease;
+  }
+
+  /* Active and hover states - gold color */
+  .nav li a:hover,
+  .nav li a:active,
+  .nav li a.active {
+    color: #ffd700 !important; /* Force gold color on hover/active with !important */
+  }
+
+  /* Fix for random dots - remove any potential pseudo-elements */
+  .nav::before,
+  .nav::after {
+    display: none !important; /* Remove any pseudo-elements that might be causing dots */
+  }
+
+  /* Add overlay when menu is open - but fix to prevent dots */
+  body.menu-open::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 999; /* Below the menu but above other content */
+  }
+
+  /* Make sure the menu is still usable on very small screens */
+  @media (max-width: 480px) {
+    .nav {
+      width: 250px; /* Set a minimum width in pixels for very small screens */
+    }
+  }
+}
+/* Fix for the random white dot in desktop mode */
+
+/* First, ensure the body.menu-open::before is only applied in mobile view */
+body.menu-open::before {
+  display: none; /* Hide by default */
+}
+/* Additional fix to ensure no other pseudo-elements are causing issues */
+.nav::before,
+.nav::after,
+.hamburger::before,
+.hamburger::after {
+  display: none !important;
+}
+/* Fix for any potential positioning issues */
 .hamburger {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  background: none;
-  border: none;
-  cursor: pointer;
+  position: relative;
+  z-index: 1100;
 }
 
-.hamburger .bar {
-  width: 25px;
-  height: 3px;
-  background-color: #fff;
-  border-radius: 2px;
+/* Ensure the hamburger is only visible on mobile */
+@media (min-width: 769px) {
+  .hamburger {
+    display: none !important;
+  }
 }
 
 /* Navigation Menu */
