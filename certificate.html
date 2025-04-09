@@ -30,59 +30,22 @@
     </header>
 
     <main class="certificate">
+      <h1 class="page-title">My Certificates</h1>
+      <p class="page-description">
+        A collection of my professional certifications and achievements
+      </p>
+
       <section class="carousel">
         <div class="carousel-track-container">
-          <ul class="carousel-track">
-            <!-- Replace these placeholders with your actual certificate images -->
-            <li class="carousel-slide">
-              <img src="images/certificte.jpeg" alt="Certificate 1" />
+          <ul class="carousel-track" id="certificates-container">
+            <!-- Loading state shown initially -->
+            <li class="loading-state">
+              <div class="loading-spinner"></div>
+              <p>Loading certificates...</p>
             </li>
-            <li class="carousel-slide">
-              <img
-                src="https://via.placeholder.com/400x300?text=Certificate+2"
-                alt="Certificate 2"
-              />
-            </li>
-            <li class="carousel-slide">
-              <img
-                src="https://via.placeholder.com/400x300?text=Certificate+3"
-                alt="Certificate 3"
-              />
-            </li>
-            <li class="carousel-slide">
-              <img
-                src="https://via.placeholder.com/400x300?text=Certificate+4"
-                alt="Certificate 4"
-              />
-            </li>
-            <li class="carousel-slide">
-              <img
-                src="https://via.placeholder.com/400x300?text=Certificate+5"
-                alt="Certificate 5"
-              />
-            </li>
-            <li class="carousel-slide">
-              <img
-                src="https://via.placeholder.com/400x300?text=Certificate+6"
-                alt="Certificate 6"
-              />
-            </li>
-            <li class="carousel-slide">
-              <img
-                src="https://via.placeholder.com/400x300?text=Certificate+7"
-                alt="Certificate 7"
-              />
-            </li>
-            <li class="carousel-slide">
-              <img
-                src="https://via.placeholder.com/400x300?text=Certificate+8"
-                alt="Certificate 8"
-              />
-            </li>
-            <!-- More slides as needed -->
           </ul>
         </div>
-        <!-- Left and Right Arrows -->
+        <!-- Carousel Controls -->
         <button
           class="carousel-arrow carousel-prev"
           aria-label="Previous Slide"
@@ -93,7 +56,7 @@
           &#10095;
         </button>
         <!-- Dot Navigation -->
-        <div class="carousel-nav">
+        <div class="carousel-nav" aria-label="Carousel Navigation">
           <!-- Dots generated dynamically -->
         </div>
       </section>
@@ -104,5 +67,6 @@
     </footer>
 
     <script src="script.js"></script>
+    <script src="debug.js"></script>
   </body>
 </html>
