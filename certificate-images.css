@@ -1,0 +1,116 @@
+/* Certificate Image Handling Styles */
+
+/* Certificate Image Container */
+.certificate-image-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+  min-height: 200px;
+  max-height: 500px;
+  overflow: hidden;
+  position: relative;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 2px solid #191970;
+}
+
+/* Certificate Image - Base Styles */
+.carousel-slide img {
+  max-width: 100%;
+  height: auto;
+  border: none;
+  border-radius: 6px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  object-fit: contain; /* Show full image without cropping */
+  max-height: 450px;
+}
+
+/* Image hover effect */
+.carousel-slide img:hover {
+  transform: scale(1.02);
+}
+
+/* Image orientation classes */
+.carousel-slide img.landscape {
+  width: 100%;
+  height: auto;
+}
+
+.carousel-slide img.portrait {
+  height: auto;
+  max-height: 450px;
+  width: auto;
+  max-width: 100%;
+}
+
+.carousel-slide img.square {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 450px;
+}
+
+/* Loading state for images */
+.carousel-slide img.loading {
+  opacity: 0.6;
+}
+
+.carousel-slide img.loaded {
+  opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .certificate-image-container {
+    max-height: 350px;
+  }
+
+  .carousel-slide img.portrait {
+    max-height: 330px;
+  }
+}
+
+@media (max-width: 480px) {
+  .certificate-image-container {
+    max-height: 250px;
+  }
+
+  .carousel-slide img.portrait {
+    max-height: 230px;
+  }
+}
+
+/* Improved layout for larger screens */
+@media (min-width: 1200px) {
+  .carousel-slide {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .certificate-image-container {
+    margin-bottom: 0;
+  }
+
+  .certificate-info {
+    margin-top: 0;
+  }
+}
+
+/* Print layout improvements */
+@media print {
+  .carousel-slide img {
+    max-height: none !important;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  .certificate-image-container {
+    border: none;
+    box-shadow: none;
+    max-height: none;
+  }
+}
