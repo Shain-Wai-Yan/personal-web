@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Marketing Plans - Innovative Strategies & Campaigns | Shain's Portfolio
+    </title>
+    <meta
+      name="description"
+      content="Explore innovative marketing plans and campaigns designed to engage audiences and boost brand visibility. View detailed marketing strategies and campaign presentations."
+    />
+    <meta
+      name="keywords"
+      content="marketing plans, digital marketing, brand visibility, marketing strategy, campaign planning, Shain's Portfolio"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="document-viewer.css" />
+    <link rel="stylesheet" href="portfolio-nav.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script>
+      // Set worker path for PDF.js
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
+    </script>
+    <!-- Open Graph tags for social sharing -->
+    <meta
+      property="og:title"
+      content="Marketing Plans - Innovative Strategies & Campaigns | Shain's Portfolio"
+    />
+    <meta
+      property="og:description"
+      content="Explore innovative marketing plans and campaigns designed to engage audiences and boost brand visibility."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://yourportfolio.com/marketing-plan.html"
+    />
+    <!-- Add an og:image if you have one -->
+    <!-- <meta property="og:image" content="https://yourportfolio.com/images/marketing-plan-preview.jpg"> -->
+  </head>
+  <body>
+    <header class="header slide-in">
+      <div class="nav-container">
+        <div class="logo">
+          <a href="index.html">Shain's Portfolio</a>
+        </div>
+        <button class="hamburger" aria-label="Toggle Menu">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+        <nav class="nav">
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Me</a></li>
+            <li class="nav-dropdown">
+              <a href="portfolio.html">Portfolio</a>
+              <div class="nav-dropdown-content">
+                <a href="business-plan.html">Business Plans</a>
+                <a href="marketing-plan.html" class="active">Marketing Plans</a>
+                <a href="#coding">Coding Projects</a>
+                <a href="#photography">Landscape Photography</a>
+                <a href="#amv">AMV Editing</a>
+              </div>
+            </li>
+            <li><a href="certificate.html">Certificate</a></li>
+            <li><a href="contact.html">Contact Me</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <nav class="portfolio-nav" aria-label="Portfolio Navigation">
+      <div class="portfolio-nav-container">
+        <div class="portfolio-breadcrumb">
+          <a href="index.html">Home</a>
+          <span class="separator">/</span>
+          <a href="portfolio.html">Portfolio</a>
+          <span class="separator">/</span>
+          <span class="current">Marketing Plans</span>
+        </div>
+        <div class="portfolio-categories">
+          <a href="business-plan.html" class="portfolio-category"
+            >Business Plans</a
+          >
+          <a href="marketing-plan.html" class="portfolio-category active"
+            >Marketing Plans</a
+          >
+          <a href="#coding" class="portfolio-category">Coding Projects</a>
+          <a href="#photography" class="portfolio-category"
+            >Landscape Photography</a
+          >
+          <a href="#amv" class="portfolio-category">AMV Editing</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="document-viewer-page">
+      <a href="portfolio.html" class="back-to-portfolio">Back to Portfolio</a>
+
+      <h1 class="page-title">Marketing Plans</h1>
+      <p class="page-description">
+        Innovative tactics designed to engage audiences and boost brand
+        visibility.
+      </p>
+
+      <div class="document-list">
+        <!-- Documents will be loaded dynamically from Strapi -->
+      </div>
+
+      <div class="document-viewer-modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 id="modal-title">Document Title</h2>
+            <button class="close-modal">&times;</button>
+          </div>
+          <div class="document-container">
+            <div id="pdf-viewer"></div>
+            <div id="pptx-viewer" class="hidden">
+              <!-- PPTX viewer will be implemented here -->
+              <p class="pptx-message">PPTX preview is being prepared...</p>
+            </div>
+          </div>
+          <div class="modal-controls">
+            <button id="prev-page" disabled>Previous</button>
+            <span id="page-info"
+              >Page <span id="page-num"></span> of <span id="page-count"></span
+            ></span>
+            <button id="next-page" disabled>Next</button>
+            <a id="download-document" href="#" download class="download-btn"
+              >Download</a
+            >
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer slide-in-up">
+      <p>&copy; 2025 Shain's Portfolio. All Rights Reserved.</p>
+    </footer>
+
+    <!-- PDF.js will be loaded dynamically by document-viewer.js -->
+    <script src="script.js"></script>
+    <script src="integration-loader.js"></script>
+    <script src="cloudinary-pdf-solution.js"></script>
+    <script src="document-viewer.js"></script>
+    <script src="portfolio-nav.js"></script>
+    <script src="strapi-integration.js"></script>
+  </body>
+</html>

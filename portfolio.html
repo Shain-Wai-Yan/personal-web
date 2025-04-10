@@ -3,8 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portfolio - Shain's Portfolio</title>
+    <title>Portfolio - Professional Work & Projects | Shain's Portfolio</title>
+    <meta
+      name="description"
+      content="Explore Shain's professional portfolio featuring business plans, marketing strategies, coding projects, photography, and video editing work."
+    />
+    <meta
+      name="keywords"
+      content="portfolio, business plans, marketing, coding, photography, video editing, professional work"
+    />
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="portfolio-nav.css" />
+    <!-- Open Graph tags for social sharing -->
+    <meta
+      property="og:title"
+      content="Portfolio - Professional Work & Projects | Shain's Portfolio"
+    />
+    <meta
+      property="og:description"
+      content="Explore Shain's professional portfolio featuring business plans, marketing strategies, coding projects, photography, and video editing work."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://yourportfolio.com/portfolio.html"
+    />
+    <!-- Add an og:image if you have one -->
+    <!-- <meta property="og:image" content="https://yourportfolio.com/images/portfolio-preview.jpg"> -->
   </head>
   <body>
     <header class="header slide-in">
@@ -21,7 +46,16 @@
           <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About Me</a></li>
-            <li><a href="portfolio.html" class="active">Portfolio</a></li>
+            <li class="nav-dropdown">
+              <a href="portfolio.html" class="active">Portfolio</a>
+              <div class="nav-dropdown-content">
+                <a href="business-plan.html">Business Plans</a>
+                <a href="marketing-plan.html">Marketing Plans</a>
+                <a href="#coding">Coding Projects</a>
+                <a href="#photography">Landscape Photography</a>
+                <a href="#amv">AMV Editing</a>
+              </div>
+            </li>
             <li><a href="certificate.html">Certificate</a></li>
             <li><a href="contact.html">Contact Me</a></li>
           </ul>
@@ -32,23 +66,29 @@
     <main class="portfolio">
       <section class="portfolio-grid">
         <!-- Business Plan -->
-        <div class="portfolio-item">
-          <h2>Business Plan</h2>
+        <div
+          class="portfolio-item"
+          onclick="window.location.href='business-plan.html'"
+        >
+          <h2>Business Plans</h2>
           <p>
             A comprehensive strategy to elevate brand positioning and drive
             market growth.
           </p>
         </div>
         <!-- Marketing Plan -->
-        <div class="portfolio-item">
-          <h2>Marketing Plan</h2>
+        <div
+          class="portfolio-item"
+          onclick="window.location.href='marketing-plan.html'"
+        >
+          <h2>Marketing Plans</h2>
           <p>
             Innovative tactics designed to engage audiences and boost brand
             visibility.
           </p>
         </div>
         <!-- Coding Projects -->
-        <div class="portfolio-item">
+        <div class="portfolio-item" id="coding">
           <h2>Coding Projects</h2>
           <p>
             Interactive web applications and software solutions built with
@@ -56,7 +96,7 @@
           </p>
         </div>
         <!-- Landscape Photography -->
-        <div class="portfolio-item">
+        <div class="portfolio-item" id="photography">
           <h2>Landscape Photography</h2>
           <p>
             Visually striking images capturing the natural beauty and grandeur
@@ -64,7 +104,7 @@
           </p>
         </div>
         <!-- AMV Editing -->
-        <div class="portfolio-item">
+        <div class="portfolio-item" id="amv">
           <h2>AMV Editing</h2>
           <p>
             Dynamic video edits that blend storytelling with impactful visuals.
@@ -79,5 +119,6 @@
     </footer>
 
     <script src="script.js"></script>
+    <script src="portfolio-nav.js"></script>
   </body>
 </html>

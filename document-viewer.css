@@ -1,0 +1,550 @@
+/* Document Viewer Page Styles */
+.document-viewer-page {
+    margin-top: 80px; /* space for fixed header */
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Document List */
+  .document-list {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 2rem;
+    min-height: 300px; /* Minimum height for loading state */
+  }
+  
+  .document-item {
+    display: flex;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .document-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Document Cover (Left Side) */
+  .document-cover {
+    width: 250px;
+    min-width: 250px;
+    background-color: #191970;
+    color: white;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+  }
+  
+  .document-cover-overlay {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(25, 25, 112, 0.85);
+    padding: 2rem 1.5rem;
+  }
+  
+  .document-icon {
+    width: 80px;
+    height: 100px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .document-icon::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-width: 0 20px 20px 0;
+    border-style: solid;
+    border-color: #e6e6e6 #191970;
+  }
+  
+  .file-type {
+    font-weight: bold;
+    color: #191970;
+    font-size: 1.2rem;
+  }
+  
+  .document-cover h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+  }
+  
+  .document-cover .document-date {
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+  
+  /* Document Details (Right Side) */
+  .document-details {
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .document-details h2 {
+    color: #191970;
+    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+  }
+  
+  .document-meta {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+  }
+  
+  .document-type {
+    font-weight: 600;
+    color: #191970;
+  }
+  
+  .document-date {
+    color: #666;
+  }
+  
+  .document-description {
+    line-height: 1.6;
+    color: #444;
+    margin-bottom: 1.5rem;
+  }
+  
+  .view-document-btn {
+    align-self: flex-start;
+    background-color: #191970;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .view-document-btn:hover {
+    background-color: #ffd700;
+    color: #191970;
+    transform: scale(1.05);
+  }
+  
+  /* Document Viewer Modal */
+  .document-viewer-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .document-viewer-modal.active {
+    display: flex;
+  }
+  
+  .modal-content {
+    background-color: white;
+    width: 90%;
+    max-width: 1000px;
+    height: 90%;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background-color: #191970;
+    color: white;
+  }
+  
+  .close-modal {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  
+  .close-modal:hover {
+    transform: scale(1.2);
+  }
+  
+  .document-container {
+    flex: 1;
+    overflow: auto;
+    background-color: #f0f0f0;
+    position: relative;
+  }
+  
+  #pdf-viewer,
+  #pptx-viewer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  #pdf-viewer canvas {
+    max-width: 100%;
+    max-height: 100%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .hidden {
+    display: none !important;
+  }
+  
+  .pptx-message {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+  }
+  
+  .modal-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border-top: 1px solid #e0e0e0;
+  }
+  
+  #prev-page,
+  #next-page {
+    background-color: #191970;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  #prev-page:hover,
+  #next-page:hover {
+    background-color: #ffd700;
+    color: #191970;
+  }
+  
+  #prev-page:disabled,
+  #next-page:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  #page-info {
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  .download-btn {
+    margin-left: auto;
+    background-color: #191970;
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .download-btn:hover {
+    background-color: #ffd700;
+    color: #191970;
+  }
+  
+  /* Loading and Error States */
+  .loading-state,
+  .error-state,
+  .no-documents {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    text-align: center;
+    width: 100%;
+  }
+  
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #191970;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .retry-btn {
+    margin-top: 1rem;
+    background-color: #191970;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  /* Screen Rotation Button for Mobile */
+  .rotate-screen-btn {
+    display: none;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(25, 25, 112, 0.8);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  .rotate-screen-btn svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  /* Landscape Mode for Document Viewer */
+  .landscape-mode .modal-content {
+    width: 95%;
+    height: 95%;
+  }
+  
+  .landscape-mode #pdf-viewer canvas,
+  .landscape-mode #pptx-viewer img {
+    max-height: 85vh;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 900px) {
+    .document-item {
+      flex-direction: column;
+    }
+  
+    .document-cover {
+      width: 100%;
+      min-width: 100%;
+      padding: 0;
+      height: 200px;
+    }
+  
+    .document-details {
+      padding: 1.5rem;
+    }
+  
+    .modal-content {
+      width: 95%;
+      height: 95%;
+    }
+  
+    /* Show rotation button on mobile */
+    .rotate-screen-btn {
+      display: flex;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .document-meta {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  
+    .modal-controls {
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+  
+    .download-btn {
+      margin-left: 0;
+      width: 100%;
+      text-align: center;
+      order: -1;
+      margin-bottom: 0.5rem;
+    }
+  
+    #page-info {
+      width: 100%;
+      text-align: center;
+      order: -2;
+      margin-bottom: 0.5rem;
+    }
+  }
+  
+  /* Orientation change prompt */
+  .orientation-prompt {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 3000;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    padding: 2rem;
+  }
+  
+  .orientation-prompt.active {
+    display: flex;
+  }
+  
+  .orientation-prompt svg {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1rem;
+    animation: rotate 2s infinite;
+  }
+  
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    25% {
+      transform: rotate(90deg);
+    }
+    50% {
+      transform: rotate(90deg);
+    }
+    75% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+  
+  .orientation-prompt p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .orientation-prompt button {
+    background-color: #191970;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  /* Add these styles to your existing document-viewer.css file */
+  
+  /* Cloudinary PDF message */
+  .cloudinary-pdf-message {
+    text-align: center;
+    padding: 40px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .cloudinary-pdf-message h3 {
+    color: #191970;
+    margin-bottom: 15px;
+  }
+  
+  .cloudinary-pdf-message p {
+    margin-bottom: 20px;
+    color: #555;
+  }
+  
+  .cloudinary-pdf-message .download-btn {
+    display: inline-block;
+    background-color: #191970;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .cloudinary-pdf-message .download-btn:hover {
+    background-color: #ffd700;
+    color: #191970;
+  }
+  /* Cloudinary PDF message */
+  .cloudinary-pdf-message {
+    text-align: center;
+    padding: 40px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .cloudinary-pdf-message h3 {
+    color: #191970;
+    margin-bottom: 15px;
+  }
+  
+  .cloudinary-pdf-message p {
+    margin-bottom: 20px;
+    color: #555;
+  }
+  
+  .cloudinary-pdf-message .download-btn {
+    display: inline-block;
+    background-color: #191970;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .cloudinary-pdf-message .download-btn:hover {
+    background-color: #ffd700;
+    color: #191970;
+  }
+  
