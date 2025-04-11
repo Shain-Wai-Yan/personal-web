@@ -1,6 +1,7 @@
 /**
  * Document Viewer
  * Complete solution for PDF viewing with enhanced readability
+ * Adaptive to different PDF layouts and orientations
  */
 
 // Immediately define a placeholder openDocument function to avoid "not found" errors
@@ -332,6 +333,19 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     toolbar.appendChild(fitWidthButton);
 
+    // Fit to page button (new)
+    const fitPageButton = document.createElement("button");
+    fitPageButton.className = "pdf-viewer-button fit-page";
+    fitPageButton.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="3" y1="9" x2="21" y2="9"></line>
+        <line x1="3" y1="15" x2="21" y2="15"></line>
+      </svg>
+      <span>Fit Page</span>
+    `;
+    toolbar.appendChild(fitPageButton);
+
     // Page info
     const pageInfo = document.createElement("div");
     pageInfo.className = "pdf-page-info";
@@ -394,32 +408,23 @@ document.addEventListener("DOMContentLoaded", () => {
     iframe.className = "pdf-viewer-frame";
     frameContainer.appendChild(iframe); // Append iframe immediately
 
-    let useWebViewer = false;
-
     // First, check if we need to load PDF.js
     loadPdfJs().then(() => {
       // Now we can proceed with rendering the PDF
+      let useWebViewer = false;
       if (window.pdfjsLib) {
         // We have PDF.js available, use our custom viewer
         useWebViewer = false;
+        renderCustomPdfViewer(pdfUrl, frameContainer, loading, pageInfo);
       } else {
         // Fallback to PDF.js web viewer
         useWebViewer = true;
-      }
-
-      // Always call both renderers, but only one will be visible
-      usePdfJsWebViewer(pdfUrl, iframe, frameContainer, loading);
-      renderCustomPdfViewer(pdfUrl, frameContainer, loading, pageInfo);
-
-      // Initially hide the custom viewer if webViewer is used
-      const customViewerCanvas = frameContainer.querySelector("canvas");
-      if (useWebViewer && customViewerCanvas) {
-        customViewerCanvas.style.display = "none";
+        usePdfJsWebViewer(pdfUrl, iframe, frameContainer, loading);
       }
     });
 
     // Set up button event listeners
-    setupToolbarButtons(toolbar, iframe);
+    setupToolbarButtons(toolbar, iframe, frameContainer);
 
     // Show the viewer
     viewerContainer.style.display = "flex";
@@ -501,6 +506,90 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /**
+   * Analyzes PDF layout to determine optimal viewing settings
+   * @param {Object} pdfDocument - The PDF document object
+   * @returns {Promise<Object>} - Resolves with layout information
+   */
+  function analyzePdfLayout(pdfDocument) {
+    return new Promise(async (resolve) => {
+      try {
+        // Default layout info
+        const layoutInfo = {
+          isPortrait: true,
+          hasMultipleColumns: false,
+          hasComplexLayout: false,
+          aspectRatio: 0.707, // Default A4 aspect ratio
+          recommendedScale: 1.0,
+          recommendedMode: "auto",
+        };
+
+        // Get the first page to analyze layout
+        const page = await pdfDocument.getPage(1);
+        const viewport = page.getViewport({ scale: 1.0 });
+
+        // Determine orientation
+        layoutInfo.isPortrait = viewport.width < viewport.height;
+        layoutInfo.aspectRatio = viewport.width / viewport.height;
+
+        // Try to detect complex layouts by analyzing text layers
+        const textContent = await page.getTextContent();
+
+        // Count text items and their positions to detect columns
+        const textItems = textContent.items;
+        const xPositions = new Set();
+
+        textItems.forEach((item) => {
+          xPositions.add(Math.round(item.transform[4] / 10) * 10); // Round to nearest 10 to group similar positions
+        });
+
+        // If we have many different x positions, it might be a multi-column layout
+        if (xPositions.size > 5) {
+          layoutInfo.hasMultipleColumns = true;
+        }
+
+        // If we have many text items, it might be a complex layout
+        if (textItems.length > 100) {
+          layoutInfo.hasComplexLayout = true;
+        }
+
+        // Set recommended viewing mode based on analysis
+        if (layoutInfo.hasComplexLayout || layoutInfo.hasMultipleColumns) {
+          // For complex layouts, use a more conservative scale
+          layoutInfo.recommendedScale = layoutInfo.isPortrait ? 0.9 : 1.0;
+          layoutInfo.recommendedMode = "auto";
+        } else {
+          // For simple layouts, fit to width is usually better
+          layoutInfo.recommendedScale = layoutInfo.isPortrait ? 1.0 : 1.2;
+          layoutInfo.recommendedMode = "width";
+        }
+
+        // Adjust for very wide or very tall documents
+        if (layoutInfo.aspectRatio < 0.5) {
+          // Very tall
+          layoutInfo.recommendedMode = "page";
+        } else if (layoutInfo.aspectRatio > 1.5) {
+          // Very wide
+          layoutInfo.recommendedMode = "width";
+        }
+
+        console.log("PDF Layout Analysis:", layoutInfo);
+        resolve(layoutInfo);
+      } catch (error) {
+        console.error("Error analyzing PDF layout:", error);
+        // Return default values if analysis fails
+        resolve({
+          isPortrait: true,
+          hasMultipleColumns: false,
+          hasComplexLayout: false,
+          aspectRatio: 0.707,
+          recommendedScale: 1.0,
+          recommendedMode: "auto",
+        });
+      }
+    });
+  }
+
+  /**
    * Renders a PDF using our custom viewer
    * @param {string} pdfUrl - URL of the PDF to render
    * @param {HTMLElement} container - Container element
@@ -531,12 +620,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // PDF.js variables
     let pdfDoc = null;
     let currentPage = 1;
-    let currentScale = 1.0; // Start with a neutral scale and adjust based on PDF orientation
+    let currentScale = 1.0; // Start with a neutral scale and adjust based on PDF layout
     let currentRotation = 0;
     let pageRendering = false;
     let pageNumPending = null;
     let isMobile = window.innerWidth < 768;
-    let isPortraitPdf = false; // Will be set after PDF is loaded
+    let layoutInfo = null; // Will store PDF layout analysis results
 
     // Detect if we're on a high-DPI display
     const pixelRatio = window.devicePixelRatio || 1;
@@ -563,19 +652,14 @@ document.addEventListener("DOMContentLoaded", () => {
         // Update page info
         pageInfo.textContent = `Page: ${currentPage}/${pdf.numPages}`;
 
-        // Get the first page to determine orientation
-        return pdf.getPage(1).then((page) => {
-          const viewport = page.getViewport({ scale: 1.0 });
-          isPortraitPdf = viewport.width < viewport.height;
+        // Analyze PDF layout to determine optimal viewing settings
+        return analyzePdfLayout(pdf).then((info) => {
+          layoutInfo = info;
 
-          // Set initial scale based on orientation
-          if (isPortraitPdf) {
-            // For portrait PDFs, use a more conservative initial scale
-            currentScale = isMobile ? 0.9 : 1.2;
-          } else {
-            // For landscape PDFs, we can be more generous with the scale
-            currentScale = isMobile ? 1.0 : 1.5;
-          }
+          // Set initial scale based on layout analysis
+          currentScale =
+            layoutInfo.recommendedScale *
+            (isMobile ? Math.min(1.2, pixelRatio) : 1.0);
 
           // Preload fonts before rendering
           return preloadPdfFonts(pdf).then(() => {
@@ -585,9 +669,16 @@ document.addEventListener("DOMContentLoaded", () => {
             // Set up page navigation
             setupPageNavigation(pdf.numPages);
 
-            // Auto-fit to width with a slight delay to ensure proper rendering
+            // Auto-fit based on layout analysis
             setTimeout(() => {
-              fitToWidth();
+              if (layoutInfo.recommendedMode === "width") {
+                fitToWidth();
+              } else if (layoutInfo.recommendedMode === "page") {
+                fitToPage();
+              } else {
+                // Auto mode - use a balanced approach
+                autoFit();
+              }
             }, 300);
           });
         });
@@ -614,20 +705,46 @@ document.addEventListener("DOMContentLoaded", () => {
       pageInfo.textContent = `Page: ${pageNum}/${pdfDoc.numPages}`;
 
       // Get the page
-      pdfDoc.getPage(pageNum).then((page) => {
-        // Determine if this specific page is portrait or landscape
+      pdfDoc.getPage(pageNum).then(async (page) => {
+        // Analyze this specific page's layout
         const rawViewport = page.getViewport({ scale: 1.0 });
         const isPagePortrait = rawViewport.width < rawViewport.height;
+        const pageAspectRatio = rawViewport.width / rawViewport.height;
 
-        // Adjust scale for high-DPI displays, with special handling for portrait pages on mobile
+        // Determine if this is a complex page (tables, multi-columns, etc.)
+        let isComplexPage = false;
+        try {
+          const textContent = await page.getTextContent();
+          // Simple heuristic: if there are many text items with different positions, it might be complex
+          const xPositions = new Set();
+          textContent.items.forEach((item) => {
+            xPositions.add(Math.round(item.transform[4] / 10) * 10);
+          });
+          isComplexPage = xPositions.size > 5 || textContent.items.length > 100;
+        } catch (e) {
+          console.log("Could not analyze page complexity:", e);
+        }
+
+        // Adjust scale for the specific page characteristics
         let adjustedScale = currentScale;
+
+        // For mobile devices, apply special handling
         if (isMobile) {
           if (isPagePortrait) {
             // For portrait pages on mobile, use a more conservative scale
-            adjustedScale = Math.min(currentScale, 1.0) * pixelRatio;
+            adjustedScale =
+              Math.min(currentScale, isComplexPage ? 0.9 : 1.0) * pixelRatio;
+          } else if (pageAspectRatio > 1.5) {
+            // For very wide landscape pages, reduce scale to fit better
+            adjustedScale = Math.min(currentScale, 0.8) * pixelRatio;
           } else {
-            // For landscape pages on mobile, we can use the full scale
+            // For normal landscape pages on mobile
             adjustedScale = currentScale * pixelRatio;
+          }
+        } else {
+          // For desktop, adjust based on page complexity
+          if (isComplexPage) {
+            adjustedScale = Math.min(currentScale, isPagePortrait ? 1.2 : 1.0);
           }
         }
 
@@ -675,6 +792,16 @@ document.addEventListener("DOMContentLoaded", () => {
           // Hide loading indicator
           if (loading) {
             loading.style.display = "none";
+          }
+
+          // Center the content vertically if it's smaller than the container
+          if (canvas.height < canvasContainer.clientHeight) {
+            canvas.style.marginTop = `${Math.max(
+              0,
+              (canvasContainer.clientHeight - canvas.height) / 2
+            )}px`;
+          } else {
+            canvas.style.marginTop = "0";
           }
         });
       });
@@ -735,24 +862,17 @@ document.addEventListener("DOMContentLoaded", () => {
       pdfDoc.getPage(currentPage).then((page) => {
         const viewport = page.getViewport({ scale: 1.0 });
         const containerWidth = canvasContainer.clientWidth - 40; // Subtract padding
-        const isPagePortrait = viewport.width < viewport.height;
 
         // Calculate scale to fit width
         let newScale = containerWidth / viewport.width;
 
-        // Apply different scaling strategies based on device and orientation
+        // Apply different scaling strategies based on device and layout
         if (isMobile) {
-          if (isPagePortrait) {
-            // For portrait PDFs on mobile, use a more conservative scale
-            // This prevents text from being cut off or too small
-            newScale = Math.min(newScale, 1.0);
+          // For mobile, limit maximum scale to prevent text from being cut off
+          newScale = Math.min(newScale, 1.2);
 
-            // Ensure minimum readability
-            newScale = Math.max(newScale, 0.8);
-          } else {
-            // For landscape PDFs on mobile, we can be more generous
-            newScale = Math.min(newScale, 1.2);
-          }
+          // Ensure minimum readability
+          newScale = Math.max(newScale, 0.8);
         } else {
           // On desktop, we can use the full width but cap it for very wide screens
           newScale = Math.min(newScale, 2.0);
@@ -760,6 +880,101 @@ document.addEventListener("DOMContentLoaded", () => {
 
         currentScale = newScale;
         queueRenderPage(currentPage);
+      });
+    }
+
+    /**
+     * Fits the entire page to the viewport
+     */
+    function fitToPage() {
+      if (!pdfDoc) return;
+
+      pdfDoc.getPage(currentPage).then((page) => {
+        const viewport = page.getViewport({ scale: 1.0 });
+        const containerWidth = canvasContainer.clientWidth - 40; // Subtract padding
+        const containerHeight = canvasContainer.clientHeight - 40; // Subtract padding
+
+        // Calculate scales for width and height
+        const scaleX = containerWidth / viewport.width;
+        const scaleY = containerHeight / viewport.height;
+
+        // Use the smaller scale to ensure the entire page fits
+        let newScale = Math.min(scaleX, scaleY);
+
+        // Ensure minimum readability
+        newScale = Math.max(newScale, 0.5);
+
+        // Limit maximum scale
+        newScale = Math.min(newScale, 2.0);
+
+        currentScale = newScale;
+        queueRenderPage(currentPage);
+      });
+    }
+
+    /**
+     * Automatically determines the best fit based on content
+     */
+    function autoFit() {
+      if (!pdfDoc) return;
+
+      pdfDoc.getPage(currentPage).then(async (page) => {
+        const viewport = page.getViewport({ scale: 1.0 });
+        const isPagePortrait = viewport.width < viewport.height;
+        const pageAspectRatio = viewport.width / viewport.height;
+
+        // Try to detect if this is a complex page
+        let isComplexPage = false;
+        try {
+          const textContent = await page.getTextContent();
+          const xPositions = new Set();
+          textContent.items.forEach((item) => {
+            xPositions.add(Math.round(item.transform[4] / 10) * 10);
+          });
+          isComplexPage = xPositions.size > 5 || textContent.items.length > 100;
+        } catch (e) {
+          console.log("Could not analyze page complexity:", e);
+        }
+
+        // For very wide pages or complex layouts, fit to page
+        if (pageAspectRatio > 1.5 || (isComplexPage && !isPagePortrait)) {
+          fitToPage();
+        }
+        // For very tall pages, fit to width
+        else if (pageAspectRatio < 0.5) {
+          fitToWidth();
+        }
+        // For normal pages, use a balanced approach
+        else {
+          const containerWidth = canvasContainer.clientWidth - 40;
+          const containerHeight = canvasContainer.clientHeight - 40;
+
+          // Calculate scales for width and height
+          const scaleX = containerWidth / viewport.width;
+          const scaleY = containerHeight / viewport.height;
+
+          // For portrait pages, prioritize width but consider height
+          if (isPagePortrait) {
+            // If fitting to width would make the page too tall, use a balanced approach
+            if (viewport.height * scaleX > containerHeight * 1.5) {
+              currentScale = Math.min(scaleX, scaleY * 1.2);
+            } else {
+              currentScale = scaleX * 0.95; // Slightly smaller than full width
+            }
+          }
+          // For landscape pages, prioritize fitting the whole page
+          else {
+            currentScale = Math.min(scaleX, scaleY * 1.1);
+          }
+
+          // Ensure minimum readability
+          currentScale = Math.max(currentScale, 0.7);
+
+          // Limit maximum scale
+          currentScale = Math.min(currentScale, 1.5);
+
+          queueRenderPage(currentPage);
+        }
       });
     }
 
@@ -786,6 +1001,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const fitWidthButton = document.querySelector(
         ".pdf-viewer-button.fit-width"
       );
+      const fitPageButton = document.querySelector(
+        ".pdf-viewer-button.fit-page"
+      );
       const rotateButton = document.querySelector(".pdf-viewer-button.rotate");
 
       // Add event listeners
@@ -794,6 +1012,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (zoomInButton) zoomInButton.addEventListener("click", zoomIn);
       if (zoomOutButton) zoomOutButton.addEventListener("click", zoomOut);
       if (fitWidthButton) fitWidthButton.addEventListener("click", fitToWidth);
+      if (fitPageButton) fitPageButton.addEventListener("click", fitToPage);
       if (rotateButton) rotateButton.addEventListener("click", rotate);
 
       // Add swipe gestures for mobile
@@ -849,7 +1068,14 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("resize", () => {
       isMobile = window.innerWidth < 768;
       if (pdfDoc) {
-        fitToWidth();
+        // Re-apply the current fitting mode
+        if (layoutInfo && layoutInfo.recommendedMode === "width") {
+          fitToWidth();
+        } else if (layoutInfo && layoutInfo.recommendedMode === "page") {
+          fitToPage();
+        } else {
+          autoFit();
+        }
       }
     });
   }
@@ -904,45 +1130,60 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     function handlePdfLoaded(iframeWindow) {
-      // Get the first page to determine orientation
+      // Get the first page to determine layout
       const pdfViewer = iframeWindow.PDFViewerApplication.pdfViewer;
       const firstPage = pdfViewer.getPageView(0);
 
       if (firstPage && firstPage.viewport) {
         const viewport = firstPage.viewport;
         const isPortrait = viewport.width < viewport.height;
+        const aspectRatio = viewport.width / viewport.height;
         const isMobile = window.innerWidth < 768;
 
-        // Apply different scaling strategies based on device and orientation
-        if (isPortrait && isMobile) {
-          // For portrait PDFs on mobile, use "auto" scale which fits the page to the viewport
-          pdfViewer.currentScaleValue = "auto";
+        // Analyze the PDF structure to determine the best viewing mode
+        analyzePdfStructure(iframeWindow).then((layoutInfo) => {
+          // Apply different scaling strategies based on layout analysis
+          if (layoutInfo.hasComplexLayout || layoutInfo.hasMultipleColumns) {
+            // For complex layouts, use "auto" scale which fits the page to the viewport
+            pdfViewer.currentScaleValue = "auto";
 
-          // After a short delay, check if text is visible and adjust if needed
-          setTimeout(() => {
-            // If scale is too small, increase it slightly but keep content visible
-            if (pdfViewer.currentScale < 0.8) {
-              pdfViewer.currentScale = 0.8;
-            } else if (pdfViewer.currentScale > 1.2) {
-              // If scale is too large, reduce it to prevent content being cut off
-              pdfViewer.currentScale = 1.2;
-            }
+            // After a short delay, check if text is visible and adjust if needed
+            setTimeout(() => {
+              // If scale is too small, increase it slightly but keep content visible
+              if (pdfViewer.currentScale < 0.8) {
+                pdfViewer.currentScale = 0.8;
+              } else if (pdfViewer.currentScale > 1.5) {
+                // If scale is too large, reduce it to prevent content being cut off
+                pdfViewer.currentScale = 1.5;
+              }
 
-            // Ensure the viewer scrolls to show the beginning of the document
-            iframeWindow.scrollTo(0, 0);
-          }, 300);
-        } else if (isPortrait) {
-          // For portrait PDFs on desktop, use a slightly reduced scale
-          pdfViewer.currentScaleValue = "page-width";
-          setTimeout(() => {
-            if (pdfViewer.currentScale > 1.5) {
-              pdfViewer.currentScale = 1.5;
-            }
-          }, 300);
-        } else {
-          // For landscape PDFs, use page-width as before
-          pdfViewer.currentScaleValue = "page-width";
-        }
+              // Ensure the viewer scrolls to show the beginning of the document
+              iframeWindow.scrollTo(0, 0);
+            }, 300);
+          } else if (isPortrait && isMobile) {
+            // For simple portrait PDFs on mobile, use a balanced approach
+            pdfViewer.currentScaleValue = "page-fit";
+
+            setTimeout(() => {
+              if (pdfViewer.currentScale < 0.8) {
+                pdfViewer.currentScale = 0.8;
+              }
+            }, 300);
+          } else if (aspectRatio > 1.5) {
+            // For very wide documents, fit to page
+            pdfViewer.currentScaleValue = "page-fit";
+          } else {
+            // For standard documents on desktop, use page-width
+            pdfViewer.currentScaleValue = "page-width";
+
+            setTimeout(() => {
+              // Limit maximum scale for readability
+              if (pdfViewer.currentScale > 2.0) {
+                pdfViewer.currentScale = 2.0;
+              }
+            }, 300);
+          }
+        });
       } else {
         // Fallback if we can't determine orientation
         iframeWindow.PDFViewerApplication.pdfViewer.currentScaleValue = "auto";
@@ -952,6 +1193,74 @@ document.addEventListener("DOMContentLoaded", () => {
       if (window.innerWidth < 768) {
         applyMobileOptimizations(iframeWindow);
       }
+    }
+
+    /**
+     * Analyzes the PDF structure to determine the best viewing mode
+     * @param {Window} iframeWindow - The iframe's window object
+     * @returns {Promise<Object>} - Layout information
+     */
+    function analyzePdfStructure(iframeWindow) {
+      return new Promise((resolve) => {
+        try {
+          const pdfViewer = iframeWindow.PDFViewerApplication.pdfViewer;
+          const pdfDocument = iframeWindow.PDFViewerApplication.pdfDocument;
+
+          // Default layout info
+          const layoutInfo = {
+            hasMultipleColumns: false,
+            hasComplexLayout: false,
+            hasLargeImages: false,
+          };
+
+          // If we can access the document structure, analyze it
+          if (pdfDocument && pdfDocument.getPage) {
+            pdfDocument
+              .getPage(1)
+              .then((page) => {
+                // Try to get text content to analyze layout
+                page
+                  .getTextContent()
+                  .then((textContent) => {
+                    const textItems = textContent.items;
+                    const xPositions = new Set();
+
+                    textItems.forEach((item) => {
+                      xPositions.add(Math.round(item.transform[4] / 10) * 10);
+                    });
+
+                    // If we have many different x positions, it might be a multi-column layout
+                    if (xPositions.size > 5) {
+                      layoutInfo.hasMultipleColumns = true;
+                    }
+
+                    // If we have many text items, it might be a complex layout
+                    if (textItems.length > 100) {
+                      layoutInfo.hasComplexLayout = true;
+                    }
+
+                    resolve(layoutInfo);
+                  })
+                  .catch(() => {
+                    // If we can't get text content, use default values
+                    resolve(layoutInfo);
+                  });
+              })
+              .catch(() => {
+                resolve(layoutInfo);
+              });
+          } else {
+            resolve(layoutInfo);
+          }
+        } catch (e) {
+          console.error("Error analyzing PDF structure:", e);
+          resolve({
+            hasMultipleColumns: false,
+            hasComplexLayout: false,
+            hasLargeImages: false,
+          });
+        }
+      });
     }
   }
 
@@ -1034,6 +1343,18 @@ document.addEventListener("DOMContentLoaded", () => {
           max-width: 100% !important;
           margin: 0 auto !important;
         }
+        
+        /* Fix for multi-column layouts */
+        .textLayer .endOfContent {
+          display: block !important;
+          clear: both !important;
+        }
+        
+        /* Ensure tables and complex layouts are visible */
+        .textLayer span[role="presentation"] {
+          max-width: 100% !important;
+          white-space: normal !important;
+        }
       }
     `;
       iframeDoc.head.appendChild(mobileStyle);
@@ -1056,6 +1377,7 @@ document.addEventListener("DOMContentLoaded", () => {
               if (currentPage && currentPage.viewport) {
                 const viewport = currentPage.viewport;
                 const isPortrait = viewport.width < viewport.height;
+                const aspectRatio = viewport.width / viewport.height;
 
                 // For portrait pages, ensure content is fully visible
                 if (isPortrait) {
@@ -1066,6 +1388,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     // If scale is too small, increase it for readability
                     pdfViewer.currentScale = 0.8;
                   }
+                }
+                // For very wide pages, fit to page
+                else if (aspectRatio > 1.5) {
+                  pdfViewer.currentScaleValue = "page-fit";
                 }
               }
             }
@@ -1088,12 +1414,14 @@ document.addEventListener("DOMContentLoaded", () => {
    * Sets up toolbar button event listeners
    * @param {HTMLElement} toolbar - The toolbar element
    * @param {HTMLIFrameElement} iframe - The iframe element
+   * @param {HTMLElement} container - The container element
    */
-  function setupToolbarButtons(toolbar, iframe) {
+  function setupToolbarButtons(toolbar, iframe, container) {
     // Get buttons
     const zoomInButton = toolbar.querySelector(".zoom-in");
     const zoomOutButton = toolbar.querySelector(".zoom-out");
     const fitWidthButton = toolbar.querySelector(".fit-width");
+    const fitPageButton = toolbar.querySelector(".fit-page");
     const prevButton = toolbar.querySelector(".prev-page");
     const nextButton = toolbar.querySelector(".next-page");
     const rotateButton = toolbar.querySelector(".rotate");
@@ -1139,19 +1467,25 @@ document.addEventListener("DOMContentLoaded", () => {
             if (currentPage && currentPage.viewport) {
               const viewport = currentPage.viewport;
               const isPortrait = viewport.width < viewport.height;
+              const aspectRatio = viewport.width / viewport.height;
               const isMobile = window.innerWidth < 768;
 
-              // For portrait PDFs on mobile, use a more conservative scale
-              if (isPortrait && isMobile) {
-                pdfViewer.currentScaleValue = "auto";
-                setTimeout(() => {
-                  if (pdfViewer.currentScale > 1.2) {
-                    pdfViewer.currentScale = 1.2;
-                  }
-                }, 100);
+              // For very wide documents, fit to page instead of width
+              if (aspectRatio > 1.5) {
+                pdfViewer.currentScaleValue = "page-fit";
               } else {
-                // For landscape or desktop, use page-width
-                pdfViewer.currentScaleValue = "page-width";
+                // For portrait PDFs on mobile, use a more conservative scale
+                if (isPortrait && isMobile) {
+                  pdfViewer.currentScaleValue = "page-width";
+                  setTimeout(() => {
+                    if (pdfViewer.currentScale > 1.2) {
+                      pdfViewer.currentScale = 1.2;
+                    }
+                  }, 100);
+                } else {
+                  // For landscape or desktop, use page-width
+                  pdfViewer.currentScaleValue = "page-width";
+                }
               }
             } else {
               // Fallback to page-width
@@ -1160,6 +1494,20 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         } catch (e) {
           console.error("Error fitting to width:", e);
+        }
+      });
+    }
+
+    if (fitPageButton) {
+      fitPageButton.addEventListener("click", () => {
+        try {
+          const iframeWindow = iframe.contentWindow;
+          if (iframeWindow && iframeWindow.PDFViewerApplication) {
+            iframeWindow.PDFViewerApplication.pdfViewer.currentScaleValue =
+              "page-fit";
+          }
+        } catch (e) {
+          console.error("Error fitting to page:", e);
         }
       });
     }
