@@ -1,821 +1,873 @@
 /**
  * Document Viewer
- * Handles PDF and PPTX document viewing functionality
+ * Complete solution for PDF viewing with enhanced readability
  */
 
 // Immediately define a placeholder openDocument function to avoid "not found" errors
 // This will be replaced with the real implementation once the document viewer is initialized
 if (typeof window.openDocument !== "function") {
-    window.openDocument = (fileUrl, title) => {
-      console.log(
-        "Document viewer not yet initialized, queuing document:",
-        fileUrl,
-        title
-      );
-      // Store the request to open it once the viewer is ready
-      if (!window._pendingDocuments) window._pendingDocuments = [];
-      window._pendingDocuments.push({ fileUrl, title });
-    };
-  }
-  
-  document.addEventListener("DOMContentLoaded", () => {
-    console.log("Document viewer script starting initialization");
-  
-    // Check if the document viewer modal exists in the DOM
-    const modalExists = document.querySelector(".document-viewer-modal");
-    if (!modalExists) {
-      console.error(
-        "Document viewer modal not found in the DOM. Adding it dynamically."
-      );
-      // Add the modal HTML dynamically if it doesn't exist
-      const modalHTML = `
-        <div class="document-viewer-modal">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h2 id="modal-title">Document Title</h2>
-              <button class="close-modal">&times;</button>
-            </div>
-            <div class="document-container">
-              <div id="pdf-viewer"></div>
-              <div id="pptx-viewer" class="hidden"></div>
-            </div>
-            <div class="modal-controls">
-              <button id="prev-page" disabled>Previous</button>
-              <span id="page-info">
-                Page <span id="page-num">1</span> of <span id="page-count">1</span>
-              </span>
-              <button id="next-page" disabled>Next</button>
-              <a id="download-document" href="#" download class="download-btn">
-                Download
-              </a>
-            </div>
-          </div>
-        </div>
+  window.openDocument = (fileUrl, title) => {
+    console.log(
+      "Document viewer not yet initialized, queuing document:",
+      fileUrl,
+      title
+    );
+    // Store the request to open it once the viewer is ready
+    if (!window._pendingDocuments) window._pendingDocuments = [];
+    window._pendingDocuments.push({ fileUrl, title });
+  };
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("Document viewer script loaded");
+
+  // Define the openDocument function immediately to handle any early calls
+  window.openDocument = (fileUrl, title) => {
+    console.log("Opening document:", fileUrl, title);
+    openEnhancedPdfViewer(fileUrl, title);
+  };
+
+  // Create necessary CSS styles
+  createStyles();
+
+  /**
+   * Creates and adds the necessary styles to the document
+   */
+  function createStyles() {
+    if (!document.getElementById("document-viewer-styles")) {
+      const styleElement = document.createElement("style");
+      styleElement.id = "document-viewer-styles";
+      styleElement.textContent = `
+        /* PDF Viewer Container */
+        .pdf-viewer-container {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 9999;
+          background-color: rgba(0, 0, 0, 0.9);
+          display: flex;
+          flex-direction: column;
+        }
+
+        /* Header for the PDF viewer */
+        .pdf-viewer-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px 15px;
+          background-color: #2c3e50;
+          color: white;
+        }
+
+        .pdf-viewer-title {
+          font-size: 16px;
+          font-weight: bold;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          margin-right: 15px;
+        }
+
+        .pdf-viewer-close {
+          background: none;
+          border: none;
+          color: white;
+          font-size: 24px;
+          cursor: pointer;
+          padding: 0 10px;
+        }
+
+        /* Container for the iframe */
+        .pdf-viewer-frame-container {
+          flex: 1;
+          position: relative;
+          overflow: hidden;
+        }
+
+        /* The iframe that will contain the PDF.js viewer */
+        .pdf-viewer-frame {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          border: none;
+        }
+
+        /* Loading indicator */
+        .pdf-loading {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          text-align: center;
+          color: white;
+        }
+
+        .pdf-loading-spinner {
+          border: 4px solid rgba(255, 255, 255, 0.3);
+          border-top: 4px solid white;
+          border-radius: 50%;
+          width: 40px;
+          height: 40px;
+          margin: 0 auto 15px;
+          animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+
+        /* Toolbar with controls */
+        .pdf-viewer-toolbar {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 8px;
+          background-color: #34495e;
+          gap: 10px;
+        }
+
+        .pdf-viewer-button {
+          background-color: #3498db;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          padding: 6px 12px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 14px;
+        }
+
+        .pdf-viewer-button:hover {
+          background-color: #2980b9;
+        }
+
+        .pdf-viewer-button svg {
+          width: 16px;
+          height: 16px;
+          margin-right: 4px;
+        }
+
+        .pdf-page-info {
+          color: white;
+          margin: 0 10px;
+          font-size: 14px;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+          .pdf-viewer-toolbar {
+            padding: 6px;
+          }
+          
+          .pdf-viewer-button {
+            padding: 6px 8px;
+            font-size: 12px;
+          }
+          
+          .pdf-page-info {
+            font-size: 12px;
+          }
+        }
       `;
-      document.body.insertAdjacentHTML("beforeend", modalHTML);
-  
-      // Add basic styles for the modal if they don't exist
-      if (!document.querySelector("#document-viewer-styles")) {
-        const styleElement = document.createElement("style");
-        styleElement.id = "document-viewer-styles";
-        styleElement.textContent = `
-          .document-viewer-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-          }
-          
-          .document-viewer-modal.active {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
-          
-          .modal-content {
-            background-color: white;
-            width: 90%;
-            max-width: 1000px;
-            height: 90%;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-          }
-          
-          .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            border-bottom: 1px solid #eee;
-          }
-          
-          .close-modal {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-          }
-          
-          .document-container {
-            flex: 1;
-            overflow: auto;
-            padding: 20px;
-            position: relative;
-          }
-          
-          .modal-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            border-top: 1px solid #eee;
-          }
-          
-          .hidden {
-            display: none;
-          }
-          
-          .loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 2s linear infinite;
-            margin: 20px auto;
-          }
-          
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-          
-          .download-btn {
-            background-color: #4CAF50;
-            color: white;
-            padding: 8px 16px;
-            text-decoration: none;
-            border-radius: 4px;
-          }
-          
-          button {
-            padding: 8px 16px;
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            cursor: pointer;
-          }
-          
-          button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-          }
-          
-          .rotate-screen-btn {
-            display: none;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(0, 0, 0, 0.6);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            padding: 8px;
-            z-index: 10;
-            cursor: pointer;
-          }
-          
-          .orientation-prompt {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            z-index: 2000;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            text-align: center;
-            padding: 20px;
-          }
-          
-          .orientation-prompt.active {
-            display: flex;
-          }
-          
-          .orientation-prompt svg {
-            width: 50px;
-            height: 50px;
-            stroke: white;
-            margin-bottom: 20px;
-          }
-          
-          .dismiss-prompt {
-            background-color: white;
-            color: black;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            margin-top: 20px;
-            cursor: pointer;
-          }
-        `;
-        document.head.appendChild(styleElement);
-      }
+      document.head.appendChild(styleElement);
     }
-  
-    // Try to load PDF.js dynamically if not already loaded
-    if (typeof window.pdfjsLib === "undefined") {
-      console.log("PDF.js not detected, loading dynamically...");
-  
+  }
+
+  /**
+   * Opens the enhanced PDF viewer
+   * @param {string} pdfUrl - URL of the PDF to open
+   * @param {string} title - Title to display
+   */
+  function openEnhancedPdfViewer(pdfUrl, title) {
+    console.log("Opening enhanced PDF viewer:", pdfUrl);
+
+    // Create viewer container if it doesn't exist
+    let viewerContainer = document.getElementById("enhanced-pdf-viewer");
+    if (viewerContainer) {
+      // If it exists, clean it up
+      viewerContainer.innerHTML = "";
+    } else {
+      viewerContainer = document.createElement("div");
+      viewerContainer.id = "enhanced-pdf-viewer";
+      viewerContainer.className = "pdf-viewer-container";
+      document.body.appendChild(viewerContainer);
+    }
+
+    // Create the header
+    const header = document.createElement("div");
+    header.className = "pdf-viewer-header";
+
+    // Add title
+    const titleElement = document.createElement("div");
+    titleElement.className = "pdf-viewer-title";
+    titleElement.textContent = title || "PDF Document";
+    header.appendChild(titleElement);
+
+    // Add close button
+    const closeButton = document.createElement("button");
+    closeButton.className = "pdf-viewer-close";
+    closeButton.innerHTML = "&times;";
+    closeButton.addEventListener("click", closeEnhancedViewer);
+    header.appendChild(closeButton);
+
+    viewerContainer.appendChild(header);
+
+    // Create toolbar with controls
+    const toolbar = document.createElement("div");
+    toolbar.className = "pdf-viewer-toolbar";
+
+    // Zoom out button
+    const zoomOutButton = document.createElement("button");
+    zoomOutButton.className = "pdf-viewer-button zoom-out";
+    zoomOutButton.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        <line x1="8" y1="11" x2="14" y2="11"></line>
+      </svg>
+      Zoom Out
+    `;
+    toolbar.appendChild(zoomOutButton);
+
+    // Zoom in button
+    const zoomInButton = document.createElement("button");
+    zoomInButton.className = "pdf-viewer-button zoom-in";
+    zoomInButton.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        <line x1="11" y1="8" x2="11" y2="14"></line>
+        <line x1="8" y1="11" x2="14" y2="11"></line>
+      </svg>
+      Zoom In
+    `;
+    toolbar.appendChild(zoomInButton);
+
+    // Fit to width button
+    const fitWidthButton = document.createElement("button");
+    fitWidthButton.className = "pdf-viewer-button fit-width";
+    fitWidthButton.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="9" y1="3" x2="9" y2="21"></line>
+        <line x1="15" y1="3" x2="15" y2="21"></line>
+      </svg>
+      Fit Width
+    `;
+    toolbar.appendChild(fitWidthButton);
+
+    // Page info
+    const pageInfo = document.createElement("div");
+    pageInfo.className = "pdf-page-info";
+    pageInfo.textContent = "Page: --/--";
+    toolbar.appendChild(pageInfo);
+
+    // Previous page button
+    const prevButton = document.createElement("button");
+    prevButton.className = "pdf-viewer-button prev-page";
+    prevButton.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      Prev
+    `;
+    toolbar.appendChild(prevButton);
+
+    // Next page button
+    const nextButton = document.createElement("button");
+    nextButton.className = "pdf-viewer-button next-page";
+    nextButton.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+      Next
+    `;
+    toolbar.appendChild(nextButton);
+
+    // Rotate button
+    const rotateButton = document.createElement("button");
+    rotateButton.className = "pdf-viewer-button rotate";
+    rotateButton.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+        <path d="M3 3v5h5"></path>
+      </svg>
+      Rotate
+    `;
+    toolbar.appendChild(rotateButton);
+
+    viewerContainer.appendChild(toolbar);
+
+    // Create frame container
+    const frameContainer = document.createElement("div");
+    frameContainer.className = "pdf-viewer-frame-container";
+
+    // Add loading indicator
+    const loading = document.createElement("div");
+    loading.className = "pdf-loading";
+    loading.innerHTML = `
+      <div class="pdf-loading-spinner"></div>
+      <div>Loading PDF...</div>
+    `;
+    frameContainer.appendChild(loading);
+
+    viewerContainer.appendChild(frameContainer);
+
+    // Create a new iframe for the PDF.js viewer
+    const iframe = document.createElement("iframe");
+    iframe.className = "pdf-viewer-frame";
+    frameContainer.appendChild(iframe); // Append iframe immediately
+
+    // First, check if we need to load PDF.js
+    loadPdfJs().then(() => {
+      // Now we can proceed with rendering the PDF
+      if (window.pdfjsLib) {
+        // We have PDF.js available, use our custom viewer
+        renderCustomPdfViewer(pdfUrl, frameContainer, loading, pageInfo);
+      } else {
+        // Fallback to PDF.js web viewer
+        usePdfJsWebViewer(pdfUrl, iframe, frameContainer, loading);
+      }
+    });
+
+    // Set up button event listeners
+    setupToolbarButtons(toolbar, iframe);
+
+    // Show the viewer
+    viewerContainer.style.display = "flex";
+
+    // Prevent scrolling of the main page
+    document.body.style.overflow = "hidden";
+
+    // Add keyboard event listener for Escape key
+    document.addEventListener("keydown", handleKeyDown);
+  }
+
+  /**
+   * Loads PDF.js if not already loaded
+   * @returns {Promise} - Resolves when PDF.js is loaded
+   */
+  function loadPdfJs() {
+    return new Promise((resolve) => {
+      if (window.pdfjsLib) {
+        resolve();
+        return;
+      }
+
       // Load PDF.js main library
       const pdfScript = document.createElement("script");
       pdfScript.src =
         "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js";
       pdfScript.onload = () => {
         console.log("PDF.js loaded successfully");
-  
+
         // Load PDF.js worker
         window.pdfjsLib.GlobalWorkerOptions.workerSrc =
           "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
-  
-        // Initialize the viewer after library is loaded
-        initDocumentViewer();
+
+        resolve();
       };
       pdfScript.onerror = () => {
         console.error("Failed to load PDF.js library");
-        alert(
-          "PDF viewer could not be loaded. Please check your internet connection."
-        );
+        resolve(); // Resolve anyway to try the fallback
       };
       document.head.appendChild(pdfScript);
-    } else {
-      // PDF.js is already loaded, initialize directly
-      console.log("PDF.js already loaded");
-      initDocumentViewer();
-    }
-  
+    });
+  }
+
+  /**
+   * Renders a PDF using our custom viewer
+   * @param {string} pdfUrl - URL of the PDF to render
+   * @param {HTMLElement} container - Container element
+   * @param {HTMLElement} loading - Loading indicator element
+   * @param {HTMLElement} pageInfo - Page info element
+   */
+  function renderCustomPdfViewer(pdfUrl, container, loading, pageInfo) {
+    // Create a canvas for rendering
+    const canvas = document.createElement("canvas");
+    canvas.style.display = "block";
+    canvas.style.margin = "0 auto";
+
+    // Create a div to wrap the canvas for scrolling
+    const canvasContainer = document.createElement("div");
+    canvasContainer.style.overflow = "auto";
+    canvasContainer.style.width = "100%";
+    canvasContainer.style.height = "100%";
+    canvasContainer.style.display = "flex";
+    canvasContainer.style.justifyContent = "center";
+    canvasContainer.style.backgroundColor = "#525659";
+    canvasContainer.appendChild(canvas);
+
+    // Clear container and add canvas container
+    container.innerHTML = "";
+    container.appendChild(canvasContainer);
+
+    // PDF.js variables
+    let pdfDoc = null;
+    let currentPage = 1;
+    let currentScale = 1.5; // Start with a larger scale for better readability
+    let currentRotation = 0;
+    let pageRendering = false;
+    let pageNumPending = null;
+
+    // Load the PDF
+    const loadingTask = window.pdfjsLib.getDocument({
+      url: pdfUrl,
+      cMapUrl: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/cmaps/",
+      cMapPacked: true,
+    });
+
+    loadingTask.promise
+      .then((pdf) => {
+        pdfDoc = pdf;
+
+        // Update page info
+        pageInfo.textContent = `Page: ${currentPage}/${pdf.numPages}`;
+
+        // Render first page
+        renderPage(currentPage);
+
+        // Set up page navigation
+        setupPageNavigation(pdf.numPages);
+
+        // Auto-fit to width
+        setTimeout(() => {
+          fitToWidth();
+        }, 500);
+      })
+      .catch((error) => {
+        console.error("Error loading PDF:", error);
+        container.innerHTML = `
+          <div style="color: white; text-align: center; padding: 20px;">
+            <h3>Error Loading PDF</h3>
+            <p>${error.message}</p>
+            <p>This might be due to CORS restrictions or an invalid URL.</p>
+          </div>
+        `;
+      });
+
     /**
-     * Main initialization function for the document viewer
+     * Renders a specific page
+     * @param {number} pageNum - Page number to render
      */
-    function initDocumentViewer() {
-      console.log("Initializing document viewer");
-  
-      // Elements
-      const modal = document.querySelector(".document-viewer-modal");
-      const closeModalBtn = document.querySelector(".close-modal");
-      const modalTitle = document.getElementById("modal-title");
-      const pdfViewer = document.getElementById("pdf-viewer");
-      const pptxViewer = document.getElementById("pptx-viewer");
-      const prevPageBtn = document.getElementById("prev-page");
-      const nextPageBtn = document.getElementById("next-page");
-      const pageNum = document.getElementById("page-num");
-      const pageCount = document.getElementById("page-count");
-      const downloadBtn = document.getElementById("download-document");
-  
-      // Check if all required elements exist
-      if (!modal || !modalTitle || !pdfViewer) {
-        console.error("Required document viewer elements not found:", {
-          modal: !!modal,
-          modalTitle: !!modalTitle,
-          pdfViewer: !!pdfViewer,
+    function renderPage(pageNum) {
+      pageRendering = true;
+
+      // Update page info
+      pageInfo.textContent = `Page: ${pageNum}/${pdfDoc.numPages}`;
+
+      // Get the page
+      pdfDoc.getPage(pageNum).then((page) => {
+        // Create viewport with current scale and rotation
+        const viewport = page.getViewport({
+          scale: currentScale,
+          rotation: currentRotation,
         });
-        return;
-      }
-  
-      // PDF.js variables
-      let pdfDoc = null;
-      let pageNum_current = 1;
-      let pageRendering = false;
-      let pageNumPending = null;
-      const scale = 1.5;
-  
-      // Add rotation button to document container (only for mobile)
-      const documentContainer = document.querySelector(".document-container");
-      if (documentContainer) {
-        const rotateBtn = document.createElement("button");
-        rotateBtn.className = "rotate-screen-btn";
-        rotateBtn.innerHTML = `
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 2v7h7"></path>
-            <path d="M3 9a9 9 0 1 0 9-9"></path>
-          </svg>
-        `;
-        rotateBtn.setAttribute("aria-label", "Rotate screen");
-        rotateBtn.setAttribute("title", "Rotate to landscape for better viewing");
-        documentContainer.appendChild(rotateBtn);
-  
-        // Add orientation prompt
-        const orientationPrompt = document.createElement("div");
-        orientationPrompt.className = "orientation-prompt";
-        orientationPrompt.innerHTML = `
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
-            <line x1="12" y1="18" x2="12" y2="18"></line>
-          </svg>
-          <p>Rotate your device to landscape mode for a better viewing experience</p>
-          <button class="dismiss-prompt">Continue in Portrait</button>
-        `;
-        document.body.appendChild(orientationPrompt);
-  
-        // Function to check if content is landscape and should show rotate button
-        let checkContentOrientation = () => {}; // Declare the variable
-  
-        checkContentOrientation = () => {
-          // Only show on mobile devices
-          if (!isMobileDevice()) {
-            rotateBtn.style.display = "none";
-            return;
-          }
-  
-          // Check if we have a PDF loaded
-          if (pdfDoc) {
-            // Get the current page
-            pdfDoc.getPage(pageNum_current).then((page) => {
-              const viewport = page.getViewport({ scale: 1.0 });
-  
-              // If the width is greater than the height, it's landscape content
-              const isLandscapeContent = viewport.width > viewport.height;
-  
-              // Only show the rotate button for landscape content in portrait mode
-              const isPortraitMode = window.innerHeight > window.innerWidth;
-  
-              if (isLandscapeContent && isPortraitMode) {
-                rotateBtn.style.display = "flex";
-              } else {
-                rotateBtn.style.display = "none";
-              }
-            });
-          } else {
-            // No PDF loaded, hide the button
-            rotateBtn.style.display = "none";
-          }
+
+        // Set canvas dimensions
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        // Render PDF page
+        const renderContext = {
+          canvasContext: canvas.getContext("2d"),
+          viewport: viewport,
         };
-  
-        // Handle rotation button click
-        rotateBtn.addEventListener("click", () => {
-          if (isMobileDevice()) {
-            orientationPrompt.classList.add("active");
-  
-            // Try to request fullscreen for better experience
-            if (document.documentElement.requestFullscreen) {
-              document.documentElement.requestFullscreen().catch((err) => {
-                console.log("Fullscreen request failed:", err);
-              });
-            }
-          } else {
-            // For desktop, just toggle landscape class
-            document.body.classList.toggle("landscape-mode");
-  
-            // Re-render current page for better fit
-            if (pdfDoc && !pageRendering) {
-              renderPage(pageNum_current);
-            }
-          }
-        });
-  
-        // Handle dismiss button
-        const dismissBtn = orientationPrompt.querySelector(".dismiss-prompt");
-        if (dismissBtn) {
-          dismissBtn.addEventListener("click", () => {
-            orientationPrompt.classList.remove("active");
-          });
-        }
-  
-        // Listen for orientation change
-        window.addEventListener("orientationchange", () => {
-          // Hide prompt when orientation changes
-          orientationPrompt.classList.remove("active");
-  
-          // Re-render current page for better fit
-          if (pdfDoc && !pageRendering) {
-            renderPage(pageNum_current);
-          }
-  
-          // Check if we should show/hide the rotate button
-          checkContentOrientation();
-        });
-  
-        // Listen for resize events to update rotate button visibility
-        window.addEventListener("resize", () => {
-          checkContentOrientation();
-        });
-      }
-  
-      // Close modal
-      if (closeModalBtn) {
-        closeModalBtn.addEventListener("click", closeModal);
-      }
-  
-      if (modal) {
-        modal.addEventListener("click", (e) => {
-          if (e.target === modal) closeModal();
-        });
-      }
-  
-      // Handle keyboard events
-      document.addEventListener("keydown", (e) => {
-        if (!modal || !modal.classList.contains("active")) return;
-  
-        if (e.key === "Escape") {
-          closeModal();
-        } else if (e.key === "ArrowLeft") {
-          if (prevPageBtn && !prevPageBtn.disabled) prevPage();
-        } else if (e.key === "ArrowRight") {
-          if (nextPageBtn && !nextPageBtn.disabled) nextPage();
-        }
-      });
-  
-      // Navigation buttons
-      if (prevPageBtn) {
-        prevPageBtn.addEventListener("click", prevPage);
-      }
-  
-      if (nextPageBtn) {
-        nextPageBtn.addEventListener("click", nextPage);
-      }
-  
-      /**
-       * Opens a document in the viewer
-       * @param {string} fileUrl - URL of the document to open
-       * @param {string} title - Title of the document
-       */
-      function openDocument(fileUrl, title) {
-        console.log("Opening document in viewer:", fileUrl);
-  
-        if (!modal || !modalTitle) {
-          console.error("Modal elements not found", {
-            modal: !!modal,
-            modalTitle: !!modalTitle,
-          });
-          return;
-        }
-  
-        modalTitle.textContent = title;
-  
-        // Check if we have the PDF utils from cloudinary-pdf-solution.js
-        const isCloudinaryPdf =
-          window.pdfUtils &&
-          (typeof window.pdfUtils.isCloudinaryPdf === "function"
-            ? window.pdfUtils.isCloudinaryPdf(fileUrl)
-            : fileUrl.includes("cloudinary.com") &&
-              fileUrl.toLowerCase().endsWith(".pdf"));
-  
-        console.log("Is Cloudinary PDF:", isCloudinaryPdf);
-  
-        // Use the PDF utils if available, otherwise use direct URL
-        let finalUrl = fileUrl;
-        if (
-          isCloudinaryPdf &&
-          window.pdfUtils &&
-          typeof window.pdfUtils.transformCloudinaryPdfUrl === "function"
-        ) {
-          // Use the utility function from cloudinary-pdf-solution.js
-          finalUrl = window.pdfUtils.transformCloudinaryPdfUrl(fileUrl);
-          console.log("Using pdfUtils to transform URL:", finalUrl);
-        }
-  
-        if (downloadBtn) {
-          downloadBtn.href = finalUrl;
-          downloadBtn.download =
-            title.replace(/[^a-z0-9]/gi, "_").toLowerCase() + ".pdf";
-        }
-  
-        // Reset viewers
-        if (pdfViewer) pdfViewer.innerHTML = "";
-        if (pptxViewer)
-          pptxViewer.innerHTML =
-            '<p class="pptx-message">PPTX preview is being prepared...</p>';
-  
-        // Determine file type
-        const fileExtension = fileUrl.split(".").pop().toLowerCase();
-  
-        if (fileExtension === "pdf") {
-          if (pdfViewer) pdfViewer.classList.remove("hidden");
-          if (pptxViewer) pptxViewer.classList.add("hidden");
-  
-          // Special handling for Cloudinary PDFs
-          if (isCloudinaryPdf) {
-            console.log("Cloudinary PDF detected, using special handling");
-  
-            // For Cloudinary PDFs, check if we should use the viewer or direct download
-            if (
-              window.pdfUtils &&
-              window.pdfUtils.SOLUTION_OPTIONS &&
-              window.pdfUtils.SOLUTION_OPTIONS.USE_CLOUDINARY_TRANSFORMATION
-            ) {
-              // Try to load the PDF with the transformation
-              loadPdf(finalUrl);
-  
-              // Show navigation controls
-              if (prevPageBtn) prevPageBtn.style.display = "";
-              if (nextPageBtn) nextPageBtn.style.display = "";
-              if (document.getElementById("page-info"))
-                document.getElementById("page-info").style.display = "";
-            } else {
-              // Show download option instead of trying to render
-              if (pdfViewer) {
-                pdfViewer.innerHTML = createCloudinaryDownloadHTML(finalUrl);
-              }
-  
-              // Hide navigation controls for direct download
-              if (prevPageBtn) prevPageBtn.style.display = "none";
-              if (nextPageBtn) nextPageBtn.style.display = "none";
-              if (document.getElementById("page-info"))
-                document.getElementById("page-info").style.display = "none";
-            }
-          } else {
-            // Normal PDF handling
-            loadPdf(finalUrl);
-  
-            // Show navigation controls
-            if (prevPageBtn) prevPageBtn.style.display = "";
-            if (nextPageBtn) nextPageBtn.style.display = "";
-            if (document.getElementById("page-info"))
-              document.getElementById("page-info").style.display = "";
-          }
-        } else if (fileExtension === "pptx") {
-          if (pdfViewer) pdfViewer.classList.add("hidden");
-          if (pptxViewer) pptxViewer.classList.remove("hidden");
-          // For now, just show a message about PPTX
-          if (pptxViewer) {
-            pptxViewer.innerHTML = `
-             <div class="pptx-placeholder">
-               <h3>PPTX Viewer</h3>
-               <p>This is a placeholder for PPTX viewing functionality.</p>
-               <p>In a production environment, you would integrate with a PPTX rendering library or convert to PDF server-side.</p>
-               <p>For now, you can download the file using the download button below.</p>
-               <p>Tip: Rotate to landscape mode for better viewing on mobile devices.</p>
-             </div>
-           `;
-          }
-        }
-  
-        modal.classList.add("active");
-        document.body.style.overflow = "hidden"; // Prevent scrolling
-  
-        // Check if we should show the rotate button
-        setTimeout(checkContentOrientation, 500);
-      }
-  
-      // Assign the openDocument function to the window object
-      window.openDocument = openDocument;
-      console.log("openDocument function registered to window");
-  
-      /**
-       * Creates HTML for Cloudinary PDF download option
-       * @param {string} url - URL of the PDF to download
-       * @returns {string} - HTML for download option
-       */
-      function createCloudinaryDownloadHTML(url) {
-        return `
-         <div class="cloudinary-pdf-message">
-           <h3>This document requires download to view</h3>
-           <p>Due to security settings, this PDF cannot be viewed directly in the browser.</p>
-           <a href="${url}" class="download-btn" target="_blank">
-             Download PDF
-           </a>
-         </div>
-       `;
-      }
-  
-      /**
-       * Closes the document viewer modal
-       */
-      function closeModal() {
-        if (!modal) return;
-  
-        modal.classList.remove("active");
-        document.body.style.overflow = ""; // Restore scrolling
-  
-        // Exit fullscreen if we're in it
-        if (document.fullscreenElement) {
-          document.exitFullscreen().catch((err) => {
-            console.log("Error exiting fullscreen:", err);
-          });
-        }
-  
-        // Clean up PDF.js
-        if (pdfDoc) {
-          pdfDoc = null;
-          pageNum_current = 1;
+
+        const renderTask = page.render(renderContext);
+
+        renderTask.promise.then(() => {
           pageRendering = false;
-          pageNumPending = null;
-        }
-      }
-  
-      /**
-       * Loads a PDF document
-       * @param {string} url - URL of the PDF to load
-       */
-      function loadPdf(url) {
-        if (!pdfViewer) {
-          console.error("PDF viewer element not found");
-          return;
-        }
-  
-        console.log("Loading PDF in viewer:", url);
-  
-        // Show loading indicator
-        pdfViewer.innerHTML = '<div class="loading-spinner"></div>';
-  
-        // Check if PDF.js is available
-        if (typeof window.pdfjsLib === "undefined") {
-          console.error("PDF.js library not available");
-          pdfViewer.innerHTML = `
-        <div class="error-message">
-          <h3>PDF Viewer Error</h3>
-          <p>PDF.js library is not available. Please refresh the page and try again.</p>
-        </div>
-      `;
-          return;
-        }
-  
-        console.log("Loading PDF:", url);
-  
-        // Load the PDF
-        window.pdfjsLib
-          .getDocument(url)
-          .promise.then((pdf) => {
-            console.log("PDF loaded successfully");
-            pdfDoc = pdf;
-            if (pageCount) pageCount.textContent = pdf.numPages;
-  
-            // Enable/disable navigation buttons
-            updateUIState();
-  
-            // Render the first page
-            renderPage(pageNum_current);
-  
-            // Check if we should show the rotate button
-            checkContentOrientation();
-          })
-          .catch((error) => {
-            console.error("Error loading PDF:", error);
-            if (pdfViewer) {
-              // Check if this is a Cloudinary 401 error
-              if (
-                (error.status === 401 || error.message.includes("401")) &&
-                url.includes("cloudinary.com")
-              ) {
-                // Transform the URL and offer download
-                let downloadUrl = url;
-  
-                // Use pdfUtils if available
-                if (
-                  window.pdfUtils &&
-                  typeof window.pdfUtils.transformCloudinaryPdfUrl === "function"
-                ) {
-                  downloadUrl = window.pdfUtils.transformCloudinaryPdfUrl(url);
-                }
-  
-                pdfViewer.innerHTML = createCloudinaryDownloadHTML(downloadUrl);
-  
-                // Hide navigation controls
-                if (prevPageBtn) prevPageBtn.style.display = "none";
-                if (nextPageBtn) nextPageBtn.style.display = "none";
-                if (document.getElementById("page-info"))
-                  document.getElementById("page-info").style.display = "none";
-              } else {
-                // Regular error message
-                pdfViewer.innerHTML = `
-                 <div class="error-message">
-                   <h3>Error Loading PDF</h3>
-                   <p>${error.message}</p>
-                   <p>This might be due to CORS restrictions or an invalid URL.</p>
-                   <p>URL: ${url}</p>
-                 </div>
-               `;
-              }
-            }
-          });
-      }
-  
-      /**
-       * Renders a specific page of the PDF
-       * @param {number} num - Page number to render
-       */
-      function renderPage(num) {
-        if (!pdfDoc || !pdfViewer) return;
-  
-        pageRendering = true;
-  
-        // Update page number display
-        if (pageNum) pageNum.textContent = num;
-  
-        // Get the page
-        pdfDoc.getPage(num).then((page) => {
-          // Determine scale based on orientation
-          let viewportScale = scale;
-  
-          // If in landscape mode on mobile, adjust scale
-          if (
-            isMobileDevice() &&
-            window.matchMedia("(orientation: landscape)").matches
-          ) {
-            viewportScale = scale * 1.2; // Increase scale for landscape
+
+          // Check if there's a pending page
+          if (pageNumPending !== null) {
+            renderPage(pageNumPending);
+            pageNumPending = null;
           }
-  
-          const viewport = page.getViewport({ scale: viewportScale });
-  
-          // Prepare canvas
-          const canvas = document.createElement("canvas");
-          const ctx = canvas.getContext("2d");
-          canvas.height = viewport.height;
-          canvas.width = viewport.width;
-  
-          // Clear previous content
-          pdfViewer.innerHTML = "";
-          pdfViewer.appendChild(canvas);
-  
-          // Render PDF page into canvas context
-          const renderContext = {
-            canvasContext: ctx,
-            viewport: viewport,
-          };
-  
-          const renderTask = page.render(renderContext);
-  
-          // Wait for rendering to finish
-          renderTask.promise.then(() => {
-            pageRendering = false;
-  
-            // Check if there's a pending page
-            if (pageNumPending !== null) {
-              renderPage(pageNumPending);
-              pageNumPending = null;
-            }
-          });
+
+          // Hide loading indicator
+          if (loading) {
+            loading.style.display = "none";
+          }
         });
-  
-        // Update UI state
-        updateUIState();
-      }
-  
-      /**
-       * Go to previous page
-       */
-      function prevPage() {
-        if (pageNum_current <= 1) return;
-        pageNum_current--;
-        queueRenderPage(pageNum_current);
-      }
-  
-      /**
-       * Go to next page
-       */
-      function nextPage() {
-        if (!pdfDoc || pageNum_current >= pdfDoc.numPages) return;
-        pageNum_current++;
-        queueRenderPage(pageNum_current);
-      }
-  
-      /**
-       * Queue rendering of a page
-       * @param {number} num - Page number to queue for rendering
-       */
-      function queueRenderPage(num) {
-        if (pageRendering) {
-          pageNumPending = num;
-        } else {
-          renderPage(num);
-        }
-      }
-  
-      /**
-       * Update UI state based on current page
-       */
-      function updateUIState() {
-        if (!pdfDoc) {
-          if (prevPageBtn) prevPageBtn.disabled = true;
-          if (nextPageBtn) nextPageBtn.disabled = true;
-          return;
-        }
-  
-        if (prevPageBtn) prevPageBtn.disabled = pageNum_current <= 1;
-        if (nextPageBtn)
-          nextPageBtn.disabled = pageNum_current >= pdfDoc.numPages;
-      }
-  
-      /**
-       * Check if device is mobile
-       * @returns {boolean} - True if the device is mobile
-       */
-      function isMobileDevice() {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-          navigator.userAgent
-        );
-      }
-  
-      // Handle window resize
-      window.addEventListener("resize", () => {
-        if (pdfDoc && !pageRendering) {
-          // Re-render current page on resize for better viewing experience
-          renderPage(pageNum_current);
-        }
       });
-  
-      // Process any pending documents that were queued before initialization
-      if (window._pendingDocuments && window._pendingDocuments.length > 0) {
-        console.log(
-          "Processing pending documents:",
-          window._pendingDocuments.length
-        );
-        window._pendingDocuments.forEach((doc) => {
-          openDocument(doc.fileUrl, doc.title);
-        });
-        window._pendingDocuments = [];
+    }
+
+    /**
+     * Queues a page for rendering
+     * @param {number} pageNum - Page number to queue
+     */
+    function queueRenderPage(pageNum) {
+      if (pageRendering) {
+        pageNumPending = pageNum;
+      } else {
+        renderPage(pageNum);
       }
     }
+
+    /**
+     * Goes to the previous page
+     */
+    function prevPage() {
+      if (currentPage <= 1) return;
+      currentPage--;
+      queueRenderPage(currentPage);
+    }
+
+    /**
+     * Goes to the next page
+     */
+    function nextPage() {
+      if (currentPage >= pdfDoc.numPages) return;
+      currentPage++;
+      queueRenderPage(currentPage);
+    }
+
+    /**
+     * Zooms in
+     */
+    function zoomIn() {
+      currentScale *= 1.2;
+      queueRenderPage(currentPage);
+    }
+
+    /**
+     * Zooms out
+     */
+    function zoomOut() {
+      currentScale /= 1.2;
+      queueRenderPage(currentPage);
+    }
+
+    /**
+     * Fits the page to width
+     */
+    function fitToWidth() {
+      if (!pdfDoc) return;
+
+      pdfDoc.getPage(currentPage).then((page) => {
+        const viewport = page.getViewport({ scale: 1.0 });
+        const containerWidth = canvasContainer.clientWidth - 40; // Subtract padding
+
+        // Calculate scale to fit width
+        currentScale = containerWidth / viewport.width;
+
+        queueRenderPage(currentPage);
+      });
+    }
+
+    /**
+     * Rotates the page
+     */
+    function rotate() {
+      currentRotation = (currentRotation + 90) % 360;
+      queueRenderPage(currentPage);
+    }
+
+    /**
+     * Sets up page navigation
+     * @param {number} numPages - Total number of pages
+     */
+    function setupPageNavigation(numPages) {
+      // Get buttons
+      const prevButton = document.querySelector(".pdf-viewer-button.prev-page");
+      const nextButton = document.querySelector(".pdf-viewer-button.next-page");
+      const zoomInButton = document.querySelector(".pdf-viewer-button.zoom-in");
+      const zoomOutButton = document.querySelector(
+        ".pdf-viewer-button.zoom-out"
+      );
+      const fitWidthButton = document.querySelector(
+        ".pdf-viewer-button.fit-width"
+      );
+      const rotateButton = document.querySelector(".pdf-viewer-button.rotate");
+
+      // Add event listeners
+      if (prevButton) prevButton.addEventListener("click", prevPage);
+      if (nextButton) nextButton.addEventListener("click", nextPage);
+      if (zoomInButton) zoomInButton.addEventListener("click", zoomIn);
+      if (zoomOutButton) zoomOutButton.addEventListener("click", zoomOut);
+      if (fitWidthButton) fitWidthButton.addEventListener("click", fitToWidth);
+      if (rotateButton) rotateButton.addEventListener("click", rotate);
+
+      // Keyboard navigation
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft") prevPage();
+        if (e.key === "ArrowRight") nextPage();
+        if (e.key === "+" || e.key === "=") zoomIn();
+        if (e.key === "-") zoomOut();
+      });
+    }
+  }
+
+  /**
+   * Uses the PDF.js web viewer as a fallback
+   * @param {string} pdfUrl - URL of the PDF to view
+   * @param {HTMLIFrameElement} iframe - The iframe element
+   * @param {HTMLElement} container - Container element
+   * @param {HTMLElement} loading - Loading indicator element
+   */
+  function usePdfJsWebViewer(pdfUrl, iframe, container, loading) {
+    // The PDF.js viewer URL - using the CDN version
+    const pdfJsViewerUrl =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/web/viewer.html";
+
+    // Encode the PDF URL to pass as a parameter
+    const encodedPdfUrl = encodeURIComponent(pdfUrl);
+
+    // Set the iframe source to the PDF.js viewer with our PDF
+    iframe.src = `${pdfJsViewerUrl}?file=${encodedPdfUrl}`;
+
+    // Handle iframe load event
+    iframe.onload = () => {
+      // Hide loading indicator
+      if (loading) {
+        loading.style.display = "none";
+      }
+
+      // Try to set initial view mode to fit page width
+      try {
+        setTimeout(() => {
+          const iframeWindow = iframe.contentWindow;
+          if (iframeWindow && iframeWindow.PDFViewerApplication) {
+            // Set view mode to fit page width for better reading
+            iframeWindow.PDFViewerApplication.pdfViewer.currentScaleValue =
+              "page-width";
+          }
+        }, 1000); // Give it a second to initialize
+      } catch (e) {
+        console.error("Error setting initial view mode:", e);
+      }
+    };
+  }
+
+  /**
+   * Sets up toolbar button event listeners
+   * @param {HTMLElement} toolbar - The toolbar element
+   * @param {HTMLIFrameElement} iframe - The iframe element
+   */
+  function setupToolbarButtons(toolbar, iframe) {
+    // Get buttons
+    const zoomInButton = toolbar.querySelector(".zoom-in");
+    const zoomOutButton = toolbar.querySelector(".zoom-out");
+    const fitWidthButton = toolbar.querySelector(".fit-width");
+    const prevButton = toolbar.querySelector(".prev-page");
+    const nextButton = toolbar.querySelector(".next-page");
+    const rotateButton = toolbar.querySelector(".rotate");
+
+    // Add event listeners for iframe-based viewer
+    if (zoomInButton) {
+      zoomInButton.addEventListener("click", () => {
+        try {
+          const iframeWindow = iframe.contentWindow;
+          if (iframeWindow && iframeWindow.PDFViewerApplication) {
+            iframeWindow.PDFViewerApplication.zoomIn();
+          }
+        } catch (e) {
+          console.error("Error zooming in:", e);
+        }
+      });
+    }
+
+    if (zoomOutButton) {
+      zoomOutButton.addEventListener("click", () => {
+        try {
+          const iframeWindow = iframe.contentWindow;
+          if (iframeWindow && iframeWindow.PDFViewerApplication) {
+            iframeWindow.PDFViewerApplication.zoomOut();
+          }
+        } catch (e) {
+          console.error("Error zooming out:", e);
+        }
+      });
+    }
+
+    if (fitWidthButton) {
+      fitWidthButton.addEventListener("click", () => {
+        try {
+          const iframeWindow = iframe.contentWindow;
+          if (iframeWindow && iframeWindow.PDFViewerApplication) {
+            iframeWindow.PDFViewerApplication.pdfViewer.currentScaleValue =
+              "page-width";
+          }
+        } catch (e) {
+          console.error("Error fitting to width:", e);
+        }
+      });
+    }
+
+    if (prevButton) {
+      prevButton.addEventListener("click", () => {
+        try {
+          const iframeWindow = iframe.contentWindow;
+          if (iframeWindow && iframeWindow.PDFViewerApplication) {
+            iframeWindow.PDFViewerApplication.page--;
+          }
+        } catch (e) {
+          console.error("Error going to previous page:", e);
+        }
+      });
+    }
+
+    if (nextButton) {
+      nextButton.addEventListener("click", () => {
+        try {
+          const iframeWindow = iframe.contentWindow;
+          if (iframeWindow && iframeWindow.PDFViewerApplication) {
+            iframeWindow.PDFViewerApplication.page++;
+          }
+        } catch (e) {
+          console.error("Error going to next page:", e);
+        }
+      });
+    }
+
+    if (rotateButton) {
+      rotateButton.addEventListener("click", () => {
+        try {
+          const iframeWindow = iframe.contentWindow;
+          if (iframeWindow && iframeWindow.PDFViewerApplication) {
+            // Rotate 90 degrees clockwise
+            const currentRotation =
+              iframeWindow.PDFViewerApplication.pdfViewer.pagesRotation;
+            iframeWindow.PDFViewerApplication.pdfViewer.pagesRotation =
+              (currentRotation + 90) % 360;
+          }
+        } catch (e) {
+          console.error("Error rotating:", e);
+        }
+      });
+    }
+  }
+
+  /**
+   * Closes the enhanced PDF viewer
+   */
+  function closeEnhancedViewer() {
+    const viewerContainer = document.getElementById("enhanced-pdf-viewer");
+    if (viewerContainer) {
+      viewerContainer.style.display = "none";
+
+      // Remove all iframes to stop any running PDF.js instances
+      const frames = viewerContainer.querySelectorAll("iframe");
+      frames.forEach((frame) => frame.remove());
+    }
+
+    // Restore scrolling of the main page
+    document.body.style.overflow = "";
+
+    // Remove keyboard event listener
+    document.removeEventListener("keydown", handleKeyDown);
+  }
+
+  /**
+   * Handles keyboard events for the viewer
+   * @param {KeyboardEvent} e - The keyboard event
+   */
+  function handleKeyDown(e) {
+    if (e.key === "Escape") {
+      closeEnhancedViewer();
+    }
+  }
+
+  // Find all "View Document" buttons and attach click handlers
+  function setupViewDocumentButtons() {
+    const viewButtons = document.querySelectorAll(
+      'a[href*=".pdf"], button:contains("View Document")'
+    );
+
+    viewButtons.forEach((button) => {
+      button.addEventListener("click", function (e) {
+        // Check if this is a "View Document" button
+        if (this.textContent.trim() === "View Document") {
+          e.preventDefault();
+
+          // Find the closest parent article or section
+          const container =
+            this.closest("article") ||
+            this.closest("section") ||
+            this.parentElement;
+
+          // Try to find a title and PDF URL
+          let title = "";
+          let pdfUrl = "";
+
+          // Look for a title in headings
+          const heading = container.querySelector("h1, h2, h3, h4, h5, h6");
+          if (heading) {
+            title = heading.textContent.trim();
+          }
+
+          // Look for a PDF link
+          const pdfLink = container.querySelector('a[href*=".pdf"]');
+          if (pdfLink) {
+            pdfUrl = pdfLink.href;
+          }
+
+          // If we found both, open the document
+          if (title && pdfUrl) {
+            openEnhancedPdfViewer(pdfUrl, title);
+          } else {
+            console.error("Could not find PDF URL or title");
+          }
+        }
+        // If it's a direct PDF link
+        else if (this.href && this.href.toLowerCase().endsWith(".pdf")) {
+          e.preventDefault();
+          const title = this.textContent.trim() || "PDF Document";
+          openEnhancedPdfViewer(this.href, title);
+        }
+      });
+    });
+  }
+
+  // Set up the document viewer when the page is fully loaded
+  window.addEventListener("load", () => {
+    setupViewDocumentButtons();
+
+    // Also look for any elements with onclick="openDocument(...)"
+    document
+      .querySelectorAll('[onclick*="openDocument"]')
+      .forEach((element) => {
+        const onclickAttr = element.getAttribute("onclick");
+        if (onclickAttr) {
+          // Extract the parameters from the onclick attribute
+          const match = onclickAttr.match(
+            /openDocument$$['"]([^'"]+)['"],\s*['"]([^'"]+)['"]$$/
+          );
+          if (match) {
+            const [_, url, title] = match;
+
+            // Replace the onclick with our own handler
+            element.removeAttribute("onclick");
+            element.addEventListener("click", (e) => {
+              e.preventDefault();
+              openEnhancedPdfViewer(url, title);
+            });
+          }
+        }
+      });
   });
-  
+
+  // Process any pending documents to open
+  if (window._pendingDocuments && window._pendingDocuments.length > 0) {
+    console.log(
+      "Processing pending documents:",
+      window._pendingDocuments.length
+    );
+    window._pendingDocuments.forEach((doc) => {
+      window.openDocument(doc.fileUrl, doc.title);
+    });
+    window._pendingDocuments = [];
+  }
+});

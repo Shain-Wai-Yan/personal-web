@@ -117,6 +117,24 @@ async function fetchFromStrapi(endpoint, queryParams = {}) {
 }
 
 /**
+ * Truncates text to a specific number of lines and adds "See more" button
+ * @param {string} text - Text to truncate
+ * @param {number} lines - Number of lines to show
+ * @returns {string} - HTML with truncated text and "See more" button
+ */
+function truncateDescription(text, lines = 2) {
+  if (!text || text.length < 100) return text; // Don't truncate short text
+
+  return `
+    <div class="truncated-text" data-lines="${lines}">
+      <div class="truncated-content">${text}</div>
+      <button class="see-more-btn">See more</button>
+      <button class="see-less-btn" style="display: none;">See less</button>
+    </div>
+  `;
+}
+
+/**
  * Generates HTML for a document item based on Strapi data
  */
 function generateDocumentItemHTML(item) {
@@ -126,13 +144,13 @@ function generateDocumentItemHTML(item) {
   if (!item || typeof item !== "object") {
     console.error("Invalid item structure:", item);
     return `
-       <div class="document-item error-item">
-         <div class="document-details">
-           <h2>Error: Invalid Document</h2>
-           <p class="document-description">This document could not be processed due to invalid data structure.</p>
-         </div>
+     <div class="document-item error-item">
+       <div class="document-details">
+         <h2>Error: Invalid Document</h2>
+         <p class="document-description">This document could not be processed due to invalid data structure.</p>
        </div>
-     `;
+     </div>
+   `;
   }
 
   try {
@@ -234,43 +252,42 @@ function generateDocumentItemHTML(item) {
       formattedDate,
     });
 
+    // Truncate description to 2 lines with "See more" button
+    const truncatedDescription = truncateDescription(description, 2);
+
     // Generate HTML - removed title and date overlay from the thumbnail
     return `
-       <div class="document-item" data-file="${documentUrl}" data-slug="${slug}">
-         <div class="document-cover" style="background-image: url('${coverImageUrl}'); background-size: cover; background-position: center; position: relative;">
+     <div class="document-item" data-file="${documentUrl}" data-slug="${slug}">
+       <div class="document-cover" style="background-image: url('${coverImageUrl}'); background-size: cover; background-position: center; position: relative;">
+         ${fileType ? `<div class="document-type-badge">${fileType}</div>` : ""}
+       </div>
+       <div class="document-details">
+         <h2>${title}</h2>
+         <div class="document-meta">
            ${
              fileType
-               ? `<div class="document-type-badge">${fileType}</div>`
+               ? `<span class="document-type">${fileType} Document</span>`
                : ""
            }
+           <span class="document-date">${formattedDate}</span>
          </div>
-         <div class="document-details">
-           <h2>${title}</h2>
-           <div class="document-meta">
-             ${
-               fileType
-                 ? `<span class="document-type">${fileType} Document</span>`
-                 : ""
-             }
-             <span class="document-date">${formattedDate}</span>
-           </div>
-           <p class="document-description">${description}</p>
-           <button class="view-document-btn" ${!documentUrl ? "disabled" : ""}>
-             ${documentUrl ? "View Document" : "No Document Available"}
-           </button>
-         </div>
+         <div class="document-description">${truncatedDescription}</div>
+         <button class="view-document-btn" ${!documentUrl ? "disabled" : ""}>
+           ${documentUrl ? "View Document" : "No Document Available"}
+         </button>
        </div>
-     `;
+     </div>
+   `;
   } catch (error) {
     console.error("Error generating document HTML:", error, item);
     return `
-       <div class="document-item error-item">
-         <div class="document-details">
-           <h2>Error Processing Document</h2>
-           <p class="document-description">This document could not be processed: ${error.message}</p>
-         </div>
+     <div class="document-item error-item">
+       <div class="document-details">
+         <h2>Error Processing Document</h2>
+         <p class="document-description">This document could not be processed: ${error.message}</p>
        </div>
-     `;
+     </div>
+   `;
   }
 }
 
@@ -287,11 +304,11 @@ async function loadDocumentsFromStrapi(contentType) {
 
   // Show loading state
   documentList.innerHTML = `
-     <div class="loading-state">
-       <div class="loading-spinner"></div>
-       <p>Loading documents...</p>
-     </div>
-   `;
+   <div class="loading-state">
+     <div class="loading-spinner"></div>
+     <p>Loading documents...</p>
+   </div>
+ `;
 
   try {
     // Determine the correct endpoint based on content type
@@ -316,11 +333,11 @@ async function loadDocumentsFromStrapi(contentType) {
     // Check if we have an error in the response
     if (response.error) {
       documentList.innerHTML = `
-         <div class="error-state">
-           <p>Error: ${response.error}</p>
-           <button class="retry-btn">Retry</button>
-         </div>
-       `;
+       <div class="error-state">
+         <p>Error: ${response.error}</p>
+         <button class="retry-btn">Retry</button>
+       </div>
+     `;
 
       // Add retry button functionality
       const retryBtn = documentList.querySelector(".retry-btn");
@@ -337,32 +354,32 @@ async function loadDocumentsFromStrapi(contentType) {
     if (!response || !response.data) {
       console.error("Unexpected API response format:", response);
       documentList.innerHTML = `
-         <div class="error-state">
-           <p>Unexpected API response format.</p>
-           <p>Please check the browser console for details.</p>
-         </div>
-       `;
+       <div class="error-state">
+         <p>Unexpected API response format.</p>
+         <p>Please check the browser console for details.</p>
+       </div>
+     `;
       return;
     }
 
     // Handle empty data array
     if (Array.isArray(response.data) && response.data.length === 0) {
       documentList.innerHTML = `
-         <div class="no-documents">
-           <p>No documents found. Please add some documents in your Strapi admin panel.</p>
-         </div>
-       `;
+       <div class="no-documents">
+         <p>No documents found. Please add some documents in your Strapi admin panel.</p>
+       </div>
+     `;
       return;
     }
 
     // Handle null data
     if (response.data === null) {
       documentList.innerHTML = `
-         <div class="error-state">
-           <p>No access to content. This might be due to permission settings in Strapi.</p>
-           <p>Please check your Strapi permissions for public access to ${contentType}.</p>
-         </div>
-       `;
+       <div class="error-state">
+         <p>No access to content. This might be due to permission settings in Strapi.</p>
+         <p>Please check your Strapi permissions for public access to ${contentType}.</p>
+       </div>
+     `;
       return;
     }
 
@@ -386,15 +403,18 @@ async function loadDocumentsFromStrapi(contentType) {
 
     // Attach event listeners to the new document items
     attachDocumentViewerEvents();
+
+    // Attach event listeners to "See more" buttons
+    attachSeeMoreEvents();
   } catch (error) {
     console.error("Error loading documents:", error);
     documentList.innerHTML = `
-       <div class="error-state">
-         <p>Error loading documents: ${error.message}</p>
-         <p>Please check the browser console for more details.</p>
-         <button class="retry-btn">Retry</button>
-       </div>
-     `;
+     <div class="error-state">
+       <p>Error loading documents: ${error.message}</p>
+       <p>Please check the browser console for more details.</p>
+       <button class="retry-btn">Retry</button>
+     </div>
+   `;
 
     // Add retry button functionality
     const retryBtn = documentList.querySelector(".retry-btn");
@@ -404,6 +424,42 @@ async function loadDocumentsFromStrapi(contentType) {
       );
     }
   }
+}
+
+/**
+ * Attaches event listeners to "See more" buttons
+ */
+function attachSeeMoreEvents() {
+  const seeMoreButtons = document.querySelectorAll(".see-more-btn");
+  const seeLessButtons = document.querySelectorAll(".see-less-btn");
+
+  seeMoreButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      const container = this.closest(".truncated-text");
+      if (container) {
+        container.classList.add("expanded");
+        this.style.display = "none";
+        const seeLessBtn = container.querySelector(".see-less-btn");
+        if (seeLessBtn) {
+          seeLessBtn.style.display = "inline-block";
+        }
+      }
+    });
+  });
+
+  seeLessButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      const container = this.closest(".truncated-text");
+      if (container) {
+        container.classList.remove("expanded");
+        this.style.display = "none";
+        const seeMoreBtn = container.querySelector(".see-more-btn");
+        if (seeMoreBtn) {
+          seeMoreBtn.style.display = "inline-block";
+        }
+      }
+    });
+  });
 }
 
 /**
@@ -488,69 +544,98 @@ document.addEventListener("DOMContentLoaded", () => {
   // Add custom styles for document items
   const styleElement = document.createElement("style");
   styleElement.textContent = `
-      .document-cover {
-        height: 200px;
-        border-radius: 8px 8px 0 0;
-        overflow: hidden;
-        position: relative;
-      }
-      .document-type-badge {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background-color: rgba(25, 25, 112, 0.8);
-        color: white;
-        padding: 5px 10px;
-        border-radius: 4px;
-        font-size: 12px;
-        font-weight: bold;
-        z-index: 2;
-      }
-      .document-item {
-        border: 1px solid #eee;
-        border-radius: 8px;
-        overflow: hidden;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-      }
-      .document-item:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-      }
-      .document-details {
-        padding: 15px;
-      }
-      .document-meta {
-        display: flex;
-        gap: 15px;
-        margin: 5px 0 10px;
-        font-size: 14px;
-        color: #666;
-      }
-      .view-document-btn {
-        background-color: #191970;
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-top: 10px;
-        transition: background-color 0.2s ease;
-      }
-      .view-document-btn:hover {
-        background-color: #0f0f4b;
-      }
-      .view-document-btn:disabled {
-        background-color: #cccccc;
-        cursor: not-allowed;
-      }
-      .document-description {
-        margin-bottom: 15px;
-        color: #333;
-        line-height: 1.5;
-      }
-    `;
+    .document-cover {
+      height: 200px;
+      border-radius: 8px 8px 0 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .document-type-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: rgba(25, 25, 112, 0.8);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      z-index: 2;
+    }
+    .document-item {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .document-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .document-details {
+      padding: 15px;
+    }
+    .document-meta {
+      display: flex;
+      gap: 15px;
+      margin: 5px 0 10px;
+      font-size: 14px;
+      color: #666;
+    }
+    .view-document-btn {
+      background-color: #191970;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.2s ease;
+    }
+    .view-document-btn:hover {
+      background-color: #0f0f4b;
+    }
+    .view-document-btn:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+    .document-description {
+      margin-bottom: 15px;
+      color: #333;
+      line-height: 1.5;
+    }
+    
+    /* Truncated text styles */
+    .truncated-text {
+      position: relative;
+    }
+    .truncated-text .truncated-content {
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      line-height: 1.5;
+    }
+    .truncated-text.expanded .truncated-content {
+      -webkit-line-clamp: unset;
+      overflow: visible;
+    }
+    .see-more-btn, .see-less-btn {
+      background: none;
+      border: none;
+      color: #191970;
+      padding: 0;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 5px;
+      text-decoration: underline;
+    }
+    .see-more-btn:hover, .see-less-btn:hover {
+      color: #0f0f4b;
+    }
+  `;
   document.head.appendChild(styleElement);
 
   initPage();
