@@ -133,6 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
           padding: 8px;
           background-color: #34495e;
           gap: 10px;
+          flex-wrap: wrap; /* Allow wrapping on small screens */
         }
 
         .pdf-viewer-button {
@@ -167,16 +168,55 @@ document.addEventListener("DOMContentLoaded", () => {
         /* Mobile optimizations */
         @media (max-width: 768px) {
           .pdf-viewer-toolbar {
-            padding: 6px;
+            padding: 6px 4px;
+            gap: 4px;
+            justify-content: center;
           }
           
           .pdf-viewer-button {
             padding: 6px 8px;
             font-size: 12px;
+            min-width: 0; /* Allow buttons to shrink */
           }
           
           .pdf-page-info {
             font-size: 12px;
+            margin: 0 4px;
+          }
+          
+          /* Ensure text doesn't overflow on small screens */
+          .pdf-viewer-button svg {
+            width: 14px;
+            height: 14px;
+            margin-right: 3px;
+          }
+          
+          /* For very small screens, show icons only */
+          @media (max-width: 480px) {
+            .pdf-viewer-button {
+              padding: 6px;
+            }
+            
+            .pdf-viewer-button span {
+              display: none; /* Hide text, show only icons */
+            }
+            
+            .pdf-viewer-button svg {
+              margin-right: 0;
+            }
+          }
+        }
+        
+        /* Fix for PDF.js viewer on mobile */
+        @media (max-width: 768px) {
+          /* Ensure PDF.js viewer toolbar is properly sized */
+          .pdf-viewer-frame-container iframe {
+            -webkit-overflow-scrolling: touch;
+          }
+          
+          /* Improve rendering quality on mobile */
+          canvas {
+            image-rendering: -webkit-optimize-contrast;
           }
         }
       `;
@@ -236,7 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         <line x1="8" y1="11" x2="14" y2="11"></line>
       </svg>
-      Zoom Out
+      <span>Zoom Out</span>
     `;
     toolbar.appendChild(zoomOutButton);
 
@@ -250,7 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <line x1="11" y1="8" x2="11" y2="14"></line>
         <line x1="8" y1="11" x2="14" y2="11"></line>
       </svg>
-      Zoom In
+      <span>Zoom In</span>
     `;
     toolbar.appendChild(zoomInButton);
 
@@ -263,7 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <line x1="9" y1="3" x2="9" y2="21"></line>
         <line x1="15" y1="3" x2="15" y2="21"></line>
       </svg>
-      Fit Width
+      <span>Fit Width</span>
     `;
     toolbar.appendChild(fitWidthButton);
 
@@ -280,7 +320,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="15 18 9 12 15 6"></polyline>
       </svg>
-      Prev
+      <span>Prev</span>
     `;
     toolbar.appendChild(prevButton);
 
@@ -291,7 +331,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="9 18 15 12 9 6"></polyline>
       </svg>
-      Next
+      <span>Next</span>
     `;
     toolbar.appendChild(nextButton);
 
@@ -303,7 +343,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
         <path d="M3 3v5h5"></path>
       </svg>
-      Rotate
+      <span>Rotate</span>
     `;
     toolbar.appendChild(rotateButton);
 
@@ -329,15 +369,25 @@ document.addEventListener("DOMContentLoaded", () => {
     iframe.className = "pdf-viewer-frame";
     frameContainer.appendChild(iframe); // Append iframe immediately
 
+    let useWebViewer = false;
+
     // First, check if we need to load PDF.js
     loadPdfJs().then(() => {
       // Now we can proceed with rendering the PDF
       if (window.pdfjsLib) {
         // We have PDF.js available, use our custom viewer
-        renderCustomPdfViewer(pdfUrl, frameContainer, loading, pageInfo);
+        //renderCustomPdfViewer(pdfUrl, frameContainer, loading, pageInfo);
+        useWebViewer = false;
       } else {
         // Fallback to PDF.js web viewer
+        //usePdfJsWebViewer(pdfUrl, iframe, frameContainer, loading);
+        useWebViewer = true;
+      }
+
+      if (useWebViewer) {
         usePdfJsWebViewer(pdfUrl, iframe, frameContainer, loading);
+      } else {
+        renderCustomPdfViewer(pdfUrl, frameContainer, loading, pageInfo);
       }
     });
 
@@ -407,6 +457,7 @@ document.addEventListener("DOMContentLoaded", () => {
     canvasContainer.style.display = "flex";
     canvasContainer.style.justifyContent = "center";
     canvasContainer.style.backgroundColor = "#525659";
+    canvasContainer.style.webkitOverflowScrolling = "touch"; // Smooth scrolling on iOS
     canvasContainer.appendChild(canvas);
 
     // Clear container and add canvas container
@@ -420,6 +471,10 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentRotation = 0;
     let pageRendering = false;
     let pageNumPending = null;
+    let isMobile = window.innerWidth < 768;
+
+    // Detect if we're on a high-DPI display
+    const pixelRatio = window.devicePixelRatio || 1;
 
     // Load the PDF
     const loadingTask = window.pdfjsLib.getDocument({
@@ -470,8 +525,13 @@ document.addEventListener("DOMContentLoaded", () => {
       // Get the page
       pdfDoc.getPage(pageNum).then((page) => {
         // Create viewport with current scale and rotation
+        // Use a higher scale for high-DPI displays on mobile
+        const adjustedScale = isMobile
+          ? currentScale * Math.min(1.5, pixelRatio)
+          : currentScale;
+
         const viewport = page.getViewport({
-          scale: currentScale,
+          scale: adjustedScale,
           rotation: currentRotation,
         });
 
@@ -479,9 +539,18 @@ document.addEventListener("DOMContentLoaded", () => {
         canvas.height = viewport.height;
         canvas.width = viewport.width;
 
+        // Get rendering context
+        const ctx = canvas.getContext("2d");
+
+        // Enable high-quality rendering for text
+        if (ctx.imageSmoothingEnabled !== undefined) {
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = "high";
+        }
+
         // Render PDF page
         const renderContext = {
-          canvasContext: canvas.getContext("2d"),
+          canvasContext: ctx,
           viewport: viewport,
         };
 
@@ -600,6 +669,46 @@ document.addEventListener("DOMContentLoaded", () => {
       if (fitWidthButton) fitWidthButton.addEventListener("click", fitToWidth);
       if (rotateButton) rotateButton.addEventListener("click", rotate);
 
+      // Add swipe gestures for mobile
+      if (isMobile) {
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        canvasContainer.addEventListener(
+          "touchstart",
+          (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+          },
+          { passive: true }
+        );
+
+        canvasContainer.addEventListener(
+          "touchend",
+          (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+          },
+          { passive: true }
+        );
+
+        function handleSwipe() {
+          const swipeThreshold = 50;
+          if (touchEndX < touchStartX - swipeThreshold) {
+            // Swipe left - next page
+            if (currentPage < pdfDoc.numPages) {
+              currentPage++;
+              queueRenderPage(currentPage);
+            }
+          } else if (touchEndX > touchStartX + swipeThreshold) {
+            // Swipe right - previous page
+            if (currentPage > 1) {
+              currentPage--;
+              queueRenderPage(currentPage);
+            }
+          }
+        }
+      }
+
       // Keyboard navigation
       document.addEventListener("keydown", (e) => {
         if (e.key === "ArrowLeft") prevPage();
@@ -608,6 +717,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.key === "-") zoomOut();
       });
     }
+
+    // Handle window resize
+    window.addEventListener("resize", () => {
+      isMobile = window.innerWidth < 768;
+      if (pdfDoc) {
+        fitToWidth();
+      }
+    });
   }
 
   /**
@@ -643,12 +760,70 @@ document.addEventListener("DOMContentLoaded", () => {
             // Set view mode to fit page width for better reading
             iframeWindow.PDFViewerApplication.pdfViewer.currentScaleValue =
               "page-width";
+
+            // Apply mobile optimizations if needed
+            if (window.innerWidth < 768) {
+              applyMobileOptimizations(iframeWindow);
+            }
           }
         }, 1000); // Give it a second to initialize
       } catch (e) {
         console.error("Error setting initial view mode:", e);
       }
     };
+  }
+
+  /**
+   * Apply mobile-specific optimizations to the PDF.js viewer
+   * @param {Window} iframeWindow - The iframe's window object
+   */
+  function applyMobileOptimizations(iframeWindow) {
+    try {
+      // Get the document inside the iframe
+      const iframeDoc = iframeWindow.document;
+
+      // Add mobile-specific styles
+      const mobileStyle = iframeDoc.createElement("style");
+      mobileStyle.textContent = `
+        /* Mobile optimizations for PDF.js viewer */
+        @media (max-width: 768px) {
+          /* Make toolbar buttons more visible */
+          .toolbarButton {
+            min-width: 28px !important;
+            height: 28px !important;
+          }
+          
+          /* Ensure text is readable */
+          .toolbarLabel {
+            font-size: 14px !important;
+          }
+          
+          /* Improve page navigation visibility */
+          #pageNumber {
+            width: 40px !important;
+            font-size: 14px !important;
+          }
+          
+          /* Ensure toolbar is properly sized */
+          #toolbarContainer {
+            min-width: 100% !important;
+          }
+          
+          /* Improve touch targets */
+          button, select, input {
+            touch-action: manipulation !important;
+          }
+          
+          /* Ensure canvas renders sharply */
+          .canvasWrapper canvas {
+            image-rendering: -webkit-optimize-contrast !important;
+          }
+        }
+      `;
+      iframeDoc.head.appendChild(mobileStyle);
+    } catch (e) {
+      console.error("Error applying mobile optimizations:", e);
+    }
   }
 
   /**
@@ -843,7 +1018,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (onclickAttr) {
           // Extract the parameters from the onclick attribute
           const match = onclickAttr.match(
-            /openDocument$$['"]([^'"]+)['"],\s*['"]([^'"]+)['"]$$/
+            /openDocument\s*$$\s*['"]([^'"]+)['"]\s*,\s*['"]([^'"]+)['"]\s*$$/
           );
           if (match) {
             const [_, url, title] = match;
