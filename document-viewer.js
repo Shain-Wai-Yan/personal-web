@@ -177,26 +177,27 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     toolbar.appendChild(textModeButton);
 
+    // Remove this entire block
     // Download button (new)
-    const downloadButton = document.createElement("button");
-    downloadButton.className = "pdf-viewer-button download";
-    downloadButton.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-        <polyline points="7 10 12 15 17 10"></polyline>
-        <line x1="12" y1="15" x2="12" y2="3"></line>
-      </svg>
-      <span>Download</span>
-    `;
-    downloadButton.addEventListener("click", () => {
-      // Create a temporary link to download the PDF
-      const link = document.createElement("a");
-      link.href = pdfUrl;
-      link.download = title || "document.pdf";
-      link.target = "_blank";
-      link.click();
-    });
-    toolbar.appendChild(downloadButton);
+    // const downloadButton = document.createElement("button");
+    // downloadButton.className = "pdf-viewer-button download";
+    // downloadButton.innerHTML = `
+    //   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    //     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    //     <polyline points="7 10 12 15 17 10"></polyline>
+    //     <line x1="12" y1="15" x2="12" y2="3"></line>
+    //   </svg>
+    //   <span>Download</span>
+    // `;
+    // downloadButton.addEventListener("click", () => {
+    //   // Create a temporary link to download the PDF
+    //   const link = document.createElement("a");
+    //   link.href = pdfUrl;
+    //   link.download = title || "document.pdf";
+    //   link.target = "_blank";
+    //   link.click();
+    // });
+    // toolbar.appendChild(downloadButton);
 
     viewerContainer.appendChild(toolbar);
 
@@ -557,20 +558,20 @@ document.addEventListener("DOMContentLoaded", () => {
           // Set initial scale based on layout analysis
           // For mobile, use a more adaptive approach based on layout analysis
           if (isMobile) {
-            // For mobile devices, adjust scale based on layout complexity
+            // For mobile devices, use a more adaptive approach based on layout analysis
             if (
               layoutInfo.hasComplexLayout ||
               layoutInfo.hasMultipleColumns ||
               layoutInfo.hasTables
             ) {
               // For complex layouts on mobile, use a more conservative scale
-              currentScale = 0.8 * pixelRatio;
+              currentScale = 0.6 * pixelRatio;
             } else if (!layoutInfo.isPortrait) {
               // For landscape PDFs on mobile, reduce scale to fit better
-              currentScale = 0.7 * pixelRatio;
+              currentScale = 0.5 * pixelRatio;
             } else {
               // For simple portrait PDFs on mobile
-              currentScale = 0.9 * pixelRatio;
+              currentScale = 0.7 * pixelRatio;
             }
           } else {
             // For desktop, keep the original behavior
@@ -1036,10 +1037,10 @@ document.addEventListener("DOMContentLoaded", () => {
           // For tables, use a balanced approach that ensures readability
           currentScale = Math.min(scaleX, scaleY * 1.2);
           // Ensure minimum scale for readability of tables
-          currentScale = Math.max(currentScale, 0.75);
+          currentScale = Math.max(currentScale, 0.6);
         } else if (isComplexPage || hasMultipleColumns) {
           // For complex layouts or multi-column documents, fit to page is usually better
-          currentScale = Math.min(scaleX, scaleY) * 0.95;
+          currentScale = Math.min(scaleX, scaleY) * 0.9;
         } else if (!isPagePortrait || pageAspectRatio > 1.2) {
           // For landscape or wide pages, fit to page
           currentScale = Math.min(scaleX, scaleY);
@@ -1050,15 +1051,15 @@ document.addEventListener("DOMContentLoaded", () => {
             currentScale = Math.min(scaleX, scaleY * 1.1);
           } else {
             // Otherwise fit to width with a slight reduction
-            currentScale = scaleX * 0.9;
+            currentScale = scaleX * 0.8;
           }
         }
 
         // Ensure minimum readability
-        currentScale = Math.max(currentScale, 0.65);
+        currentScale = Math.max(currentScale, 0.5);
 
         // Limit maximum scale for mobile
-        currentScale = Math.min(currentScale, 1.0);
+        currentScale = Math.min(currentScale, 0.9);
 
         // Apply the calculated scale
         queueRenderPage(currentPage);
@@ -1131,6 +1132,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Add swipe gestures for mobile
       if (isMobile) {
+        // Make buttons bigger on mobile
+        const allButtons = document.querySelectorAll(".pdf-viewer-button");
+        allButtons.forEach((button) => {
+          button.style.padding = "10px 14px";
+          button.style.fontSize = "14px";
+        });
+
         let touchStartX = 0;
         let touchEndX = 0;
 
@@ -1416,19 +1424,21 @@ document.addEventListener("DOMContentLoaded", () => {
       @media (max-width: 768px) {
         /* Make toolbar buttons more visible */
         .toolbarButton {
-          min-width: 28px !important;
-          height: 28px !important;
+          min-width: 36px !important;
+          height: 36px !important;
+          padding: 8px !important;
         }
         
         /* Ensure text is readable */
         .toolbarLabel {
-          font-size: 14px !important;
+          font-size: 16px !important;
         }
         
         /* Improve page navigation visibility */
         #pageNumber {
-          width: 40px !important;
-          font-size: 14px !important;
+          width: 50px !important;
+          font-size: 16px !important;
+          height: 36px !important;
         }
         
         /* Ensure toolbar is properly sized */
