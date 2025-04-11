@@ -28,228 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
     openEnhancedPdfViewer(fileUrl, title);
   };
 
-  // Create necessary CSS styles
-  createStyles();
-
-  /**
-   * Creates and adds the necessary styles to the document
-   */
-  function createStyles() {
-    if (!document.getElementById("document-viewer-styles")) {
-      const styleElement = document.createElement("style");
-      styleElement.id = "document-viewer-styles";
-      styleElement.textContent = `
-        /* PDF Viewer Container */
-        .pdf-viewer-container {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 9999;
-          background-color: rgba(0, 0, 0, 0.9);
-          display: flex;
-          flex-direction: column;
-        }
-
-        /* Header for the PDF viewer */
-        .pdf-viewer-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 10px 15px;
-          background-color: #2c3e50;
-          color: white;
-        }
-
-        .pdf-viewer-title {
-          font-size: 16px;
-          font-weight: bold;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          margin-right: 15px;
-        }
-
-        .pdf-viewer-close {
-          background: none;
-          border: none;
-          color: white;
-          font-size: 24px;
-          cursor: pointer;
-          padding: 0 10px;
-        }
-
-        /* Container for the iframe */
-        .pdf-viewer-frame-container {
-          flex: 1;
-          position: relative;
-          overflow: hidden;
-        }
-
-        /* The iframe that will contain the PDF.js viewer */
-        .pdf-viewer-frame {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          border: none;
-        }
-
-        /* Loading indicator */
-        .pdf-loading {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          text-align: center;
-          color: white;
-        }
-
-        .pdf-loading-spinner {
-          border: 4px solid rgba(255, 255, 255, 0.3);
-          border-top: 4px solid white;
-          border-radius: 50%;
-          width: 40px;
-          height: 40px;
-          margin: 0 auto 15px;
-          animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-          0% {
-            transform: rotate(0deg);
-          }
-          100% {
-            transform: rotate(360deg);
-          }
-        }
-
-        /* Toolbar with controls */
-        .pdf-viewer-toolbar {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          padding: 8px;
-          background-color: #34495e;
-          gap: 10px;
-          flex-wrap: wrap; /* Allow wrapping on small screens */
-        }
-
-        .pdf-viewer-button {
-          background-color: #3498db;
-          color: white;
-          border: none;
-          border-radius: 4px;
-          padding: 6px 12px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 14px;
-        }
-
-        .pdf-viewer-button:hover {
-          background-color: #2980b9;
-        }
-
-        .pdf-viewer-button svg {
-          width: 16px;
-          height: 16px;
-          margin-right: 4px;
-        }
-
-        .pdf-page-info {
-          color: white;
-          margin: 0 10px;
-          font-size: 14px;
-        }
-
-        /* Font handling for PDF rendering */
-        @font-face {
-          font-family: 'pdf-viewer-fonts';
-          src: local('pdf-viewer-fonts');
-          font-display: block;
-        }
-
-        /* Ensure PDF text is rendered with proper font smoothing */
-        canvas {
-          text-rendering: optimizeLegibility;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* Ensure PDF container properly handles embedded fonts */
-        .pdf-viewer-frame-container {
-          font-family: sans-serif; /* Fallback */
-        }
-
-        /* Mobile optimizations */
-        @media (max-width: 768px) {
-          .pdf-viewer-toolbar {
-            padding: 6px 4px;
-            gap: 4px;
-            justify-content: center;
-          }
-          
-          .pdf-viewer-button {
-            padding: 6px 8px;
-            font-size: 12px;
-            min-width: 0; /* Allow buttons to shrink */
-          }
-          
-          .pdf-page-info {
-            font-size: 12px;
-            margin: 0 4px;
-          }
-          
-          /* Ensure text doesn't overflow on small screens */
-          .pdf-viewer-button svg {
-            width: 14px;
-            height: 14px;
-            margin-right: 3px;
-          }
-          
-          /* For very small screens, show icons only */
-          @media (max-width: 480px) {
-            .pdf-viewer-button {
-              padding: 6px;
-            }
-            
-            .pdf-viewer-button span {
-              display: none; /* Hide text, show only icons */
-            }
-            
-            .pdf-viewer-button svg {
-              margin-right: 0;
-            }
-          }
-
-          /* Improve font rendering on mobile */
-          canvas {
-            text-rendering: optimizeLegibility !important;
-            -webkit-font-smoothing: antialiased !important;
-          }
-        }
-        
-        /* Fix for PDF.js viewer on mobile */
-        @media (max-width: 768px) {
-          /* Ensure PDF.js viewer toolbar is properly sized */
-          .pdf-viewer-frame-container iframe {
-            -webkit-overflow-scrolling: touch;
-          }
-          
-          /* Improve rendering quality on mobile */
-          canvas {
-            image-rendering: -webkit-optimize-contrast;
-          }
-        }
-      `;
-      document.head.appendChild(styleElement);
-    }
-  }
-
   /**
    * Opens the enhanced PDF viewer
    * @param {string} pdfUrl - URL of the PDF to open
@@ -333,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     toolbar.appendChild(fitWidthButton);
 
-    // Fit to page button (new)
+    // Fit to page button
     const fitPageButton = document.createElement("button");
     fitPageButton.className = "pdf-viewer-button fit-page";
     fitPageButton.innerHTML = `
@@ -386,6 +164,40 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     toolbar.appendChild(rotateButton);
 
+    // Text mode toggle button (new)
+    const textModeButton = document.createElement("button");
+    textModeButton.className = "pdf-viewer-button text-mode";
+    textModeButton.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="4 7 4 4 20 4 20 7"></polyline>
+        <line x1="9" y1="20" x2="15" y2="20"></line>
+        <line x1="12" y1="4" x2="12" y2="20"></line>
+      </svg>
+      <span>Text Mode</span>
+    `;
+    toolbar.appendChild(textModeButton);
+
+    // Download button (new)
+    const downloadButton = document.createElement("button");
+    downloadButton.className = "pdf-viewer-button download";
+    downloadButton.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+      </svg>
+      <span>Download</span>
+    `;
+    downloadButton.addEventListener("click", () => {
+      // Create a temporary link to download the PDF
+      const link = document.createElement("a");
+      link.href = pdfUrl;
+      link.download = title || "document.pdf";
+      link.target = "_blank";
+      link.click();
+    });
+    toolbar.appendChild(downloadButton);
+
     viewerContainer.appendChild(toolbar);
 
     // Create frame container
@@ -408,23 +220,24 @@ document.addEventListener("DOMContentLoaded", () => {
     iframe.className = "pdf-viewer-frame";
     frameContainer.appendChild(iframe); // Append iframe immediately
 
+    let usingCustomViewer = false;
+
     // First, check if we need to load PDF.js
     loadPdfJs().then(() => {
       // Now we can proceed with rendering the PDF
-      let useWebViewer = false;
       if (window.pdfjsLib) {
         // We have PDF.js available, use our custom viewer
-        useWebViewer = false;
+        usingCustomViewer = true;
         renderCustomPdfViewer(pdfUrl, frameContainer, loading, pageInfo);
       } else {
         // Fallback to PDF.js web viewer
-        useWebViewer = true;
+        usingCustomViewer = false;
         usePdfJsWebViewer(pdfUrl, iframe, frameContainer, loading);
       }
     });
 
     // Set up button event listeners
-    setupToolbarButtons(toolbar, iframe, frameContainer);
+    setupToolbarButtons(toolbar, iframe, frameContainer, usingCustomViewer);
 
     // Show the viewer
     viewerContainer.style.display = "flex";
@@ -518,9 +331,14 @@ document.addEventListener("DOMContentLoaded", () => {
           isPortrait: true,
           hasMultipleColumns: false,
           hasComplexLayout: false,
+          hasLargeImages: false,
+          hasTables: false,
           aspectRatio: 0.707, // Default A4 aspect ratio
           recommendedScale: 1.0,
           recommendedMode: "auto",
+          textDensity: "medium", // low, medium, high
+          fontSizes: [], // array of font sizes found
+          colorProfile: "standard", // standard, rich, monochrome
         };
 
         // Get the first page to analyze layout
@@ -537,10 +355,17 @@ document.addEventListener("DOMContentLoaded", () => {
         // Count text items and their positions to detect columns
         const textItems = textContent.items;
         const xPositions = new Set();
+        const fontSizes = new Set();
+        let textLength = 0;
 
         textItems.forEach((item) => {
           xPositions.add(Math.round(item.transform[4] / 10) * 10); // Round to nearest 10 to group similar positions
+          if (item.height) fontSizes.add(Math.round(item.height));
+          if (item.str) textLength += item.str.length;
         });
+
+        // Store font sizes for later use
+        layoutInfo.fontSizes = Array.from(fontSizes).sort((a, b) => a - b);
 
         // If we have many different x positions, it might be a multi-column layout
         if (xPositions.size > 5) {
@@ -552,11 +377,58 @@ document.addEventListener("DOMContentLoaded", () => {
           layoutInfo.hasComplexLayout = true;
         }
 
+        // Calculate text density
+        const pageArea = viewport.width * viewport.height;
+        const textDensity = textLength / pageArea;
+
+        if (textDensity > 0.01) {
+          layoutInfo.textDensity = "high";
+        } else if (textDensity > 0.005) {
+          layoutInfo.textDensity = "medium";
+        } else {
+          layoutInfo.textDensity = "low";
+        }
+
+        // Try to detect tables by looking for grid-like text positioning
+        const yPositions = new Set();
+        textItems.forEach((item) => {
+          yPositions.add(Math.round(item.transform[5] / 10) * 10);
+        });
+
+        // If we have many aligned rows and columns, it might be a table
+        if (xPositions.size > 3 && yPositions.size > 5) {
+          layoutInfo.hasTables = true;
+        }
+
+        // Check for images
+        try {
+          const operatorList = await page.getOperatorList();
+          const hasImages = operatorList.fnArray.some(
+            (fn) =>
+              fn === window.pdfjsLib.OPS.paintImageXObject ||
+              fn === window.pdfjsLib.OPS.paintJpegXObject
+          );
+
+          if (hasImages) {
+            layoutInfo.hasLargeImages = true;
+          }
+        } catch (e) {
+          console.log("Could not check for images:", e);
+        }
+
         // Set recommended viewing mode based on analysis
-        if (layoutInfo.hasComplexLayout || layoutInfo.hasMultipleColumns) {
+        if (
+          layoutInfo.hasComplexLayout ||
+          layoutInfo.hasMultipleColumns ||
+          layoutInfo.hasTables
+        ) {
           // For complex layouts, use a more conservative scale
           layoutInfo.recommendedScale = layoutInfo.isPortrait ? 0.9 : 1.0;
           layoutInfo.recommendedMode = "auto";
+        } else if (layoutInfo.hasLargeImages) {
+          // For image-heavy documents, fit to page is usually better
+          layoutInfo.recommendedScale = 1.0;
+          layoutInfo.recommendedMode = "page";
         } else {
           // For simple layouts, fit to width is usually better
           layoutInfo.recommendedScale = layoutInfo.isPortrait ? 1.0 : 1.2;
@@ -584,6 +456,9 @@ document.addEventListener("DOMContentLoaded", () => {
           aspectRatio: 0.707,
           recommendedScale: 1.0,
           recommendedMode: "auto",
+          textDensity: "medium",
+          fontSizes: [],
+          colorProfile: "standard",
         });
       }
     });
@@ -613,8 +488,29 @@ document.addEventListener("DOMContentLoaded", () => {
     canvasContainer.style.webkitOverflowScrolling = "touch"; // Smooth scrolling on iOS
     canvasContainer.appendChild(canvas);
 
+    // Create text layer container
+    const textLayerContainer = document.createElement("div");
+    textLayerContainer.className = "textLayer";
+    textLayerContainer.style.position = "absolute";
+    textLayerContainer.style.left = "0";
+    textLayerContainer.style.top = "0";
+    textLayerContainer.style.right = "0";
+    textLayerContainer.style.bottom = "0";
+    textLayerContainer.style.overflow = "hidden";
+    textLayerContainer.style.opacity = "0.2";
+    textLayerContainer.style.lineHeight = "1.0";
+    textLayerContainer.style.display = "none"; // Initially hidden, will be shown in text mode
+
+    // Create a wrapper for canvas and text layer
+    const renderWrapper = document.createElement("div");
+    renderWrapper.style.position = "relative";
+    renderWrapper.style.display = "inline-block";
+    renderWrapper.appendChild(canvas);
+    renderWrapper.appendChild(textLayerContainer);
+
     // Clear container and add canvas container
     container.innerHTML = "";
+    canvasContainer.appendChild(renderWrapper);
     container.appendChild(canvasContainer);
 
     // PDF.js variables
@@ -626,6 +522,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let pageNumPending = null;
     let isMobile = window.innerWidth < 768;
     let layoutInfo = null; // Will store PDF layout analysis results
+    let textMode = false; // Toggle for text layer visibility
 
     // Detect if we're on a high-DPI display
     const pixelRatio = window.devicePixelRatio || 1;
@@ -640,9 +537,10 @@ document.addEventListener("DOMContentLoaded", () => {
       disableFontFace: false,
       fontExtraProperties: true,
       nativeImageDecoderSupport: "all",
-      useSystemFonts: false, // Don't use system fonts as fallbacks
+      useSystemFonts: true, // Use system fonts for better rendering
       isEvalSupported: true,
       useWorkerFetch: true,
+      rangeChunkSize: 65536, // Larger chunk size for faster loading
     });
 
     pdfLoadingTask.promise
@@ -657,9 +555,27 @@ document.addEventListener("DOMContentLoaded", () => {
           layoutInfo = info;
 
           // Set initial scale based on layout analysis
-          currentScale =
-            layoutInfo.recommendedScale *
-            (isMobile ? Math.min(1.2, pixelRatio) : 1.0);
+          // For mobile, use a more adaptive approach based on layout analysis
+          if (isMobile) {
+            // For mobile devices, adjust scale based on layout complexity
+            if (
+              layoutInfo.hasComplexLayout ||
+              layoutInfo.hasMultipleColumns ||
+              layoutInfo.hasTables
+            ) {
+              // For complex layouts on mobile, use a more conservative scale
+              currentScale = 0.8 * pixelRatio;
+            } else if (!layoutInfo.isPortrait) {
+              // For landscape PDFs on mobile, reduce scale to fit better
+              currentScale = 0.7 * pixelRatio;
+            } else {
+              // For simple portrait PDFs on mobile
+              currentScale = 0.9 * pixelRatio;
+            }
+          } else {
+            // For desktop, keep the original behavior
+            currentScale = layoutInfo.recommendedScale;
+          }
 
           // Preload fonts before rendering
           return preloadPdfFonts(pdf).then(() => {
@@ -671,13 +587,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Auto-fit based on layout analysis
             setTimeout(() => {
-              if (layoutInfo.recommendedMode === "width") {
-                fitToWidth();
-              } else if (layoutInfo.recommendedMode === "page") {
-                fitToPage();
+              if (isMobile) {
+                // For mobile, always use adaptive fitting based on content
+                adaptiveFitForMobile();
               } else {
-                // Auto mode - use a balanced approach
-                autoFit();
+                // For desktop, keep original behavior
+                if (layoutInfo.recommendedMode === "width") {
+                  fitToWidth();
+                } else if (layoutInfo.recommendedMode === "page") {
+                  fitToPage();
+                } else {
+                  autoFit();
+                }
               }
             }, 300);
           });
@@ -713,14 +634,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Determine if this is a complex page (tables, multi-columns, etc.)
         let isComplexPage = false;
+        let hasMultipleColumns = false;
+        let hasTables = false;
+
         try {
           const textContent = await page.getTextContent();
           // Simple heuristic: if there are many text items with different positions, it might be complex
           const xPositions = new Set();
+          const yPositions = new Set();
+
           textContent.items.forEach((item) => {
             xPositions.add(Math.round(item.transform[4] / 10) * 10);
+            yPositions.add(Math.round(item.transform[5] / 10) * 10);
           });
+
           isComplexPage = xPositions.size > 5 || textContent.items.length > 100;
+          hasMultipleColumns = xPositions.size > 5;
+          hasTables = xPositions.size > 3 && yPositions.size > 5;
         } catch (e) {
           console.log("Could not analyze page complexity:", e);
         }
@@ -733,18 +663,32 @@ document.addEventListener("DOMContentLoaded", () => {
           if (isPagePortrait) {
             // For portrait pages on mobile, use a more conservative scale
             adjustedScale =
-              Math.min(currentScale, isComplexPage ? 0.9 : 1.0) * pixelRatio;
+              Math.min(currentScale, isComplexPage ? 0.8 : 0.9) * pixelRatio;
           } else if (pageAspectRatio > 1.5) {
             // For very wide landscape pages, reduce scale to fit better
-            adjustedScale = Math.min(currentScale, 0.8) * pixelRatio;
+            adjustedScale = Math.min(currentScale, 0.7) * pixelRatio;
           } else {
             // For normal landscape pages on mobile
-            adjustedScale = currentScale * pixelRatio;
+            adjustedScale = Math.min(currentScale, 0.8) * pixelRatio;
+          }
+
+          // Special handling for tables and multi-column layouts
+          if (hasTables || hasMultipleColumns) {
+            // For tables and columns, use a slightly larger scale to ensure readability
+            adjustedScale = Math.max(adjustedScale, 0.75 * pixelRatio);
           }
         } else {
           // For desktop, adjust based on page complexity
           if (isComplexPage) {
             adjustedScale = Math.min(currentScale, isPagePortrait ? 1.2 : 1.0);
+          } else {
+            adjustedScale = currentScale;
+          }
+
+          // Special handling for tables and multi-column layouts on desktop
+          if (hasTables || hasMultipleColumns) {
+            // For tables and columns, ensure scale is sufficient for readability
+            adjustedScale = Math.max(adjustedScale, 1.0);
           }
         }
 
@@ -757,8 +701,12 @@ document.addEventListener("DOMContentLoaded", () => {
         canvas.height = viewport.height;
         canvas.width = viewport.width;
 
+        // Set text layer container dimensions
+        textLayerContainer.style.width = `${viewport.width}px`;
+        textLayerContainer.style.height = `${viewport.height}px`;
+
         // Get rendering context
-        const ctx = canvas.getContext("2d");
+        const ctx = canvas.getContext("2d", { alpha: false }); // Disable alpha for better performance
 
         // Enable high-quality rendering for text
         if (ctx.imageSmoothingEnabled !== undefined) {
@@ -770,18 +718,66 @@ document.addEventListener("DOMContentLoaded", () => {
         const pdfRenderContext = {
           canvasContext: ctx,
           viewport: viewport,
-          textLayer: true,
+          textLayer: textMode ? textLayerContainer : null,
           renderInteractiveForms: true,
           enableWebGL: true,
           // Enable enhanced font rendering
           enhanceTextSelection: true,
-          renderTextLayer: true,
+          renderTextLayer: textMode,
+          // Use image smoothing for better quality
+          canvasFactory: {
+            create: (width, height) => {
+              const canvas = document.createElement("canvas");
+              canvas.width = width;
+              canvas.height = height;
+              const context = canvas.getContext("2d");
+              if (context.imageSmoothingEnabled !== undefined) {
+                context.imageSmoothingEnabled = true;
+                context.imageSmoothingQuality = "high";
+              }
+              return {
+                canvas: canvas,
+                context: context,
+              };
+            },
+            reset: (canvasAndContext, width, height) => {
+              canvasAndContext.canvas.width = width;
+              canvasAndContext.canvas.height = height;
+            },
+            destroy: (canvasAndContext) => {
+              canvasAndContext.canvas.width = 0;
+              canvasAndContext.canvas.height = 0;
+              canvasAndContext.canvas = null;
+              canvasAndContext.context = null;
+            },
+          },
         };
 
         const renderTask = page.render(pdfRenderContext);
 
         renderTask.promise.then(() => {
           pageRendering = false;
+
+          // If text mode is enabled, render the text layer
+          if (textMode) {
+            // Clear previous text layer content
+            textLayerContainer.innerHTML = "";
+            textLayerContainer.style.display = "block";
+
+            // Render text layer
+            page.getTextContent().then((textContent) => {
+              const textLayer = new window.pdfjsLib.TextLayerBuilder({
+                textLayerDiv: textLayerContainer,
+                pageIndex: page.pageNumber - 1,
+                viewport: viewport,
+              });
+
+              textLayer.setTextContent(textContent);
+              textLayer.render();
+            });
+          } else {
+            textLayerContainer.style.display = "none";
+          }
 
           // Check if there's a pending page
           if (pageNumPending !== null) {
@@ -796,12 +792,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
           // Center the content vertically if it's smaller than the container
           if (canvas.height < canvasContainer.clientHeight) {
-            canvas.style.marginTop = `${Math.max(
+            renderWrapper.style.marginTop = `${Math.max(
               0,
               (canvasContainer.clientHeight - canvas.height) / 2
             )}px`;
           } else {
-            canvas.style.marginTop = "0";
+            renderWrapper.style.marginTop = "0";
           }
         });
       });
@@ -869,10 +865,10 @@ document.addEventListener("DOMContentLoaded", () => {
         // Apply different scaling strategies based on device and layout
         if (isMobile) {
           // For mobile, limit maximum scale to prevent text from being cut off
-          newScale = Math.min(newScale, 1.2);
+          newScale = Math.min(newScale, 1.0);
 
           // Ensure minimum readability
-          newScale = Math.max(newScale, 0.8);
+          newScale = Math.max(newScale, 0.7);
         } else {
           // On desktop, we can use the full width but cap it for very wide screens
           newScale = Math.min(newScale, 2.0);
@@ -901,11 +897,20 @@ document.addEventListener("DOMContentLoaded", () => {
         // Use the smaller scale to ensure the entire page fits
         let newScale = Math.min(scaleX, scaleY);
 
-        // Ensure minimum readability
-        newScale = Math.max(newScale, 0.5);
+        // For mobile, ensure the scale is appropriate
+        if (isMobile) {
+          // Limit maximum scale for mobile
+          newScale = Math.min(newScale, 1.0);
 
-        // Limit maximum scale
-        newScale = Math.min(newScale, 2.0);
+          // Ensure minimum readability
+          newScale = Math.max(newScale, 0.6);
+        } else {
+          // Ensure minimum readability for desktop
+          newScale = Math.max(newScale, 0.5);
+
+          // Limit maximum scale for desktop
+          newScale = Math.min(newScale, 2.0);
+        }
 
         currentScale = newScale;
         queueRenderPage(currentPage);
@@ -968,14 +973,118 @@ document.addEventListener("DOMContentLoaded", () => {
           }
 
           // Ensure minimum readability
-          currentScale = Math.max(currentScale, 0.7);
+          currentScale = Math.max(currentScale, isMobile ? 0.7 : 0.5);
 
           // Limit maximum scale
-          currentScale = Math.min(currentScale, 1.5);
+          currentScale = Math.min(currentScale, isMobile ? 1.0 : 1.5);
 
           queueRenderPage(currentPage);
         }
       });
+    }
+
+    /**
+     * Adaptive fitting specifically for mobile devices
+     * Analyzes the current page and applies the best fitting strategy
+     */
+    function adaptiveFitForMobile() {
+      if (!pdfDoc) return;
+
+      pdfDoc.getPage(currentPage).then(async (page) => {
+        const viewport = page.getViewport({ scale: 1.0 });
+        const isPagePortrait = viewport.width < viewport.height;
+        const pageAspectRatio = viewport.width / viewport.height;
+
+        // Get text content to analyze layout complexity
+        let isComplexPage = false;
+        let hasMultipleColumns = false;
+        let hasTables = false;
+
+        try {
+          const textContent = await page.getTextContent();
+          const textItems = textContent.items;
+          const xPositions = new Set();
+          const yPositions = new Set();
+
+          textItems.forEach((item) => {
+            xPositions.add(Math.round(item.transform[4] / 10) * 10);
+            yPositions.add(Math.round(item.transform[5] / 10) * 10);
+          });
+
+          // If we have many different x positions, it might be a multi-column layout
+          hasMultipleColumns = xPositions.size > 5;
+
+          // If we have many text items, it might be a complex layout
+          isComplexPage = textItems.length > 100 || hasMultipleColumns;
+
+          // If we have many aligned rows and columns, it might be a table
+          hasTables = xPositions.size > 3 && yPositions.size > 5;
+        } catch (e) {
+          console.log("Could not analyze page complexity:", e);
+        }
+
+        // Calculate container dimensions
+        const containerWidth = canvasContainer.clientWidth - 40;
+        const containerHeight = canvasContainer.clientHeight - 40;
+
+        // Calculate scales for width and height
+        const scaleX = containerWidth / viewport.width;
+        const scaleY = containerHeight / viewport.height;
+
+        // Determine the best fitting strategy based on content analysis
+        if (hasTables) {
+          // For tables, use a balanced approach that ensures readability
+          currentScale = Math.min(scaleX, scaleY * 1.2);
+          // Ensure minimum scale for readability of tables
+          currentScale = Math.max(currentScale, 0.75);
+        } else if (isComplexPage || hasMultipleColumns) {
+          // For complex layouts or multi-column documents, fit to page is usually better
+          currentScale = Math.min(scaleX, scaleY) * 0.95;
+        } else if (!isPagePortrait || pageAspectRatio > 1.2) {
+          // For landscape or wide pages, fit to page
+          currentScale = Math.min(scaleX, scaleY);
+        } else {
+          // For simple portrait pages, fit to width but ensure it's not too tall
+          if (viewport.height * scaleX > containerHeight * 1.5) {
+            // If too tall, use a balanced approach
+            currentScale = Math.min(scaleX, scaleY * 1.1);
+          } else {
+            // Otherwise fit to width with a slight reduction
+            currentScale = scaleX * 0.9;
+          }
+        }
+
+        // Ensure minimum readability
+        currentScale = Math.max(currentScale, 0.65);
+
+        // Limit maximum scale for mobile
+        currentScale = Math.min(currentScale, 1.0);
+
+        // Apply the calculated scale
+        queueRenderPage(currentPage);
+      });
+    }
+
+    /**
+     * Toggles text mode on/off
+     */
+    function toggleTextMode() {
+      textMode = !textMode;
+
+      // Update button appearance
+      const textModeButton = document.querySelector(
+        ".pdf-viewer-button.text-mode"
+      );
+      if (textModeButton) {
+        if (textMode) {
+          textModeButton.style.backgroundColor = "#e74c3c";
+        } else {
+          textModeButton.style.backgroundColor = "";
+        }
+      }
+
+      // Re-render the current page with text layer if needed
+      queueRenderPage(currentPage);
     }
 
     /**
@@ -1005,6 +1114,9 @@ document.addEventListener("DOMContentLoaded", () => {
         ".pdf-viewer-button.fit-page"
       );
       const rotateButton = document.querySelector(".pdf-viewer-button.rotate");
+      const textModeButton = document.querySelector(
+        ".pdf-viewer-button.text-mode"
+      );
 
       // Add event listeners
       if (prevButton) prevButton.addEventListener("click", prevPage);
@@ -1014,6 +1126,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (fitWidthButton) fitWidthButton.addEventListener("click", fitToWidth);
       if (fitPageButton) fitPageButton.addEventListener("click", fitToPage);
       if (rotateButton) rotateButton.addEventListener("click", rotate);
+      if (textModeButton)
+        textModeButton.addEventListener("click", toggleTextMode);
 
       // Add swipe gestures for mobile
       if (isMobile) {
@@ -1069,7 +1183,10 @@ document.addEventListener("DOMContentLoaded", () => {
       isMobile = window.innerWidth < 768;
       if (pdfDoc) {
         // Re-apply the current fitting mode
-        if (layoutInfo && layoutInfo.recommendedMode === "width") {
+        if (isMobile) {
+          // For mobile, use adaptive fitting
+          adaptiveFitForMobile();
+        } else if (layoutInfo && layoutInfo.recommendedMode === "width") {
           fitToWidth();
         } else if (layoutInfo && layoutInfo.recommendedMode === "page") {
           fitToPage();
@@ -1096,7 +1213,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const encodedPdfUrl = encodeURIComponent(pdfUrl);
 
     // Set the iframe source with improved font rendering options
-    iframe.src = `${pdfJsViewerUrl}?file=${encodedPdfUrl}&disableFontFace=false&useSystemFonts=false`;
+    iframe.src = `${pdfJsViewerUrl}?file=${encodedPdfUrl}&disableFontFace=false&useSystemFonts=true`;
 
     // Handle iframe load event
     iframe.onload = () => {
@@ -1142,46 +1259,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Analyze the PDF structure to determine the best viewing mode
         analyzePdfStructure(iframeWindow).then((layoutInfo) => {
-          // Apply different scaling strategies based on layout analysis
-          if (layoutInfo.hasComplexLayout || layoutInfo.hasMultipleColumns) {
-            // For complex layouts, use "auto" scale which fits the page to the viewport
-            pdfViewer.currentScaleValue = "auto";
+          // Apply different scaling strategies based on device and layout
+          if (isMobile) {
+            // For mobile devices, use a more adaptive approach
+            if (
+              layoutInfo.hasComplexLayout ||
+              layoutInfo.hasMultipleColumns ||
+              layoutInfo.hasTables
+            ) {
+              // For complex layouts on mobile, use "page-fit" scale
+              pdfViewer.currentScaleValue = "page-fit";
 
-            // After a short delay, check if text is visible and adjust if needed
-            setTimeout(() => {
-              // If scale is too small, increase it slightly but keep content visible
-              if (pdfViewer.currentScale < 0.8) {
-                pdfViewer.currentScale = 0.8;
-              } else if (pdfViewer.currentScale > 1.5) {
-                // If scale is too large, reduce it to prevent content being cut off
-                pdfViewer.currentScale = 1.5;
-              }
+              // After a short delay, adjust scale if needed
+              setTimeout(() => {
+                // If scale is too small, increase it slightly for readability
+                if (pdfViewer.currentScale < 0.7) {
+                  pdfViewer.currentScale = 0.7;
+                } else if (pdfViewer.currentScale > 1.0) {
+                  // If scale is too large, reduce it to prevent content being cut off
+                  pdfViewer.currentScale = 1.0;
+                }
 
-              // Ensure the viewer scrolls to show the beginning of the document
-              iframeWindow.scrollTo(0, 0);
-            }, 300);
-          } else if (isPortrait && isMobile) {
-            // For simple portrait PDFs on mobile, use a balanced approach
-            pdfViewer.currentScaleValue = "page-fit";
+                // Ensure the viewer scrolls to show the beginning of the document
+                iframeWindow.scrollTo(0, 0);
+              }, 300);
+            } else if (!isPortrait || aspectRatio > 1.2) {
+              // For landscape or wide PDFs on mobile, fit to page
+              pdfViewer.currentScaleValue = "page-fit";
+            } else {
+              // For simple portrait PDFs on mobile, use a balanced approach
+              pdfViewer.currentScaleValue = "page-width";
 
-            setTimeout(() => {
-              if (pdfViewer.currentScale < 0.8) {
-                pdfViewer.currentScale = 0.8;
-              }
-            }, 300);
-          } else if (aspectRatio > 1.5) {
-            // For very wide documents, fit to page
-            pdfViewer.currentScaleValue = "page-fit";
+              setTimeout(() => {
+                // Limit scale to prevent content being cut off
+                if (pdfViewer.currentScale > 1.0) {
+                  pdfViewer.currentScale = 1.0;
+                }
+              }, 300);
+            }
           } else {
-            // For standard documents on desktop, use page-width
-            pdfViewer.currentScaleValue = "page-width";
-
-            setTimeout(() => {
-              // Limit maximum scale for readability
-              if (pdfViewer.currentScale > 2.0) {
-                pdfViewer.currentScale = 2.0;
-              }
-            }, 300);
+            // For desktop, keep the original behavior
+            if (layoutInfo.hasComplexLayout || layoutInfo.hasMultipleColumns) {
+              // For complex layouts, use "auto" scale
+              pdfViewer.currentScaleValue = "auto";
+            } else if (aspectRatio > 1.5) {
+              // For very wide documents, fit to page
+              pdfViewer.currentScaleValue = "page-fit";
+            } else {
+              // For standard documents, use page-width
+              pdfViewer.currentScaleValue = "page-width";
+            }
           }
         });
       } else {
@@ -1211,6 +1338,7 @@ document.addEventListener("DOMContentLoaded", () => {
             hasMultipleColumns: false,
             hasComplexLayout: false,
             hasLargeImages: false,
+            hasTables: false,
           };
 
           // If we can access the document structure, analyze it
@@ -1224,9 +1352,11 @@ document.addEventListener("DOMContentLoaded", () => {
                   .then((textContent) => {
                     const textItems = textContent.items;
                     const xPositions = new Set();
+                    const yPositions = new Set();
 
                     textItems.forEach((item) => {
                       xPositions.add(Math.round(item.transform[4] / 10) * 10);
+                      yPositions.add(Math.round(item.transform[5] / 10) * 10);
                     });
 
                     // If we have many different x positions, it might be a multi-column layout
@@ -1237,6 +1367,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     // If we have many text items, it might be a complex layout
                     if (textItems.length > 100) {
                       layoutInfo.hasComplexLayout = true;
+                    }
+
+                    // If we have many aligned rows and columns, it might be a table
+                    if (xPositions.size > 3 && yPositions.size > 5) {
+                      layoutInfo.hasTables = true;
                     }
 
                     resolve(layoutInfo);
@@ -1258,6 +1393,7 @@ document.addEventListener("DOMContentLoaded", () => {
             hasMultipleColumns: false,
             hasComplexLayout: false,
             hasLargeImages: false,
+            hasTables: false,
           });
         }
       });
@@ -1336,6 +1472,8 @@ document.addEventListener("DOMContentLoaded", () => {
         /* Prevent text from being cut off */
         .textLayer span {
           white-space: normal !important;
+          max-width: 100% !important;
+          overflow-wrap: break-word !important;
         }
         
         /* Improve readability for portrait PDFs */
@@ -1354,6 +1492,54 @@ document.addEventListener("DOMContentLoaded", () => {
         .textLayer span[role="presentation"] {
           max-width: 100% !important;
           white-space: normal !important;
+        }
+        
+        /* Universal fixes for all PDF layouts on mobile */
+        /* Ensure content is fully visible and scrollable */
+        #viewerContainer, .pdfViewer {
+          overflow: auto !important;
+          -webkit-overflow-scrolling: touch !important;
+        }
+        
+        /* Fix for multi-column layouts and tables */
+        .textLayer {
+          transform-origin: top left !important;
+          max-width: 100% !important;
+        }
+        
+        /* Prevent horizontal overflow for all PDFs */
+        .page {
+          max-width: 100% !important;
+          margin: 0 auto !important;
+        }
+        
+        /* Ensure text doesn't get cut off */
+        .textLayer span, .textLayer div {
+          white-space: normal !important;
+          max-width: 100% !important;
+          overflow-wrap: break-word !important;
+        }
+        
+        /* Improve container padding for better readability */
+        #viewerContainer {
+          padding: 0 8px !important;
+        }
+        
+        /* Ensure proper scaling for all pages */
+        .page {
+          transform-origin: top center !important;
+        }
+        
+        /* High-DPI optimizations */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+          .textLayer span {
+            font-size: calc(1em * 0.98) !important;
+            line-height: 1.2 !important;
+          }
+          
+          canvas {
+            image-rendering: auto !important;
+          }
         }
       }
     `;
@@ -1382,11 +1568,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 // For portrait pages, ensure content is fully visible
                 if (isPortrait) {
                   // If scale is too large, reduce it to prevent content being cut off
-                  if (pdfViewer.currentScale > 1.2) {
-                    pdfViewer.currentScale = 1.2;
-                  } else if (pdfViewer.currentScale < 0.8) {
+                  if (pdfViewer.currentScale > 1.0) {
+                    pdfViewer.currentScale = 1.0;
+                  } else if (pdfViewer.currentScale < 0.7) {
                     // If scale is too small, increase it for readability
-                    pdfViewer.currentScale = 0.8;
+                    pdfViewer.currentScale = 0.7;
                   }
                 }
                 // For very wide pages, fit to page
@@ -1416,7 +1602,7 @@ document.addEventListener("DOMContentLoaded", () => {
    * @param {HTMLIFrameElement} iframe - The iframe element
    * @param {HTMLElement} container - The container element
    */
-  function setupToolbarButtons(toolbar, iframe, container) {
+  function setupToolbarButtons(toolbar, iframe, container, usingCustomViewer) {
     // Get buttons
     const zoomInButton = toolbar.querySelector(".zoom-in");
     const zoomOutButton = toolbar.querySelector(".zoom-out");
@@ -1425,134 +1611,164 @@ document.addEventListener("DOMContentLoaded", () => {
     const prevButton = toolbar.querySelector(".prev-page");
     const nextButton = toolbar.querySelector(".next-page");
     const rotateButton = toolbar.querySelector(".rotate");
+    const textModeButton = toolbar.querySelector(".text-mode");
 
     // Add event listeners for iframe-based viewer
-    if (zoomInButton) {
-      zoomInButton.addEventListener("click", () => {
-        try {
-          const iframeWindow = iframe.contentWindow;
-          if (iframeWindow && iframeWindow.PDFViewerApplication) {
-            iframeWindow.PDFViewerApplication.zoomIn();
-          }
-        } catch (e) {
-          console.error("Error zooming in:", e);
-        }
-      });
-    }
-
-    if (zoomOutButton) {
-      zoomOutButton.addEventListener("click", () => {
-        try {
-          const iframeWindow = iframe.contentWindow;
-          if (iframeWindow && iframeWindow.PDFViewerApplication) {
-            iframeWindow.PDFViewerApplication.zoomOut();
-          }
-        } catch (e) {
-          console.error("Error zooming out:", e);
-        }
-      });
-    }
-
-    if (fitWidthButton) {
-      fitWidthButton.addEventListener("click", () => {
-        try {
-          const iframeWindow = iframe.contentWindow;
-          if (iframeWindow && iframeWindow.PDFViewerApplication) {
-            // Check if the PDF is portrait or landscape
-            const pdfViewer = iframeWindow.PDFViewerApplication.pdfViewer;
-            const currentPage = pdfViewer.getPageView(
-              pdfViewer.currentPageNumber - 1
-            );
-
-            if (currentPage && currentPage.viewport) {
-              const viewport = currentPage.viewport;
-              const isPortrait = viewport.width < viewport.height;
-              const aspectRatio = viewport.width / viewport.height;
-              const isMobile = window.innerWidth < 768;
-
-              // For very wide documents, fit to page instead of width
-              if (aspectRatio > 1.5) {
-                pdfViewer.currentScaleValue = "page-fit";
-              } else {
-                // For portrait PDFs on mobile, use a more conservative scale
-                if (isPortrait && isMobile) {
-                  pdfViewer.currentScaleValue = "page-width";
-                  setTimeout(() => {
-                    if (pdfViewer.currentScale > 1.2) {
-                      pdfViewer.currentScale = 1.2;
-                    }
-                  }, 100);
-                } else {
-                  // For landscape or desktop, use page-width
-                  pdfViewer.currentScaleValue = "page-width";
-                }
-              }
-            } else {
-              // Fallback to page-width
-              pdfViewer.currentScaleValue = "page-width";
+    if (!usingCustomViewer) {
+      if (zoomInButton) {
+        zoomInButton.addEventListener("click", () => {
+          try {
+            const iframeWindow = iframe.contentWindow;
+            if (iframeWindow && iframeWindow.PDFViewerApplication) {
+              iframeWindow.PDFViewerApplication.zoomIn();
             }
+          } catch (e) {
+            console.error("Error zooming in:", e);
           }
-        } catch (e) {
-          console.error("Error fitting to width:", e);
-        }
-      });
-    }
+        });
+      }
 
-    if (fitPageButton) {
-      fitPageButton.addEventListener("click", () => {
-        try {
-          const iframeWindow = iframe.contentWindow;
-          if (iframeWindow && iframeWindow.PDFViewerApplication) {
-            iframeWindow.PDFViewerApplication.pdfViewer.currentScaleValue =
-              "page-fit";
+      if (zoomOutButton) {
+        zoomOutButton.addEventListener("click", () => {
+          try {
+            const iframeWindow = iframe.contentWindow;
+            if (iframeWindow && iframeWindow.PDFViewerApplication) {
+              iframeWindow.PDFViewerApplication.zoomOut();
+            }
+          } catch (e) {
+            console.error("Error zooming out:", e);
           }
-        } catch (e) {
-          console.error("Error fitting to page:", e);
-        }
-      });
-    }
+        });
+      }
 
-    if (prevButton) {
-      prevButton.addEventListener("click", () => {
-        try {
-          const iframeWindow = iframe.contentWindow;
-          if (iframeWindow && iframeWindow.PDFViewerApplication) {
-            iframeWindow.PDFViewerApplication.page--;
-          }
-        } catch (e) {
-          console.error("Error going to previous page:", e);
-        }
-      });
-    }
+      if (fitWidthButton) {
+        fitWidthButton.addEventListener("click", () => {
+          try {
+            const iframeWindow = iframe.contentWindow;
+            if (iframeWindow && iframeWindow.PDFViewerApplication) {
+              // Check if the PDF is portrait or landscape
+              const pdfViewer = iframeWindow.PDFViewerApplication.pdfViewer;
+              const currentPage = pdfViewer.getPageView(
+                pdfViewer.currentPageNumber - 1
+              );
 
-    if (nextButton) {
-      nextButton.addEventListener("click", () => {
-        try {
-          const iframeWindow = iframe.contentWindow;
-          if (iframeWindow && iframeWindow.PDFViewerApplication) {
-            iframeWindow.PDFViewerApplication.page++;
-          }
-        } catch (e) {
-          console.error("Error going to next page:", e);
-        }
-      });
-    }
+              if (currentPage && currentPage.viewport) {
+                const viewport = currentPage.viewport;
+                const isPortrait = viewport.width < viewport.height;
+                const aspectRatio = viewport.width / viewport.height;
+                const isMobile = window.innerWidth < 768;
 
-    if (rotateButton) {
-      rotateButton.addEventListener("click", () => {
-        try {
-          const iframeWindow = iframe.contentWindow;
-          if (iframeWindow && iframeWindow.PDFViewerApplication) {
-            // Rotate 90 degrees clockwise
-            const currentRotation =
-              iframeWindow.PDFViewerApplication.pdfViewer.pagesRotation;
-            iframeWindow.PDFViewerApplication.pdfViewer.pagesRotation =
-              (currentRotation + 90) % 360;
+                // For very wide documents, fit to page instead of width
+                if (aspectRatio > 1.5) {
+                  pdfViewer.currentScaleValue = "page-fit";
+                } else {
+                  // For portrait PDFs on mobile, use a more conservative scale
+                  if (isPortrait && isMobile) {
+                    pdfViewer.currentScaleValue = "page-width";
+                    setTimeout(() => {
+                      if (pdfViewer.currentScale > 1.0) {
+                        pdfViewer.currentScale = 1.0;
+                      }
+                    }, 100);
+                  } else {
+                    // For landscape or desktop, use page-width
+                    pdfViewer.currentScaleValue = "page-width";
+                  }
+                }
+              } else {
+                // Fallback to page-width
+                pdfViewer.currentScaleValue = "page-width";
+              }
+            }
+          } catch (e) {
+            console.error("Error fitting to width:", e);
           }
-        } catch (e) {
-          console.error("Error rotating:", e);
-        }
-      });
+        });
+      }
+
+      if (fitPageButton) {
+        fitPageButton.addEventListener("click", () => {
+          try {
+            const iframeWindow = iframe.contentWindow;
+            if (iframeWindow && iframeWindow.PDFViewerApplication) {
+              iframeWindow.PDFViewerApplication.pdfViewer.currentScaleValue =
+                "page-fit";
+            }
+          } catch (e) {
+            console.error("Error fitting to page:", e);
+          }
+        });
+      }
+
+      if (prevButton) {
+        prevButton.addEventListener("click", () => {
+          try {
+            const iframeWindow = iframe.contentWindow;
+            if (iframeWindow && iframeWindow.PDFViewerApplication) {
+              iframeWindow.PDFViewerApplication.page--;
+            }
+          } catch (e) {
+            console.error("Error going to previous page:", e);
+          }
+        });
+      }
+
+      if (nextButton) {
+        nextButton.addEventListener("click", () => {
+          try {
+            const iframeWindow = iframe.contentWindow;
+            if (iframeWindow && iframeWindow.PDFViewerApplication) {
+              iframeWindow.PDFViewerApplication.page++;
+            }
+          } catch (e) {
+            console.error("Error going to next page:", e);
+          }
+        });
+      }
+
+      if (rotateButton) {
+        rotateButton.addEventListener("click", () => {
+          try {
+            const iframeWindow = iframe.contentWindow;
+            if (iframeWindow && iframeWindow.PDFViewerApplication) {
+              // Rotate 90 degrees clockwise
+              const currentRotation =
+                iframeWindow.PDFViewerApplication.pdfViewer.pagesRotation;
+              iframeWindow.PDFViewerApplication.pdfViewer.pagesRotation =
+                (currentRotation + 90) % 360;
+            }
+          } catch (e) {
+            console.error("Error rotating:", e);
+          }
+        });
+      }
+
+      if (textModeButton) {
+        textModeButton.addEventListener("click", () => {
+          try {
+            const iframeWindow = iframe.contentWindow;
+            if (iframeWindow && iframeWindow.PDFViewerApplication) {
+              // Toggle text layer mode
+              const pdfViewer = iframeWindow.PDFViewerApplication.pdf.pdfViewer;
+
+              if (pdfViewer.textLayerMode === 0) {
+                // Enable text layer
+                pdfViewer.textLayerMode = 1;
+                textModeButton.style.backgroundColor = "#e74c3c";
+              } else {
+                // Disable text layer
+                pdfViewer.textLayerMode = 0;
+                textModeButton.style.backgroundColor = "";
+              }
+
+              // Force redraw of current page
+              iframeWindow.PDFViewerApplication.pdfViewer.update();
+            }
+          } catch (e) {
+            console.error("Error toggling text mode:", e);
+          }
+        });
+      }
     }
   }
 
