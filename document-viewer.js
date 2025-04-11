@@ -401,11 +401,9 @@ document.addEventListener("DOMContentLoaded", () => {
       // Now we can proceed with rendering the PDF
       if (window.pdfjsLib) {
         // We have PDF.js available, use our custom viewer
-        //renderCustomPdfViewer(pdfUrl, frameContainer, loading, pageInfo);
         useWebViewer = false;
       } else {
         // Fallback to PDF.js web viewer
-        //usePdfJsWebViewer(pdfUrl, iframe, frameContainer, loading);
         useWebViewer = true;
       }
 
@@ -533,38 +531,15 @@ document.addEventListener("DOMContentLoaded", () => {
     // PDF.js variables
     let pdfDoc = null;
     let currentPage = 1;
-    let currentScale = 1.5; // Start with a larger scale for better readability
+    let currentScale = 1.0; // Start with a neutral scale and adjust based on PDF orientation
     let currentRotation = 0;
     let pageRendering = false;
     let pageNumPending = null;
     let isMobile = window.innerWidth < 768;
+    let isPortraitPdf = false; // Will be set after PDF is loaded
 
     // Detect if we're on a high-DPI display
     const pixelRatio = window.devicePixelRatio || 1;
-
-    // Load the PDF
-    //const loadingTask = window.pdfjsLib.getDocument({
-    //  url: pdfUrl,
-    //  cMapUrl: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/cmaps/",
-    //  cMapPacked: true,
-    //})
-
-    // Replace it with this enhanced version that properly handles fonts:
-
-    // Load the PDF with font handling enabled
-    //const loadingTask = window.pdfjsLib.getDocument({
-    //  url: pdfUrl,
-    //  // Enable font handling
-    //  cMapUrl: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/cmaps/",
-    //  cMapPacked: true,
-    //  // These settings ensure original fonts are used
-    //  disableFontFace: false,
-    //  fontExtraProperties: true,
-    //  nativeImageDecoderSupport: "all",
-    //  useSystemFonts: false, // Don't use system fonts as fallbacks
-    //  isEvalSupported: true,
-    //  useWorkerFetch: true
-    //})
 
     // Load the PDF with font handling enabled
     const pdfLoadingTask = window.pdfjsLib.getDocument({
@@ -588,18 +563,33 @@ document.addEventListener("DOMContentLoaded", () => {
         // Update page info
         pageInfo.textContent = `Page: ${currentPage}/${pdf.numPages}`;
 
-        // Preload fonts before rendering
-        preloadPdfFonts(pdf).then(() => {
-          // Render first page
-          renderPage(currentPage);
+        // Get the first page to determine orientation
+        return pdf.getPage(1).then((page) => {
+          const viewport = page.getViewport({ scale: 1.0 });
+          isPortraitPdf = viewport.width < viewport.height;
 
-          // Set up page navigation
-          setupPageNavigation(pdf.numPages);
+          // Set initial scale based on orientation
+          if (isPortraitPdf) {
+            // For portrait PDFs, use a more conservative initial scale
+            currentScale = isMobile ? 0.9 : 1.2;
+          } else {
+            // For landscape PDFs, we can be more generous with the scale
+            currentScale = isMobile ? 1.0 : 1.5;
+          }
 
-          // Auto-fit to width
-          setTimeout(() => {
-            fitToWidth();
-          }, 500);
+          // Preload fonts before rendering
+          return preloadPdfFonts(pdf).then(() => {
+            // Render first page
+            renderPage(currentPage);
+
+            // Set up page navigation
+            setupPageNavigation(pdf.numPages);
+
+            // Auto-fit to width with a slight delay to ensure proper rendering
+            setTimeout(() => {
+              fitToWidth();
+            }, 300);
+          });
         });
       })
       .catch((error) => {
@@ -625,11 +615,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Get the page
       pdfDoc.getPage(pageNum).then((page) => {
-        // Create viewport with current scale and rotation
-        // Use a higher scale for high-DPI displays on mobile
-        const adjustedScale = isMobile
-          ? currentScale * Math.min(1.5, pixelRatio)
-          : currentScale;
+        // Determine if this specific page is portrait or landscape
+        const rawViewport = page.getViewport({ scale: 1.0 });
+        const isPagePortrait = rawViewport.width < rawViewport.height;
+
+        // Adjust scale for high-DPI displays, with special handling for portrait pages on mobile
+        let adjustedScale = currentScale;
+        if (isMobile) {
+          if (isPagePortrait) {
+            // For portrait pages on mobile, use a more conservative scale
+            adjustedScale = Math.min(currentScale, 1.0) * pixelRatio;
+          } else {
+            // For landscape pages on mobile, we can use the full scale
+            adjustedScale = currentScale * pixelRatio;
+          }
+        }
 
         const viewport = page.getViewport({
           scale: adjustedScale,
@@ -648,26 +648,6 @@ document.addEventListener("DOMContentLoaded", () => {
           ctx.imageSmoothingEnabled = true;
           ctx.imageSmoothingQuality = "high";
         }
-
-        // Render PDF page
-        //const renderContext = {
-        //  canvasContext: ctx,
-        //  viewport: viewport,
-        //}
-
-        // Replace it with:
-
-        // Render PDF page with enhanced text rendering
-        //const renderContext = {
-        //  canvasContext: ctx,
-        //  viewport: viewport,
-        //  textLayer: true,
-        //  renderInteractiveForms: true,
-        //  enableWebGL: true,
-        //  // Enable enhanced font rendering
-        //  enhanceTextSelection: true,
-        //  renderTextLayer: true
-        //}
 
         // Render PDF page with enhanced text rendering
         const pdfRenderContext = {
@@ -755,16 +735,27 @@ document.addEventListener("DOMContentLoaded", () => {
       pdfDoc.getPage(currentPage).then((page) => {
         const viewport = page.getViewport({ scale: 1.0 });
         const containerWidth = canvasContainer.clientWidth - 40; // Subtract padding
-        const isPortrait = viewport.width < viewport.height;
-        const isMobilePortrait = isMobile && isPortrait;
+        const isPagePortrait = viewport.width < viewport.height;
 
         // Calculate scale to fit width
         let newScale = containerWidth / viewport.width;
 
-        // For portrait PDFs on mobile, limit the maximum scale to prevent text from being cut off
-        if (isMobilePortrait) {
-          // Limit scale for portrait PDFs on mobile to prevent text from being cut off
-          newScale = Math.min(newScale, 1.2);
+        // Apply different scaling strategies based on device and orientation
+        if (isMobile) {
+          if (isPagePortrait) {
+            // For portrait PDFs on mobile, use a more conservative scale
+            // This prevents text from being cut off or too small
+            newScale = Math.min(newScale, 1.0);
+
+            // Ensure minimum readability
+            newScale = Math.max(newScale, 0.8);
+          } else {
+            // For landscape PDFs on mobile, we can be more generous
+            newScale = Math.min(newScale, 1.2);
+          }
+        } else {
+          // On desktop, we can use the full width but cap it for very wide screens
+          newScale = Math.min(newScale, 2.0);
         }
 
         currentScale = newScale;
@@ -878,12 +869,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Encode the PDF URL to pass as a parameter
     const encodedPdfUrl = encodeURIComponent(pdfUrl);
 
-    // Set the iframe source to the PDF.js viewer with our PDF
-    iframe.src = `${pdfJsViewerUrl}?file=${encodedPdfUrl}`;
-
-    // Replace it with:
-    //iframe.src = `${pdfJsViewerUrl}?file=${encodedPdfUrl}&disableFontFace=false&useSystemFonts=false`
-
+    // Set the iframe source with improved font rendering options
     iframe.src = `${pdfJsViewerUrl}?file=${encodedPdfUrl}&disableFontFace=false&useSystemFonts=false`;
 
     // Handle iframe load event
@@ -927,9 +913,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const isPortrait = viewport.width < viewport.height;
         const isMobile = window.innerWidth < 768;
 
-        // For portrait PDFs on mobile, use "page-fit" instead of "page-width"
+        // Apply different scaling strategies based on device and orientation
         if (isPortrait && isMobile) {
-          // Use "auto" scale which fits the page to the viewport
+          // For portrait PDFs on mobile, use "auto" scale which fits the page to the viewport
           pdfViewer.currentScaleValue = "auto";
 
           // After a short delay, check if text is visible and adjust if needed
@@ -937,13 +923,24 @@ document.addEventListener("DOMContentLoaded", () => {
             // If scale is too small, increase it slightly but keep content visible
             if (pdfViewer.currentScale < 0.8) {
               pdfViewer.currentScale = 0.8;
-            } else if (pdfViewer.currentScale > 1.5) {
+            } else if (pdfViewer.currentScale > 1.2) {
               // If scale is too large, reduce it to prevent content being cut off
+              pdfViewer.currentScale = 1.2;
+            }
+
+            // Ensure the viewer scrolls to show the beginning of the document
+            iframeWindow.scrollTo(0, 0);
+          }, 300);
+        } else if (isPortrait) {
+          // For portrait PDFs on desktop, use a slightly reduced scale
+          pdfViewer.currentScaleValue = "page-width";
+          setTimeout(() => {
+            if (pdfViewer.currentScale > 1.5) {
               pdfViewer.currentScale = 1.5;
             }
-          }, 500);
+          }, 300);
         } else {
-          // For landscape PDFs or desktop, use page-width as before
+          // For landscape PDFs, use page-width as before
           pdfViewer.currentScaleValue = "page-width";
         }
       } else {
@@ -1018,16 +1015,24 @@ document.addEventListener("DOMContentLoaded", () => {
         /* Prevent horizontal overflow for portrait PDFs */
         .page {
           margin: 0 auto !important;
+          max-width: 100% !important;
         }
         
         /* Ensure content is fully visible */
         #viewerContainer {
           overflow: auto !important;
+          -webkit-overflow-scrolling: touch !important;
         }
         
         /* Prevent text from being cut off */
         .textLayer span {
           white-space: normal !important;
+        }
+        
+        /* Improve readability for portrait PDFs */
+        .pdfViewer .page.portrait {
+          max-width: 100% !important;
+          margin: 0 auto !important;
         }
       }
     `;
@@ -1055,8 +1060,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 // For portrait pages, ensure content is fully visible
                 if (isPortrait) {
                   // If scale is too large, reduce it to prevent content being cut off
-                  if (pdfViewer.currentScale > 1.5) {
-                    pdfViewer.currentScale = 1.5;
+                  if (pdfViewer.currentScale > 1.2) {
+                    pdfViewer.currentScale = 1.2;
+                  } else if (pdfViewer.currentScale < 0.8) {
+                    // If scale is too small, increase it for readability
+                    pdfViewer.currentScale = 0.8;
                   }
                 }
               }
@@ -1122,8 +1130,33 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
           const iframeWindow = iframe.contentWindow;
           if (iframeWindow && iframeWindow.PDFViewerApplication) {
-            iframeWindow.PDFViewerApplication.pdfViewer.currentScaleValue =
-              "page-width";
+            // Check if the PDF is portrait or landscape
+            const pdfViewer = iframeWindow.PDFViewerApplication.pdfViewer;
+            const currentPage = pdfViewer.getPageView(
+              pdfViewer.currentPageNumber - 1
+            );
+
+            if (currentPage && currentPage.viewport) {
+              const viewport = currentPage.viewport;
+              const isPortrait = viewport.width < viewport.height;
+              const isMobile = window.innerWidth < 768;
+
+              // For portrait PDFs on mobile, use a more conservative scale
+              if (isPortrait && isMobile) {
+                pdfViewer.currentScaleValue = "auto";
+                setTimeout(() => {
+                  if (pdfViewer.currentScale > 1.2) {
+                    pdfViewer.currentScale = 1.2;
+                  }
+                }, 100);
+              } else {
+                // For landscape or desktop, use page-width
+                pdfViewer.currentScaleValue = "page-width";
+              }
+            } else {
+              // Fallback to page-width
+              pdfViewer.currentScaleValue = "page-width";
+            }
           }
         } catch (e) {
           console.error("Error fitting to width:", e);
