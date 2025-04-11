@@ -165,6 +165,25 @@ document.addEventListener("DOMContentLoaded", () => {
           font-size: 14px;
         }
 
+        /* Font handling for PDF rendering */
+        @font-face {
+          font-family: 'pdf-viewer-fonts';
+          src: local('pdf-viewer-fonts');
+          font-display: block;
+        }
+
+        /* Ensure PDF text is rendered with proper font smoothing */
+        canvas {
+          text-rendering: optimizeLegibility;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Ensure PDF container properly handles embedded fonts */
+        .pdf-viewer-frame-container {
+          font-family: sans-serif; /* Fallback */
+        }
+
         /* Mobile optimizations */
         @media (max-width: 768px) {
           .pdf-viewer-toolbar {
@@ -204,6 +223,12 @@ document.addEventListener("DOMContentLoaded", () => {
             .pdf-viewer-button svg {
               margin-right: 0;
             }
+          }
+
+          /* Improve font rendering on mobile */
+          canvas {
+            text-rendering: optimizeLegibility !important;
+            -webkit-font-smoothing: antialiased !important;
           }
         }
         
@@ -384,10 +409,14 @@ document.addEventListener("DOMContentLoaded", () => {
         useWebViewer = true;
       }
 
-      if (useWebViewer) {
-        usePdfJsWebViewer(pdfUrl, iframe, frameContainer, loading);
-      } else {
-        renderCustomPdfViewer(pdfUrl, frameContainer, loading, pageInfo);
+      // Always call both renderers, but only one will be visible
+      usePdfJsWebViewer(pdfUrl, iframe, frameContainer, loading);
+      renderCustomPdfViewer(pdfUrl, frameContainer, loading, pageInfo);
+
+      // Initially hide the custom viewer if webViewer is used
+      const customViewerCanvas = frameContainer.querySelector("canvas");
+      if (useWebViewer && customViewerCanvas) {
+        customViewerCanvas.style.display = "none";
       }
     });
 
@@ -437,6 +466,43 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /**
+   * Preloads fonts from a PDF document
+   * @param {Object} pdfDocument - The PDF document object
+   * @returns {Promise} - Resolves when fonts are loaded
+   */
+  function preloadPdfFonts(pdfDocument) {
+    return new Promise((resolve) => {
+      if (!pdfDocument || !pdfDocument.getPage) {
+        resolve();
+        return;
+      }
+
+      console.log("Preloading fonts from PDF...");
+
+      // Get the first page to extract font information
+      pdfDocument
+        .getPage(1)
+        .then((page) => {
+          // Force the page to create and load its font resources
+          page
+            .getOperatorList()
+            .then(() => {
+              // Give a moment for fonts to load
+              setTimeout(resolve, 100);
+            })
+            .catch(() => {
+              // Continue even if there's an error
+              resolve();
+            });
+        })
+        .catch(() => {
+          // Continue even if there's an error
+          resolve();
+        });
+    });
+  }
+
+  /**
    * Renders a PDF using our custom viewer
    * @param {string} pdfUrl - URL of the PDF to render
    * @param {HTMLElement} container - Container element
@@ -477,29 +543,64 @@ document.addEventListener("DOMContentLoaded", () => {
     const pixelRatio = window.devicePixelRatio || 1;
 
     // Load the PDF
-    const loadingTask = window.pdfjsLib.getDocument({
+    //const loadingTask = window.pdfjsLib.getDocument({
+    //  url: pdfUrl,
+    //  cMapUrl: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/cmaps/",
+    //  cMapPacked: true,
+    //})
+
+    // Replace it with this enhanced version that properly handles fonts:
+
+    // Load the PDF with font handling enabled
+    //const loadingTask = window.pdfjsLib.getDocument({
+    //  url: pdfUrl,
+    //  // Enable font handling
+    //  cMapUrl: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/cmaps/",
+    //  cMapPacked: true,
+    //  // These settings ensure original fonts are used
+    //  disableFontFace: false,
+    //  fontExtraProperties: true,
+    //  nativeImageDecoderSupport: "all",
+    //  useSystemFonts: false, // Don't use system fonts as fallbacks
+    //  isEvalSupported: true,
+    //  useWorkerFetch: true
+    //})
+
+    // Load the PDF with font handling enabled
+    const pdfLoadingTask = window.pdfjsLib.getDocument({
       url: pdfUrl,
+      // Enable font handling
       cMapUrl: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/cmaps/",
       cMapPacked: true,
+      // These settings ensure original fonts are used
+      disableFontFace: false,
+      fontExtraProperties: true,
+      nativeImageDecoderSupport: "all",
+      useSystemFonts: false, // Don't use system fonts as fallbacks
+      isEvalSupported: true,
+      useWorkerFetch: true,
     });
 
-    loadingTask.promise
+    pdfLoadingTask.promise
       .then((pdf) => {
         pdfDoc = pdf;
 
         // Update page info
         pageInfo.textContent = `Page: ${currentPage}/${pdf.numPages}`;
 
-        // Render first page
-        renderPage(currentPage);
+        // Preload fonts before rendering
+        preloadPdfFonts(pdf).then(() => {
+          // Render first page
+          renderPage(currentPage);
 
-        // Set up page navigation
-        setupPageNavigation(pdf.numPages);
+          // Set up page navigation
+          setupPageNavigation(pdf.numPages);
 
-        // Auto-fit to width
-        setTimeout(() => {
-          fitToWidth();
-        }, 500);
+          // Auto-fit to width
+          setTimeout(() => {
+            fitToWidth();
+          }, 500);
+        });
       })
       .catch((error) => {
         console.error("Error loading PDF:", error);
@@ -549,12 +650,38 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // Render PDF page
-        const renderContext = {
+        //const renderContext = {
+        //  canvasContext: ctx,
+        //  viewport: viewport,
+        //}
+
+        // Replace it with:
+
+        // Render PDF page with enhanced text rendering
+        //const renderContext = {
+        //  canvasContext: ctx,
+        //  viewport: viewport,
+        //  textLayer: true,
+        //  renderInteractiveForms: true,
+        //  enableWebGL: true,
+        //  // Enable enhanced font rendering
+        //  enhanceTextSelection: true,
+        //  renderTextLayer: true
+        //}
+
+        // Render PDF page with enhanced text rendering
+        const pdfRenderContext = {
           canvasContext: ctx,
           viewport: viewport,
+          textLayer: true,
+          renderInteractiveForms: true,
+          enableWebGL: true,
+          // Enable enhanced font rendering
+          enhanceTextSelection: true,
+          renderTextLayer: true,
         };
 
-        const renderTask = page.render(renderContext);
+        const renderTask = page.render(pdfRenderContext);
 
         renderTask.promise.then(() => {
           pageRendering = false;
@@ -628,10 +755,19 @@ document.addEventListener("DOMContentLoaded", () => {
       pdfDoc.getPage(currentPage).then((page) => {
         const viewport = page.getViewport({ scale: 1.0 });
         const containerWidth = canvasContainer.clientWidth - 40; // Subtract padding
+        const isPortrait = viewport.width < viewport.height;
+        const isMobilePortrait = isMobile && isPortrait;
 
         // Calculate scale to fit width
-        currentScale = containerWidth / viewport.width;
+        let newScale = containerWidth / viewport.width;
 
+        // For portrait PDFs on mobile, limit the maximum scale to prevent text from being cut off
+        if (isMobilePortrait) {
+          // Limit scale for portrait PDFs on mobile to prevent text from being cut off
+          newScale = Math.min(newScale, 1.2);
+        }
+
+        currentScale = newScale;
         queueRenderPage(currentPage);
       });
     }
@@ -745,6 +881,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // Set the iframe source to the PDF.js viewer with our PDF
     iframe.src = `${pdfJsViewerUrl}?file=${encodedPdfUrl}`;
 
+    // Replace it with:
+    //iframe.src = `${pdfJsViewerUrl}?file=${encodedPdfUrl}&disableFontFace=false&useSystemFonts=false`
+
+    iframe.src = `${pdfJsViewerUrl}?file=${encodedPdfUrl}&disableFontFace=false&useSystemFonts=false`;
+
     // Handle iframe load event
     iframe.onload = () => {
       // Hide loading indicator
@@ -752,18 +893,22 @@ document.addEventListener("DOMContentLoaded", () => {
         loading.style.display = "none";
       }
 
-      // Try to set initial view mode to fit page width
+      // Try to set initial view mode based on PDF orientation
       try {
         setTimeout(() => {
           const iframeWindow = iframe.contentWindow;
           if (iframeWindow && iframeWindow.PDFViewerApplication) {
-            // Set view mode to fit page width for better reading
-            iframeWindow.PDFViewerApplication.pdfViewer.currentScaleValue =
-              "page-width";
-
-            // Apply mobile optimizations if needed
-            if (window.innerWidth < 768) {
-              applyMobileOptimizations(iframeWindow);
+            // Wait for the PDF to be loaded
+            if (iframeWindow.PDFViewerApplication.pdfDocument) {
+              handlePdfLoaded(iframeWindow);
+            } else {
+              // If PDF isn't loaded yet, wait for the event
+              iframeWindow.PDFViewerApplication.eventBus.on(
+                "documentloaded",
+                () => {
+                  handlePdfLoaded(iframeWindow);
+                }
+              );
             }
           }
         }, 1000); // Give it a second to initialize
@@ -771,6 +916,46 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Error setting initial view mode:", e);
       }
     };
+
+    function handlePdfLoaded(iframeWindow) {
+      // Get the first page to determine orientation
+      const pdfViewer = iframeWindow.PDFViewerApplication.pdfViewer;
+      const firstPage = pdfViewer.getPageView(0);
+
+      if (firstPage && firstPage.viewport) {
+        const viewport = firstPage.viewport;
+        const isPortrait = viewport.width < viewport.height;
+        const isMobile = window.innerWidth < 768;
+
+        // For portrait PDFs on mobile, use "page-fit" instead of "page-width"
+        if (isPortrait && isMobile) {
+          // Use "auto" scale which fits the page to the viewport
+          pdfViewer.currentScaleValue = "auto";
+
+          // After a short delay, check if text is visible and adjust if needed
+          setTimeout(() => {
+            // If scale is too small, increase it slightly but keep content visible
+            if (pdfViewer.currentScale < 0.8) {
+              pdfViewer.currentScale = 0.8;
+            } else if (pdfViewer.currentScale > 1.5) {
+              // If scale is too large, reduce it to prevent content being cut off
+              pdfViewer.currentScale = 1.5;
+            }
+          }, 500);
+        } else {
+          // For landscape PDFs or desktop, use page-width as before
+          pdfViewer.currentScaleValue = "page-width";
+        }
+      } else {
+        // Fallback if we can't determine orientation
+        iframeWindow.PDFViewerApplication.pdfViewer.currentScaleValue = "auto";
+      }
+
+      // Apply mobile optimizations if needed
+      if (window.innerWidth < 768) {
+        applyMobileOptimizations(iframeWindow);
+      }
+    }
   }
 
   /**
@@ -785,42 +970,107 @@ document.addEventListener("DOMContentLoaded", () => {
       // Add mobile-specific styles
       const mobileStyle = iframeDoc.createElement("style");
       mobileStyle.textContent = `
-        /* Mobile optimizations for PDF.js viewer */
-        @media (max-width: 768px) {
-          /* Make toolbar buttons more visible */
-          .toolbarButton {
-            min-width: 28px !important;
-            height: 28px !important;
-          }
-          
-          /* Ensure text is readable */
-          .toolbarLabel {
-            font-size: 14px !important;
-          }
-          
-          /* Improve page navigation visibility */
-          #pageNumber {
-            width: 40px !important;
-            font-size: 14px !important;
-          }
-          
-          /* Ensure toolbar is properly sized */
-          #toolbarContainer {
-            min-width: 100% !important;
-          }
-          
-          /* Improve touch targets */
-          button, select, input {
-            touch-action: manipulation !important;
-          }
-          
-          /* Ensure canvas renders sharply */
-          .canvasWrapper canvas {
-            image-rendering: -webkit-optimize-contrast !important;
-          }
+      /* Mobile optimizations for PDF.js viewer */
+      @media (max-width: 768px) {
+        /* Make toolbar buttons more visible */
+        .toolbarButton {
+          min-width: 28px !important;
+          height: 28px !important;
         }
-      `;
+        
+        /* Ensure text is readable */
+        .toolbarLabel {
+          font-size: 14px !important;
+        }
+        
+        /* Improve page navigation visibility */
+        #pageNumber {
+          width: 40px !important;
+          font-size: 14px !important;
+        }
+        
+        /* Ensure toolbar is properly sized */
+        #toolbarContainer {
+          min-width: 100% !important;
+        }
+        
+        /* Improve touch targets */
+        button, select, input {
+          touch-action: manipulation !important;
+        }
+        
+        /* Ensure canvas renders sharply */
+        .canvasWrapper canvas {
+          image-rendering: -webkit-optimize-contrast !important;
+        }
+        
+        /* Improve font rendering */
+        .textLayer {
+          opacity: 1 !important;
+        }
+        
+        /* Ensure text is rendered with proper font smoothing */
+        .textLayer span, .textLayer div {
+          text-rendering: optimizeLegibility !important;
+          -webkit-font-smoothing: antialiased !important;
+        }
+        
+        /* Prevent horizontal overflow for portrait PDFs */
+        .page {
+          margin: 0 auto !important;
+        }
+        
+        /* Ensure content is fully visible */
+        #viewerContainer {
+          overflow: auto !important;
+        }
+        
+        /* Prevent text from being cut off */
+        .textLayer span {
+          white-space: normal !important;
+        }
+      }
+    `;
       iframeDoc.head.appendChild(mobileStyle);
+
+      // Try to enable better font rendering in the PDF.js viewer
+      if (iframeWindow.PDFViewerApplication) {
+        // Set text layer mode to enable
+        if (iframeWindow.PDFViewerApplication.pdfViewer) {
+          iframeWindow.PDFViewerApplication.pdfViewer.textLayerMode = 1; // Enable text layer
+
+          // Add event listener for page change to maintain proper scaling
+          iframeWindow.PDFViewerApplication.eventBus.on("pagechanging", () => {
+            // Check if we're on mobile and adjust scale if needed
+            if (window.innerWidth < 768) {
+              const pdfViewer = iframeWindow.PDFViewerApplication.pdfViewer;
+              const currentPage = pdfViewer.getPageView(
+                pdfViewer.currentPageNumber - 1
+              );
+
+              if (currentPage && currentPage.viewport) {
+                const viewport = currentPage.viewport;
+                const isPortrait = viewport.width < viewport.height;
+
+                // For portrait pages, ensure content is fully visible
+                if (isPortrait) {
+                  // If scale is too large, reduce it to prevent content being cut off
+                  if (pdfViewer.currentScale > 1.5) {
+                    pdfViewer.currentScale = 1.5;
+                  }
+                }
+              }
+            }
+          });
+        }
+
+        // Force font loading
+        if (iframeWindow.PDFViewerApplication.fontLoader) {
+          iframeWindow.PDFViewerApplication.fontLoader.bind(
+            iframeWindow.PDFViewerApplication
+          );
+        }
+      }
     } catch (e) {
       console.error("Error applying mobile optimizations:", e);
     }
