@@ -1,0 +1,1092 @@
+/* Document Viewer Page Styles */
+.document-viewer-page {
+  margin-top: 80px; /* space for fixed header */
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Document List */
+.document-list {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 2rem;
+  min-height: 300px; /* Minimum height for loading state */
+}
+
+.document-item {
+  display: flex;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.document-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Document Cover (Left Side) */
+.document-cover {
+  width: 250px;
+  min-width: 250px;
+  background-color: #191970;
+  color: white;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+}
+
+.document-cover-overlay {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(25, 25, 112, 0.85);
+  padding: 2rem 1.5rem;
+}
+
+.document-icon {
+  width: 80px;
+  height: 100px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.document-icon::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-width: 0 20px 20px 0;
+  border-style: solid;
+  border-color: #e6e6e6 #191970;
+}
+
+.file-type {
+  font-weight: bold;
+  color: #191970;
+  font-size: 1.2rem;
+}
+
+.document-cover h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.3rem;
+}
+
+.document-cover .document-date {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Document Details (Right Side) */
+.document-details {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.document-details h2 {
+  color: #191970;
+  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
+}
+
+.document-meta {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.document-type {
+  font-weight: 600;
+  color: #191970;
+}
+
+.document-date {
+  color: #666;
+}
+
+.document-description {
+  line-height: 1.6;
+  color: #444;
+  margin-bottom: 1.5rem;
+}
+
+.view-document-btn {
+  align-self: flex-start;
+  background-color: #191970;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.view-document-btn:hover {
+  background-color: #ffd700;
+  color: #191970;
+  transform: scale(1.05);
+}
+
+/* Document Viewer Modal */
+.document-viewer-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+}
+
+.document-viewer-modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background-color: white;
+  width: 90%;
+  max-width: 1000px;
+  height: 90%;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background-color: #191970;
+  color: white;
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.8rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.close-modal:hover {
+  transform: scale(1.2);
+}
+
+.document-container {
+  flex: 1;
+  overflow: auto;
+  background-color: #f0f0f0;
+  position: relative;
+}
+
+#pdf-viewer,
+#pptx-viewer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Enhanced PDF Viewer Styles */
+#pdf-viewer {
+  background-color: #525659;
+}
+
+#pdf-viewer canvas {
+  max-width: 100%;
+  max-height: 100%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* PDF Text Layer Enhancements */
+.textLayer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  opacity: 0.8;
+  line-height: 1;
+}
+
+.textLayer > span {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+}
+
+.textLayer .highlight {
+  margin: -1px;
+  padding: 1px;
+  background-color: rgb(180, 0, 170);
+  border-radius: 4px;
+}
+
+.textLayer .highlight.begin {
+  border-radius: 4px 0px 0px 4px;
+}
+
+.textLayer .highlight.end {
+  border-radius: 0px 4px 4px 0px;
+}
+
+.textLayer .highlight.middle {
+  border-radius: 0px;
+}
+
+.textLayer .highlight.selected {
+  background-color: rgb(0, 100, 0);
+}
+
+.textLayer ::selection {
+  background: rgba(0, 0, 255, 0.3);
+}
+
+.textLayer .endOfContent {
+  display: block;
+  position: absolute;
+  left: 0px;
+  top: 100%;
+  right: 0px;
+  bottom: 0px;
+  z-index: -1;
+  cursor: default;
+  user-select: none;
+}
+
+.textLayer .endOfContent.active {
+  top: 0px;
+}
+
+/* PDF Annotation Layer */
+.annotationLayer section {
+  position: absolute;
+  text-align: initial;
+}
+
+.annotationLayer .linkAnnotation > a,
+.annotationLayer .buttonWidgetAnnotation.pushButton > a {
+  position: absolute;
+  font-size: 1em;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.annotationLayer .linkAnnotation > a:hover,
+.annotationLayer .buttonWidgetAnnotation.pushButton > a:hover {
+  opacity: 0.2;
+  background: rgba(255, 255, 0, 1);
+  box-shadow: 0px 2px 10px rgba(255, 255, 0, 1);
+}
+
+.annotationLayer .textAnnotation img {
+  position: absolute;
+  cursor: pointer;
+}
+
+.annotationLayer .textWidgetAnnotation input,
+.annotationLayer .textWidgetAnnotation textarea,
+.annotationLayer .choiceWidgetAnnotation select,
+.annotationLayer .buttonWidgetAnnotation.checkBox input,
+.annotationLayer .buttonWidgetAnnotation.radioButton input {
+  background-color: rgba(0, 54, 255, 0.13);
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  font-size: 9px;
+  height: 100%;
+  margin: 0;
+  padding: 0 3px;
+  vertical-align: top;
+  width: 100%;
+}
+
+.annotationLayer .choiceWidgetAnnotation select option {
+  padding: 0;
+}
+
+.annotationLayer .buttonWidgetAnnotation.radioButton input {
+  border-radius: 50%;
+}
+
+.annotationLayer .textWidgetAnnotation textarea {
+  font: message-box;
+  font-size: 9px;
+  resize: none;
+}
+
+.annotationLayer .textWidgetAnnotation input[disabled],
+.annotationLayer .textWidgetAnnotation textarea[disabled],
+.annotationLayer .choiceWidgetAnnotation select[disabled],
+.annotationLayer .buttonWidgetAnnotation.checkBox input[disabled],
+.annotationLayer .buttonWidgetAnnotation.radioButton input[disabled] {
+  background: none;
+  border: 1px solid transparent;
+  cursor: not-allowed;
+}
+
+.annotationLayer .textWidgetAnnotation input:hover,
+.annotationLayer .textWidgetAnnotation textarea:hover,
+.annotationLayer .choiceWidgetAnnotation select:hover,
+.annotationLayer .buttonWidgetAnnotation.checkBox input:hover,
+.annotationLayer .buttonWidgetAnnotation.radioButton input:hover {
+  border: 1px solid #000;
+}
+
+.annotationLayer .textWidgetAnnotation input:focus,
+.annotationLayer .textWidgetAnnotation textarea:focus,
+.annotationLayer .choiceWidgetAnnotation select:focus {
+  background: none;
+  border: 1px solid transparent;
+}
+
+.annotationLayer .buttonWidgetAnnotation.checkBox input:checked:before,
+.annotationLayer .buttonWidgetAnnotation.checkBox input:checked:after,
+.annotationLayer .buttonWidgetAnnotation.radioButton input:checked:before {
+  background-color: #000;
+  content: "";
+  display: block;
+  position: absolute;
+}
+
+.annotationLayer .buttonWidgetAnnotation.checkBox input:checked:before,
+.annotationLayer .buttonWidgetAnnotation.checkBox input:checked:after {
+  height: 80%;
+  left: 45%;
+  width: 1px;
+}
+
+.annotationLayer .buttonWidgetAnnotation.checkBox input:checked:before {
+  transform: rotate(45deg);
+}
+
+.annotationLayer .buttonWidgetAnnotation.checkBox input:checked:after {
+  transform: rotate(-45deg);
+}
+
+.annotationLayer .buttonWidgetAnnotation.radioButton input:checked:before {
+  border-radius: 50%;
+  height: 50%;
+  left: 30%;
+  top: 30%;
+  width: 50%;
+}
+
+.annotationLayer .popupWrapper {
+  position: absolute;
+  width: 20em;
+}
+
+.annotationLayer .popup {
+  position: absolute;
+  z-index: 200;
+  max-width: 20em;
+  background-color: #ffff99;
+  box-shadow: 0px 2px 5px #888;
+  border-radius: 2px;
+  padding: 6px;
+  margin-left: 5px;
+  cursor: pointer;
+  font: message-box;
+  font-size: 9px;
+  word-wrap: break-word;
+}
+
+.annotationLayer .popup > * {
+  font-size: 9px;
+}
+
+.annotationLayer .popup h1 {
+  display: inline-block;
+}
+
+.annotationLayer .popup span {
+  display: inline-block;
+  margin-left: 5px;
+}
+
+.annotationLayer .popup p {
+  border-top: 1px solid #333;
+  margin-top: 2px;
+  padding-top: 2px;
+}
+
+.annotationLayer .highlightAnnotation,
+.annotationLayer .underlineAnnotation,
+.annotationLayer .squigglyAnnotation,
+.annotationLayer .strikeoutAnnotation,
+.annotationLayer .freeTextAnnotation,
+.annotationLayer .lineAnnotation svg line,
+.annotationLayer .squareAnnotation svg rect,
+.annotationLayer .circleAnnotation svg ellipse,
+.annotationLayer .polylineAnnotation svg polyline,
+.annotationLayer .polygonAnnotation svg polygon,
+.annotationLayer .caretAnnotation,
+.annotationLayer .inkAnnotation svg polyline,
+.annotationLayer .stampAnnotation,
+.annotationLayer .fileAttachmentAnnotation {
+  cursor: pointer;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.pptx-message {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.modal-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* Enhanced PDF Controls */
+.pdf-viewer-toolbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  background-color: #34495e;
+  gap: 10px;
+  flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+.pdf-viewer-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.pdf-viewer-button:hover {
+  background-color: #2980b9;
+}
+
+.pdf-viewer-button svg {
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+}
+
+.pdf-page-info {
+  color: white;
+  margin: 0 10px;
+  font-size: 14px;
+}
+
+#prev-page,
+#next-page {
+  background-color: #191970;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#prev-page:hover,
+#next-page:hover {
+  background-color: #ffd700;
+  color: #191970;
+}
+
+#prev-page:disabled,
+#next-page:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+#page-info {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.download-btn {
+  margin-left: auto;
+  background-color: #191970;
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.download-btn:hover {
+  background-color: #ffd700;
+  color: #191970;
+}
+
+/* Loading and Error States */
+.loading-state,
+.error-state,
+.no-documents {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+  width: 100%;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #191970;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.retry-btn {
+  margin-top: 1rem;
+  background-color: #191970;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Screen Rotation Button for Mobile */
+.rotate-screen-btn {
+  display: none;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: rgba(25, 25, 112, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.rotate-screen-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Landscape Mode for Document Viewer */
+.landscape-mode .modal-content {
+  width: 95%;
+  height: 95%;
+}
+
+.landscape-mode #pdf-viewer canvas,
+.landscape-mode #pptx-viewer img {
+  max-height: 85vh;
+}
+
+/* Enhanced PDF Viewer Loading */
+.pdf-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+}
+
+.pdf-loading-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 15px;
+  animation: spin 1s linear infinite;
+}
+
+/* Responsive Styles */
+@media (max-width: 900px) {
+  .document-item {
+    flex-direction: column;
+  }
+
+  .document-cover {
+    width: 100%;
+    min-width: 100%;
+    padding: 0;
+    height: 200px;
+  }
+
+  .document-details {
+    padding: 1.5rem;
+  }
+
+  .modal-content {
+    width: 95%;
+    height: 95%;
+  }
+
+  /* Show rotation button on mobile */
+  .rotate-screen-btn {
+    display: flex;
+  }
+
+  /* Enhanced PDF Viewer Mobile Styles */
+  .pdf-viewer-toolbar {
+    padding: 8px 6px;
+    gap: 6px;
+    justify-content: center;
+  }
+
+  .pdf-viewer-button {
+    padding: 8px 12px;
+    font-size: 14px;
+    min-width: 0; /* Allow buttons to shrink */
+  }
+
+  .pdf-viewer-button svg {
+    width: 18px;
+    height: 18px;
+    margin-right: 4px;
+  }
+
+  /* Hide download button with CSS as well */
+  .pdf-viewer-button.download {
+    display: none;
+  }
+
+  .pdf-page-info {
+    font-size: 12px;
+    margin: 0 4px;
+  }
+
+  /* Ensure text doesn't overflow on small screens */
+  .pdf-viewer-button svg {
+    width: 14px;
+    height: 14px;
+    margin-right: 3px;
+  }
+
+  /* Improve font rendering on mobile */
+  canvas {
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
+  }
+
+  /* Ensure PDF.js viewer toolbar is properly sized */
+  .pdf-viewer-frame-container iframe {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Improve rendering quality on mobile */
+  canvas {
+    image-rendering: -webkit-optimize-contrast;
+  }
+
+  /* Universal fixes for all PDF layouts on mobile */
+  /* Ensure content is fully visible and scrollable */
+  .pdf-viewer-frame-container {
+    overflow: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Fix for multi-column layouts and tables */
+  .textLayer {
+    transform-origin: top left !important;
+    max-width: 100% !important;
+  }
+
+  /* Prevent horizontal overflow for all PDFs */
+  .page {
+    max-width: 100% !important;
+    margin: 0 auto !important;
+  }
+
+  /* Ensure text doesn't get cut off */
+  .textLayer span,
+  .textLayer div {
+    white-space: normal !important;
+    max-width: 100% !important;
+    overflow-wrap: break-word !important;
+  }
+}
+
+/* Improve mobile PDF viewing */
+@media (max-width: 768px) {
+  /* Make buttons more tappable */
+  .pdf-viewer-button {
+    padding: 10px 14px;
+    margin: 2px;
+  }
+
+  /* Ensure PDF fits properly on screen */
+  .pdf-viewer-frame-container canvas {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Improve canvas rendering */
+  canvas {
+    image-rendering: auto !important;
+  }
+
+  /* Ensure proper initial scale */
+  .canvasWrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Ensure PDF is centered */
+  .page {
+    margin: 0 auto !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .document-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .modal-controls {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .download-btn {
+    margin-left: 0;
+    width: 100%;
+    text-align: center;
+    order: -1;
+    margin-bottom: 0.5rem;
+  }
+
+  #page-info {
+    width: 100%;
+    text-align: center;
+    order: -2;
+    margin-bottom: 0.5rem;
+  }
+
+  /* For very small screens, show icons only */
+  .pdf-viewer-button {
+    padding: 6px;
+  }
+
+  .pdf-viewer-button span {
+    display: none; /* Hide text, show only icons */
+  }
+
+  .pdf-viewer-button svg {
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  /* For very small screens, ensure buttons are big enough to tap */
+  .pdf-viewer-button {
+    padding: 12px 16px;
+    margin: 3px;
+  }
+
+  /* Ensure PDF is properly scaled */
+  .pdf-viewer-frame-container {
+    padding: 0 !important;
+  }
+
+  /* Ensure canvas is properly centered */
+  canvas {
+    margin: 0 auto !important;
+  }
+}
+
+/* Orientation change prompt */
+.orientation-prompt {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 3000;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  padding: 2rem;
+}
+
+.orientation-prompt.active {
+  display: flex;
+}
+
+.orientation-prompt svg {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1rem;
+  animation: rotate 2s infinite;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(90deg);
+  }
+  75% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.orientation-prompt p {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.orientation-prompt button {
+  background-color: #191970;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Cloudinary PDF message */
+.cloudinary-pdf-message {
+  text-align: center;
+  padding: 40px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.cloudinary-pdf-message h3 {
+  color: #191970;
+  margin-bottom: 15px;
+}
+
+.cloudinary-pdf-message p {
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.cloudinary-pdf-message .download-btn {
+  display: inline-block;
+  background-color: #191970;
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.cloudinary-pdf-message .download-btn:hover {
+  background-color: #ffd700;
+  color: #191970;
+}
+
+/* Enhanced PDF Viewer Container */
+.pdf-viewer-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header for the PDF viewer */
+.pdf-viewer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #2c3e50;
+  color: white;
+}
+
+.pdf-viewer-title {
+  font-size: 16px;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 15px;
+}
+
+.pdf-viewer-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0 10px;
+}
+
+/* Container for the iframe */
+.pdf-viewer-frame-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* The iframe that will contain the PDF.js viewer */
+.pdf-viewer-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* High-DPI Screen Optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  canvas {
+    image-rendering: auto;
+  }
+
+  .textLayer {
+    transform-origin: top left;
+  }
+
+  .textLayer span {
+    font-size: calc(1em * 0.98);
+    line-height: 1.2;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .pdf-viewer-container {
+    background-color: rgba(0, 0, 0, 0.95);
+  }
+
+  .pdf-viewer-header {
+    background-color: #1a1a2e;
+  }
+
+  .pdf-viewer-toolbar {
+    background-color: #16213e;
+  }
+
+  .pdf-viewer-button {
+    background-color: #0f3460;
+  }
+
+  .pdf-viewer-button:hover {
+    background-color: #e94560;
+  }
+
+  .document-container {
+    background-color: #2a2a2a;
+  }
+
+  #pdf-viewer {
+    background-color: #333333;
+  }
+}
+
+/* Print Optimizations */
+@media print {
+  .pdf-viewer-header,
+  .pdf-viewer-toolbar,
+  .modal-controls,
+  .rotate-screen-btn {
+    display: none !important;
+  }
+
+  .pdf-viewer-frame-container,
+  .document-container {
+    overflow: visible !important;
+    position: static !important;
+    height: auto !important;
+  }
+
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
+    page-break-inside: avoid;
+  }
+
+  .textLayer {
+    display: none !important;
+  }
+}
