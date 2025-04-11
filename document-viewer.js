@@ -233,8 +233,17 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         // Fallback to PDF.js web viewer
         usingCustomViewer = false;
-        usePdfJsWebViewer(pdfUrl, iframe, frameContainer, loading);
+        // usePdfJsWebViewer(pdfUrl, iframe, frameContainer, loading)
       }
+
+      // Always call usePdfJsWebViewer, but conditionally execute its logic
+      usePdfJsWebViewer(
+        pdfUrl,
+        iframe,
+        frameContainer,
+        loading,
+        !window.pdfjsLib
+      );
     });
 
     // Set up button event listeners
@@ -1118,6 +1127,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const textModeButton = document.querySelector(
         ".pdf-viewer-button.text-mode"
       );
+      const pageInfo = document.querySelector(".pdf-page-info");
 
       // Add event listeners
       if (prevButton) prevButton.addEventListener("click", prevPage);
@@ -1130,15 +1140,63 @@ document.addEventListener("DOMContentLoaded", () => {
       if (textModeButton)
         textModeButton.addEventListener("click", toggleTextMode);
 
+      // Handle mobile-specific layout
+      if (isMobile) {
+        // Hide zoom and fit buttons on mobile
+        if (zoomInButton) zoomInButton.style.display = "none";
+        if (zoomOutButton) zoomOutButton.style.display = "none";
+        if (fitWidthButton) fitWidthButton.style.display = "none";
+        if (fitPageButton) fitPageButton.style.display = "none";
+
+        // Reorganize toolbar for mobile
+        const toolbar = document.querySelector(".pdf-viewer-toolbar");
+        if (
+          toolbar &&
+          textModeButton &&
+          prevButton &&
+          nextButton &&
+          pageInfo &&
+          rotateButton
+        ) {
+          // Clear the toolbar
+          toolbar.innerHTML = "";
+
+          // Add text mode button first
+          toolbar.appendChild(textModeButton);
+
+          // Add prev button
+          toolbar.appendChild(prevButton);
+
+          // Add page info in the middle
+          toolbar.appendChild(pageInfo);
+
+          // Add next button
+          toolbar.appendChild(nextButton);
+
+          // Add rotate button last
+          toolbar.appendChild(rotateButton);
+
+          // Style the toolbar for mobile
+          toolbar.style.justifyContent = "space-between";
+          toolbar.style.padding = "8px 10px";
+
+          // Make buttons more tappable
+          const allButtons = document.querySelectorAll(".pdf-viewer-button");
+          allButtons.forEach((button) => {
+            button.style.padding = "10px";
+            button.style.margin = "0";
+          });
+
+          // Style page info
+          pageInfo.style.margin = "0";
+          pageInfo.style.display = "flex";
+          pageInfo.style.alignItems = "center";
+          pageInfo.style.justifyContent = "center";
+        }
+      }
+
       // Add swipe gestures for mobile
       if (isMobile) {
-        // Make buttons bigger on mobile
-        const allButtons = document.querySelectorAll(".pdf-viewer-button");
-        allButtons.forEach((button) => {
-          button.style.padding = "10px 14px";
-          button.style.fontSize = "14px";
-        });
-
         let touchStartX = 0;
         let touchEndX = 0;
 
@@ -1211,8 +1269,19 @@ document.addEventListener("DOMContentLoaded", () => {
    * @param {HTMLIFrameElement} iframe - The iframe element
    * @param {HTMLElement} container - Container element
    * @param {HTMLElement} loading - Loading indicator element
+   * @param {boolean} shouldLoad - Conditional flag to execute the logic
    */
-  function usePdfJsWebViewer(pdfUrl, iframe, container, loading) {
+  function usePdfJsWebViewer(
+    pdfUrl,
+    iframe,
+    container,
+    loading,
+    shouldLoad = true
+  ) {
+    if (!shouldLoad) {
+      return;
+    }
+
     // The PDF.js viewer URL - using the CDN version
     const pdfJsViewerUrl =
       "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/web/viewer.html";

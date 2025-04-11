@@ -529,6 +529,54 @@
   font-size: 14px;
 }
 
+/* Mobile-specific toolbar layout */
+@media (max-width: 768px) {
+  .pdf-viewer-toolbar {
+    flex-wrap: nowrap;
+    padding: 6px 8px;
+    gap: 4px;
+    justify-content: space-between;
+    height: 48px;
+    overflow: hidden;
+  }
+
+  .pdf-viewer-button {
+    padding: 8px;
+    margin: 0;
+    min-width: 36px;
+    height: 36px;
+  }
+
+  .pdf-viewer-button svg {
+    width: 20px;
+    height: 20px;
+    margin-right: 0;
+  }
+
+  .pdf-viewer-button span {
+    display: none;
+  }
+
+  .pdf-page-info {
+    margin: 0;
+    font-size: 14px;
+    white-space: nowrap;
+    flex: 0 1 auto;
+    text-align: center;
+  }
+
+  /* Handle rotated PDFs better */
+  .pdf-viewer-frame-container {
+    height: calc(100% - 48px);
+  }
+
+  /* Ensure canvas is properly sized for rotated content */
+  .pdf-viewer-frame-container canvas.rotated {
+    max-height: calc(100vw - 48px);
+    max-width: 100vh;
+  }
+}
+
 #prev-page,
 #next-page {
   background-color: #191970;
