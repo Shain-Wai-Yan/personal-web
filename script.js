@@ -196,7 +196,7 @@ function generatePlaceholderImage(
 // Debug function to test API connectivity
 async function testApiConnection() {
   const API_URL =
-    "https://personal-cms-production.up.railway.app/api/certificates?populate=*";
+    "https://backend-cms-89la.onrender.com/api/certificates?populate=*";
 
   try {
     console.log("Testing API connection to:", API_URL);
@@ -231,7 +231,7 @@ async function testApiConnection() {
 // Improved fetchCertificates function - ALWAYS try API first
 async function fetchCertificates() {
   const API_URL =
-    "https://personal-cms-production.up.railway.app/api/certificates?populate=*";
+    "https://backend-cms-89la.onrender.com/api/certificates?populate=*";
   const container = document.getElementById("certificates-container");
 
   if (!container) return;
@@ -309,7 +309,7 @@ async function fetchCertificates() {
           if (imageData.url) {
             imageUrl = imageData.url.startsWith("http")
               ? imageData.url
-              : `https://personal-cms-production.up.railway.app${imageData.url}`;
+              : `https://backend-cms-89la.onrender.com${imageData.url}`;
           } else if (imageData.formats) {
             const formats = ["large", "medium", "small", "thumbnail"];
             for (const format of formats) {
@@ -317,7 +317,7 @@ async function fetchCertificates() {
                 const formatUrl = imageData.formats[format].url;
                 imageUrl = formatUrl.startsWith("http")
                   ? formatUrl
-                  : `https://personal-cms-production.up.railway.app${formatUrl}`;
+                  : `https://backend-cms-89la.onrender.com${formatUrl}`;
                 break;
               }
             }
@@ -327,7 +327,7 @@ async function fetchCertificates() {
         else if (imageField.url) {
           imageUrl = imageField.url.startsWith("http")
             ? imageField.url
-            : `https://personal-cms-production.up.railway.app${imageField.url}`;
+            : `https://backend-cms-89la.onrender.com${imageField.url}`;
         }
         // Formats directly on the image field
         else if (imageField.formats) {
@@ -337,7 +337,7 @@ async function fetchCertificates() {
               const formatUrl = imageField.formats[format].url;
               imageUrl = formatUrl.startsWith("http")
                 ? formatUrl
-                : `https://personal-cms-production.up.railway.app${formatUrl}`;
+                : `https://backend-cms-89la.onrender.com${formatUrl}`;
               break;
             }
           }
