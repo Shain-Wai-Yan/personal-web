@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes"
+    />
+    <title>Photography Portfolio | Shain's Portfolio</title>
+    <meta
+      name="description"
+      content="Explore Shain's photography portfolio featuring stunning natural scenery, mountains, lakes, sunsets and more captured with artistic vision."
+    />
+    <meta
+      name="keywords"
+      content="photography, nature photography, scenic photos, portfolio, professional photography"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="portfolio-nav.css" />
+    <link rel="stylesheet" href="photography.css" />
+    <!-- Open Graph tags for social sharing -->
+    <meta
+      property="og:title"
+      content="Photography Portfolio | Shain's Portfolio"
+    />
+    <meta
+      property="og:description"
+      content="Explore Shain's photography portfolio featuring stunning natural scenery, mountains, lakes, sunsets and more captured with artistic vision."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://yourportfolio.com/photography.html"
+    />
+    <!-- Add an og:image if you have one -->
+    <!-- <meta property="og:image" content="https://yourportfolio.com/images/landscape-preview.jpg"> -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+  </head>
+  <body>
+    <header class="header slide-in">
+      <div class="nav-container">
+        <div class="logo">
+          <a href="index.html">Shain's Portfolio</a>
+        </div>
+        <button class="hamburger" aria-label="Toggle Menu">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+        <nav class="nav">
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Me</a></li>
+            <li class="nav-dropdown">
+              <a href="portfolio.html" class="active">Portfolio</a>
+              <div class="nav-dropdown-content">
+                <a href="business-plan.html">Business Plans</a>
+                <a href="marketing-plan.html">Marketing Plans</a>
+                <a href="portfolio.html#coding">Coding Projects</a>
+                <a href="photography.html" class="active">Photography</a>
+                <a href="amv-editing.html">AMV Editing</a>
+              </div>
+            </li>
+            <li><a href="certificate.html">Certificate</a></li>
+            <li><a href="contact.html">Contact Me</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="portfolio-nav">
+      <div class="portfolio-nav-container">
+        <div class="portfolio-breadcrumb">
+          <a href="index.html">Home</a>
+          <span class="separator">›</span>
+          <a href="portfolio.html">Portfolio</a>
+          <span class="separator">›</span>
+          <span class="current">Photography</span>
+        </div>
+        <div class="portfolio-categories">
+          <a href="business-plan.html" class="portfolio-category"
+            >Business Plans</a
+          >
+          <a href="marketing-plan.html" class="portfolio-category"
+            >Marketing Plans</a
+          >
+          <a href="portfolio.html#coding" class="portfolio-category"
+            >Coding Projects</a
+          >
+          <a href="photography.html" class="portfolio-category active"
+            >Photography</a
+          >
+          <a href="amv-editing.html" class="portfolio-category">AMV Editing</a>
+        </div>
+      </div>
+    </div>
+
+    <main class="landscape-container">
+      <div class="back-to-portfolio-container">
+        <a href="portfolio.html" class="back-to-portfolio">Back to Portfolio</a>
+      </div>
+
+      <section class="landscape-header">
+        <h1>Shain's Gallery</h1>
+        <p>
+          Capturing moments and memories through my lens and with the art of
+          photography
+        </p>
+      </section>
+
+      <!-- Add filter controls after the landscape-header section -->
+      <!-- Update the filter controls section to be dynamically populated from API -->
+      <section class="filter-controls">
+        <button class="filter-button active" data-filter="all">
+          All Photos
+        </button>
+        <button class="filter-button" data-filter="mountains">Mountains</button>
+        <button class="filter-button" data-filter="lakes">Lakes</button>
+        <button class="filter-button" data-filter="scenic">Scenic</button>
+        <button class="filter-button" data-filter="sunset">
+          Sunset & Sunrise
+        </button>
+        <button class="filter-button" data-filter="building">Building</button>
+        <button class="filter-button" data-filter="cafe">Cafe & Bars</button>
+        <button class="filter-button" data-filter="clouds">Clouds</button>
+      </section>
+
+      <!-- Update the masonry-container div to include a search input -->
+      <div class="masonry-container">
+        <div class="search-container">
+          <input
+            type="text"
+            id="photo-search"
+            placeholder="Search photos by title or location..."
+          />
+        </div>
+        <div class="masonry-grid" id="masonry-grid">
+          <!-- Images will be loaded dynamically via JavaScript -->
+        </div>
+
+        <!-- Related Photos Feature -->
+        <div class="related-photos-overlay" id="related-photos-overlay"></div>
+        <div
+          class="related-photos-container"
+          id="related-photos-container"
+        ></div>
+        <button class="related-photos-close" id="related-photos-close">
+          &times;
+        </button>
+      </div>
+
+      <div class="photo-lightbox" id="photo-lightbox">
+        <div class="lightbox-overlay"></div>
+        <!-- Lightbox container will be dynamically created by JavaScript -->
+      </div>
+
+      <div class="load-more-container">
+        <button id="load-more" class="load-more-btn">Load More</button>
+      </div>
+    </main>
+
+    <footer class="footer slide-in-up">
+      <p>&copy; 2025 Shain's Portfolio. All Rights Reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="portfolio-nav.js"></script>
+    <script src="photography-fetch-from-strapi.js"></script>
+    <script src="photography.js"></script>
+  </body>
+</html>

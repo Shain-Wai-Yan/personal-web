@@ -1,183 +1,176 @@
 /* Portfolio Navigation Styles */
 .portfolio-nav {
-    margin-top: 80px;
-    padding: 1rem 2rem;
-    background-color: #f9f9f9;
-    border-bottom: 1px solid #e0e0e0;
-  }
-  
-  .portfolio-nav-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .portfolio-breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    color: #666;
-  }
-  
-  .portfolio-breadcrumb a {
-    color: #191970;
-    transition: color 0.3s ease;
-  }
-  
-  .portfolio-breadcrumb a:hover {
-    color: #ffd700;
-  }
-  
-  .portfolio-breadcrumb .separator {
-    color: #999;
-  }
-  
-  .portfolio-breadcrumb .current {
-    font-weight: 600;
-  }
-  
+  margin-top: 80px;
+  padding: 1rem 2rem;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.portfolio-nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.portfolio-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.portfolio-breadcrumb a {
+  color: #191970;
+  transition: color 0.3s ease;
+}
+
+.portfolio-breadcrumb a:hover {
+  color: #ffd700;
+}
+
+.portfolio-breadcrumb .separator {
+  color: #999;
+}
+
+.portfolio-breadcrumb .current {
+  font-weight: 600;
+}
+
+.portfolio-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.portfolio-category {
+  padding: 0.5rem 1rem;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  color: #333;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.portfolio-category:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
+}
+
+.portfolio-category.active {
+  background-color: #191970;
+  color: #fff;
+  border-color: #191970;
+}
+
+.portfolio-category.active:hover {
+  background-color: #13134d;
+}
+
+/* Back to Portfolio Button */
+.back-to-portfolio {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #191970;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.back-to-portfolio:hover {
+  background-color: #ffd700;
+  color: #191970;
+  transform: translateX(-5px);
+}
+
+/* Dropdown Menu for Desktop */
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  min-width: 200px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  z-index: 1100;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.nav-dropdown:hover .nav-dropdown-content {
+  display: block;
+}
+
+.nav-dropdown-content a {
+  color: #191970 !important;
+  padding: 0.75rem 1rem;
+  display: block;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s ease;
+}
+
+.nav-dropdown-content a:hover {
+  background-color: #f0f0f0;
+  color: #ffd700 !important;
+}
+
+.nav-dropdown-content a.active {
+  background-color: #f0f0f0;
+  color: #ffd700 !important;
+  font-weight: 600;
+}
+
+/* Mobile Adjustments - IMPROVED VERSION */
+@media (max-width: 768px) {
   .portfolio-categories {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 0.5rem;
-  }
-  
-  .portfolio-category {
-    padding: 0.5rem 1rem;
-    background-color: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    color: #333;
-    transition: all 0.3s ease;
-    text-decoration: none;
-  }
-  
-  .portfolio-category:hover {
-    background-color: #f0f0f0;
-    transform: translateY(-2px);
-  }
-  
-  .portfolio-category.active {
-    background-color: #191970;
-    color: #fff;
-    border-color: #191970;
-  }
-  
-  .portfolio-category.active:hover {
-    background-color: #13134d;
-  }
-  
-  /* Back to Portfolio Button */
-  .back-to-portfolio {
-    display: inline-flex;
-    align-items: center;
+    flex-direction: column;
     gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background-color: #191970;
-    color: white;
-    border-radius: 4px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    margin-bottom: 1rem;
   }
-  
-  .back-to-portfolio:hover {
-    background-color: #ffd700;
-    color: #191970;
-    transform: translateX(-5px);
+
+  .portfolio-category {
+    text-align: center;
   }
-  
-  .back-to-portfolio::before {
-    content: "←";
-    font-size: 1.2rem;
-  }
-  
-  /* Dropdown Menu for Desktop */
-  .nav-dropdown {
-    position: relative;
-  }
-  
-  .nav-dropdown-content {
+
+  /* For mobile menu - IMPROVED COMPACT VERSION */
+  .nav .nav-dropdown-content {
+    position: static;
     display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: white;
-    min-width: 200px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    z-index: 1100;
-    border-radius: 4px;
-    overflow: hidden;
+    box-shadow: none;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding-left: 0.5rem;
+    margin-top: 0.25rem;
+    border-left: 2px solid rgba(255, 255, 255, 0.2);
   }
-  
-  .nav-dropdown:hover .nav-dropdown-content {
+
+  .nav .nav-dropdown.active .nav-dropdown-content {
     display: block;
   }
-  
-  .nav-dropdown-content a {
-    color: #191970 !important;
-    padding: 0.75rem 1rem;
-    display: block;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    transition: background-color 0.3s ease;
+
+  .nav .nav-dropdown-content a {
+    border-bottom: none;
+    padding: 0.35rem 0;
+    font-size: 0.9rem;
   }
-  
-  .nav-dropdown-content a:hover {
-    background-color: #f0f0f0;
-    color: #ffd700 !important;
+
+  .nav .nav-dropdown > a::after {
+    content: "▼";
+    font-size: 0.6rem;
+    margin-left: 0.5rem;
+    opacity: 0.8;
   }
-  
-  .nav-dropdown-content a.active {
-    background-color: #f0f0f0;
-    color: #ffd700 !important;
-    font-weight: 600;
+
+  .nav .nav-dropdown.active > a::after {
+    content: "▲";
   }
-  
-  /* Mobile Adjustments - IMPROVED VERSION */
-  @media (max-width: 768px) {
-    .portfolio-categories {
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-  
-    .portfolio-category {
-      text-align: center;
-    }
-  
-    /* For mobile menu - IMPROVED COMPACT VERSION */
-    .nav .nav-dropdown-content {
-      position: static;
-      display: none;
-      box-shadow: none;
-      background-color: rgba(255, 255, 255, 0.05);
-      padding-left: 0.5rem;
-      margin-top: 0.25rem;
-      border-left: 2px solid rgba(255, 255, 255, 0.2);
-    }
-  
-    .nav .nav-dropdown.active .nav-dropdown-content {
-      display: block;
-    }
-  
-    .nav .nav-dropdown-content a {
-      border-bottom: none;
-      padding: 0.35rem 0;
-      font-size: 0.9rem;
-    }
-  
-    .nav .nav-dropdown > a::after {
-      content: "▼";
-      font-size: 0.6rem;
-      margin-left: 0.5rem;
-      opacity: 0.8;
-    }
-  
-    .nav .nav-dropdown.active > a::after {
-      content: "▲";
-    }
-  }
-  
+}
