@@ -1,846 +1,846 @@
 /* Photography Gallery - Main Styles */
 .landscape-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 2rem 1rem;
-  }
-  
-  .landscape-header {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-  
-  .landscape-header h1 {
-    font-size: 2.5rem;
-    color: #191970;
-    margin-bottom: 0.5rem;
-  }
-  
-  .landscape-header p {
-    font-size: 1.2rem;
-    color: #666;
-    margin-bottom: 2rem;
-  }
-  
-  /* Back to Portfolio Button */
-  .back-to-portfolio-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 2rem;
-  }
-  
-  .back-to-portfolio {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    background-color: #191970;
-    color: white;
-    border-radius: 4px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    margin-bottom: 1rem;
-  }
-  
-  .back-to-portfolio:hover {
-    background-color: #13134d;
-    transform: translateY(-2px);
-  }
-  
-  /* Masonry Grid Layout - FIXED for proper image display */
-  .masonry-container {
-    width: 100%;
-    margin-bottom: 3rem;
-    position: relative;
-  }
-  
-  /* FIXED: True Pinterest-style masonry grid layout */
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.landscape-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.landscape-header h1 {
+  font-size: 2.5rem;
+  color: #191970;
+  margin-bottom: 0.5rem;
+}
+
+.landscape-header p {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+/* Back to Portfolio Button */
+.back-to-portfolio-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.back-to-portfolio {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #191970;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+.back-to-portfolio:hover {
+  background-color: #ffd700;
+  color: #191970;
+  transform: translateX(-5px);
+}
+
+/* Masonry Grid Layout - FIXED for proper image display */
+.masonry-container {
+  width: 100%;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+/* FIXED: True Pinterest-style masonry grid layout */
+.masonry-grid {
+  column-count: 4;
+  column-gap: 16px;
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
   .masonry-grid {
-    column-count: 4;
-    column-gap: 16px;
-    width: 100%;
+    column-count: 3;
   }
-  
-  @media (max-width: 1200px) {
-    .masonry-grid {
-      column-count: 3;
-    }
+}
+
+@media (max-width: 768px) {
+  .masonry-grid {
+    column-count: 2;
   }
-  
-  @media (max-width: 768px) {
-    .masonry-grid {
-      column-count: 2;
-    }
+}
+
+@media (max-width: 480px) {
+  .masonry-grid {
+    column-count: 1;
   }
-  
-  @media (max-width: 480px) {
-    .masonry-grid {
-      column-count: 1;
-    }
-  }
-  
-  /* FIXED: Masonry item that preserves natural aspect ratio */
-  .masonry-item {
-    break-inside: avoid;
-    margin-bottom: 16px;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-    background-color: #fff;
-    display: inline-block;
-    width: 100%;
-  }
-  
-  .masonry-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  }
-  
-  .masonry-item.active {
-    transform: scale(1.05);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-    z-index: 10;
-  }
-  
-  /* FIXED: Image container that preserves natural aspect ratio */
-  .masonry-image-container {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-  }
-  
-  /* FIXED: Images display at natural aspect ratio */
-  .masonry-image-container img {
-    width: 100%;
-    height: auto;
-    display: block;
-    transition: transform 0.5s ease;
-  }
-  
-  /* Add image zoom effect on hover */
-  .masonry-item:hover .masonry-image-container img {
-    transform: scale(1.05);
-  }
-  
-  /* FIXED: Compact info section */
-  .masonry-info {
-    padding: 10px;
-    background-color: #fff;
-    flex-shrink: 0;
-  }
-  
-  .masonry-title {
-    margin: 0 0 3px 0;
-    font-size: 1rem;
-    color: #333;
-    font-weight: 600;
-    line-height: 1.2;
-  }
-  
-  .masonry-location {
-    margin: 0;
-    font-size: 0.85rem;
-    color: #666;
-  }
-  
-  /* Image info and metadata */
-  .masonry-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-top: 5px;
-  }
-  
-  .masonry-tag {
-    font-size: 0.7rem;
-    padding: 2px 6px;
-    background-color: #f0f0f0;
-    border-radius: 3px;
-    color: #666;
-  }
-  
-  /* Related Photos Feature */
-  .related-photos-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 100;
-    display: none;
+}
+
+/* FIXED: Masonry item that preserves natural aspect ratio */
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  background-color: #fff;
+  display: inline-block;
+  width: 100%;
+}
+
+.masonry-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.masonry-item.active {
+  transform: scale(1.05);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+/* FIXED: Image container that preserves natural aspect ratio */
+.masonry-image-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* FIXED: Images display at natural aspect ratio */
+.masonry-image-container img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+/* Add image zoom effect on hover */
+.masonry-item:hover .masonry-image-container img {
+  transform: scale(1.05);
+}
+
+/* FIXED: Compact info section */
+.masonry-info {
+  padding: 10px;
+  background-color: #fff;
+  flex-shrink: 0;
+}
+
+.masonry-title {
+  margin: 0 0 3px 0;
+  font-size: 1rem;
+  color: #333;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.masonry-location {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Image info and metadata */
+.masonry-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.masonry-tag {
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  background-color: #f0f0f0;
+  border-radius: 3px;
+  color: #666;
+}
+
+/* Related Photos Feature */
+.related-photos-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 100;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.related-photos-overlay.active {
+  display: block;
+  opacity: 1;
+}
+
+.related-photos-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 101;
+  display: none;
+  pointer-events: none;
+}
+
+.related-photos-container.active {
+  display: block;
+}
+
+.related-photo {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+  transform: translate(var(--pos-x, 0), var(--pos-y, 0)) scale(0);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.related-photo.active {
+  transform: translate(var(--pos-x, 0), var(--pos-y, 0)) scale(1);
+}
+
+.related-photo:hover {
+  z-index: 102;
+  transform: translate(var(--pos-x, 0), var(--pos-y, 0)) scale(1.05);
+}
+
+.related-photo img {
+  width: 100%;
+  height: 75%;
+  object-fit: cover;
+}
+
+.related-photo-info {
+  padding: 8px;
+  height: 25%;
+}
+
+.related-photo-title {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.related-photo-location {
+  margin: 2px 0 0 0;
+  font-size: 0.7rem;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.related-photos-close {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 102;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  display: none;
+}
+
+.related-photos-close.active {
+  display: flex;
+}
+
+/* Enhanced Lightbox with Zoom Animation */
+.photo-lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2000;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.photo-lightbox.active {
+  display: block;
+  opacity: 1;
+}
+
+.lightbox-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Lightbox Layout - Optimized for Cloudinary Images */
+.lightbox-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 80vh 20vh;
+  z-index: 2001;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2002;
+  transition: background 0.3s ease;
+}
+
+.lightbox-close:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.lightbox-main {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* FIXED: Lightbox image container to properly center and display full images */
+.lightbox-image-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.5s ease;
+  will-change: transform;
+  width: 100%;
+  height: 100%;
+}
+
+/* FIXED: Ensure images display fully without cropping */
+#lightbox-main-image {
+  max-width: 90vw;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 4px;
+  transform-origin: var(--origin-x, center) var(--origin-y, center);
+  will-change: transform, opacity;
+}
+
+/* Zoom Animation - Optimized for CORS support */
+@keyframes zoomInFromOrigin {
+  from {
+    transform: scale(0.5);
     opacity: 0;
-    transition: opacity 0.3s ease;
   }
-  
-  .related-photos-overlay.active {
-    display: block;
+  to {
+    transform: scale(1);
     opacity: 1;
   }
-  
-  .related-photos-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 101;
-    display: none;
-    pointer-events: none;
+}
+
+@keyframes zoomOutToOrigin {
+  from {
+    transform: scale(1);
+    opacity: 1;
   }
-  
-  .related-photos-container.active {
-    display: block;
-  }
-  
-  .related-photo {
-    position: absolute;
-    width: 180px;
-    height: 180px;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    background-color: #fff;
-    transform: translate(var(--pos-x, 0), var(--pos-y, 0)) scale(0);
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    cursor: pointer;
-    pointer-events: auto;
-  }
-  
-  .related-photo.active {
-    transform: translate(var(--pos-x, 0), var(--pos-y, 0)) scale(1);
-  }
-  
-  .related-photo:hover {
-    z-index: 102;
-    transform: translate(var(--pos-x, 0), var(--pos-y, 0)) scale(1.05);
-  }
-  
-  .related-photo img {
-    width: 100%;
-    height: 75%;
-    object-fit: cover;
-  }
-  
-  .related-photo-info {
-    padding: 8px;
-    height: 25%;
-  }
-  
-  .related-photo-title {
-    margin: 0;
-    font-size: 0.8rem;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .related-photo-location {
-    margin: 2px 0 0 0;
-    font-size: 0.7rem;
-    color: #666;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .related-photos-close {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.9);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    cursor: pointer;
-    z-index: 102;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    display: none;
-  }
-  
-  .related-photos-close.active {
-    display: flex;
-  }
-  
-  /* Enhanced Lightbox with Zoom Animation */
-  .photo-lightbox {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 2000;
-    display: none;
+  to {
+    transform: scale(0.5);
     opacity: 0;
-    transition: opacity 0.3s ease;
   }
-  
-  .photo-lightbox.active {
-    display: block;
-    opacity: 1;
-  }
-  
-  .lightbox-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-  }
-  
-  /* Lightbox Layout - Optimized for Cloudinary Images */
-  .lightbox-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-rows: 80vh 20vh;
-    z-index: 2001;
-  }
-  
-  .lightbox-close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    font-size: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 2002;
-    transition: background 0.3s ease;
-  }
-  
-  .lightbox-close:hover {
-    background: rgba(0, 0, 0, 0.8);
-  }
-  
-  .lightbox-main {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
-  
-  /* FIXED: Lightbox image container to properly center and display full images */
-  .lightbox-image-container {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: transform 0.5s ease;
-    will-change: transform;
-    width: 100%;
-    height: 100%;
-  }
-  
-  /* FIXED: Ensure images display fully without cropping */
-  #lightbox-main-image {
-    max-width: 90vw;
-    max-height: 80vh;
-    object-fit: contain;
-    border-radius: 4px;
-    transform-origin: var(--origin-x, center) var(--origin-y, center);
-    will-change: transform, opacity;
-  }
-  
-  /* Zoom Animation - Optimized for CORS support */
-  @keyframes zoomInFromOrigin {
-    from {
-      transform: scale(0.5);
-      opacity: 0;
-    }
-    to {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-  
-  @keyframes zoomOutToOrigin {
-    from {
-      transform: scale(1);
-      opacity: 1;
-    }
-    to {
-      transform: scale(0.5);
-      opacity: 0;
-    }
-  }
-  
-  .lightbox-image-container.zooming-in #lightbox-main-image {
-    animation: zoomInFromOrigin 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)
-      forwards;
-  }
-  
-  .lightbox-image-container.zooming-out #lightbox-main-image {
-    animation: zoomOutToOrigin 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)
-      forwards;
-  }
-  
-  /* Parallax Effect for Navigation */
-  @keyframes parallaxLeft {
-    from {
-      transform: translateX(80px) scale(0.95);
-      opacity: 0;
-      filter: blur(2px);
-    }
-    to {
-      transform: translateX(0) scale(1);
-      opacity: 1;
-      filter: blur(0);
-    }
-  }
-  
-  @keyframes parallaxRight {
-    from {
-      transform: translateX(-80px) scale(0.95);
-      opacity: 0;
-      filter: blur(2px);
-    }
-    to {
-      transform: translateX(0) scale(1);
-      opacity: 1;
-      filter: blur(0);
-    }
-  }
-  
-  .lightbox-image-container.slide-from-right #lightbox-main-image {
-    animation: parallaxRight 0.4s ease-out forwards;
-  }
-  
-  .lightbox-image-container.slide-from-left #lightbox-main-image {
-    animation: parallaxLeft 0.4s ease-out forwards;
-  }
-  
-  /* FIXED: Make info section more compact */
-  .lightbox-info {
-    position: absolute;
-    bottom: 20px;
-    left: 0;
-    width: 100%;
-    padding: 10px 15px;
-    text-align: center;
-    color: white;
-    background: linear-gradient(
-      to top,
-      rgba(0, 0, 0, 0.7) 0%,
-      rgba(0, 0, 0, 0) 100%
-    );
+}
+
+.lightbox-image-container.zooming-in #lightbox-main-image {
+  animation: zoomInFromOrigin 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+    forwards;
+}
+
+.lightbox-image-container.zooming-out #lightbox-main-image {
+  animation: zoomOutToOrigin 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+    forwards;
+}
+
+/* Parallax Effect for Navigation */
+@keyframes parallaxLeft {
+  from {
+    transform: translateX(80px) scale(0.95);
     opacity: 0;
-    transition: opacity 0.3s ease;
+    filter: blur(2px);
   }
-  
-  .lightbox-main:hover .lightbox-info {
+  to {
+    transform: translateX(0) scale(1);
     opacity: 1;
+    filter: blur(0);
   }
-  
-  .lightbox-info h3 {
-    margin: 0 0 3px 0;
-    font-size: 1.1rem;
-    font-weight: 500;
+}
+
+@keyframes parallaxRight {
+  from {
+    transform: translateX(-80px) scale(0.95);
+    opacity: 0;
+    filter: blur(2px);
   }
-  
-  .lightbox-info p {
-    margin: 0;
-    font-size: 0.85rem;
-    color: #ccc;
-  }
-  
-  .lightbox-navigation {
-    position: absolute;
-    top: 50%;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 20px;
-    transform: translateY(-50%);
-    z-index: 2002;
-  }
-  
-  .lightbox-prev,
-  .lightbox-next {
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    font-size: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.3s ease;
-  }
-  
-  .lightbox-prev:hover,
-  .lightbox-next:hover {
-    background: rgba(0, 0, 0, 0.8);
-    transform: scale(1.1);
-  }
-  
-  /* Related Images Strip - With Touch Support */
-  .related-strip {
-    display: flex;
-    overflow-x: auto;
-    padding: 10px;
-    gap: 15px;
-    background: rgba(0, 0, 0, 0.8);
-    scrollbar-width: thin;
-    scrollbar-color: #666 #333;
-    align-items: center;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-  }
-  
-  .related-strip::-webkit-scrollbar {
-    height: 8px;
-  }
-  
-  .related-strip::-webkit-scrollbar-track {
-    background: #333;
-  }
-  
-  .related-strip::-webkit-scrollbar-thumb {
-    background-color: #666;
-    border-radius: 4px;
-  }
-  
-  /* FIXED: Make related thumbnails smaller on mobile */
-  .related-thumb {
-    flex: 0 0 auto;
-    height: calc(20vh - 20px);
-    aspect-ratio: var(--thumb-ratio, 1.5);
-    border-radius: 4px;
-    overflow: hidden;
-    cursor: pointer;
-    opacity: 0.6;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    border: 2px solid transparent;
-    scroll-snap-align: center;
-    will-change: transform, opacity;
-  }
-  
-  .related-thumb:hover {
-    opacity: 0.9;
-    transform: translateY(-2px);
-  }
-  
-  .related-thumb.active {
+  to {
+    transform: translateX(0) scale(1);
     opacity: 1;
-    border-color: #fff;
+    filter: blur(0);
   }
-  
-  .related-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+}
+
+.lightbox-image-container.slide-from-right #lightbox-main-image {
+  animation: parallaxRight 0.4s ease-out forwards;
+}
+
+.lightbox-image-container.slide-from-left #lightbox-main-image {
+  animation: parallaxLeft 0.4s ease-out forwards;
+}
+
+/* FIXED: Make info section more compact */
+.lightbox-info {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  padding: 10px 15px;
+  text-align: center;
+  color: white;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.lightbox-main:hover .lightbox-info {
+  opacity: 1;
+}
+
+.lightbox-info h3 {
+  margin: 0 0 3px 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.lightbox-info p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #ccc;
+}
+
+.lightbox-navigation {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  transform: translateY(-50%);
+  z-index: 2002;
+}
+
+.lightbox-prev,
+.lightbox-next {
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.lightbox-prev:hover,
+.lightbox-next:hover {
+  background: rgba(0, 0, 0, 0.8);
+  transform: scale(1.1);
+}
+
+/* Related Images Strip - With Touch Support */
+.related-strip {
+  display: flex;
+  overflow-x: auto;
+  padding: 10px;
+  gap: 15px;
+  background: rgba(0, 0, 0, 0.8);
+  scrollbar-width: thin;
+  scrollbar-color: #666 #333;
+  align-items: center;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+.related-strip::-webkit-scrollbar {
+  height: 8px;
+}
+
+.related-strip::-webkit-scrollbar-track {
+  background: #333;
+}
+
+.related-strip::-webkit-scrollbar-thumb {
+  background-color: #666;
+  border-radius: 4px;
+}
+
+/* FIXED: Make related thumbnails smaller on mobile */
+.related-thumb {
+  flex: 0 0 auto;
+  height: calc(20vh - 20px);
+  aspect-ratio: var(--thumb-ratio, 1.5);
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  border: 2px solid transparent;
+  scroll-snap-align: center;
+  will-change: transform, opacity;
+}
+
+.related-thumb:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.related-thumb.active {
+  opacity: 1;
+  border-color: #fff;
+}
+
+.related-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Infinite Scroll Trigger */
+.scroll-trigger {
+  width: 100%;
+  height: 20px;
+  margin: 2rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.scroll-trigger-spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid rgba(25, 25, 112, 0.3);
+  border-radius: 50%;
+  border-top-color: #191970;
+  animation: spin 1s ease-in-out infinite;
+  display: none;
+}
+
+.scroll-trigger.loading .scroll-trigger-spinner {
+  display: block;
+}
+
+/* Load More Button (fallback for browsers without IntersectionObserver) */
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.load-more-btn {
+  padding: 0.75rem 2rem;
+  background-color: #191970;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.load-more-btn:hover {
+  background-color: #13134d;
+  transform: translateY(-2px);
+}
+
+.load-more-btn:active {
+  transform: translateY(0);
+}
+
+/* Animation for new items */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  
-  /* Infinite Scroll Trigger */
-  .scroll-trigger {
-    width: 100%;
-    height: 20px;
-    margin: 2rem 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .scroll-trigger-spinner {
-    width: 30px;
-    height: 30px;
-    border: 3px solid rgba(25, 25, 112, 0.3);
-    border-radius: 50%;
-    border-top-color: #191970;
-    animation: spin 1s ease-in-out infinite;
-    display: none;
-  }
-  
-  .scroll-trigger.loading .scroll-trigger-spinner {
-    display: block;
-  }
-  
-  /* Load More Button (fallback for browsers without IntersectionObserver) */
-  .load-more-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 2rem;
-  }
-  
-  .load-more-btn {
-    padding: 0.75rem 2rem;
-    background-color: #191970;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .load-more-btn:hover {
-    background-color: #13134d;
-    transform: translateY(-2px);
-  }
-  
-  .load-more-btn:active {
+  to {
+    opacity: 1;
     transform: translateY(0);
   }
-  
-  /* Animation for new items */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+}
+
+.masonry-item.new {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+/* Category and Tag Filters */
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.filter-button {
+  padding: 8px 16px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.filter-button:hover {
+  background-color: #e0e0e0;
+}
+
+.filter-button.active {
+  background-color: #191970;
+  color: white;
+}
+
+/* Photo Info Overlay */
+.photo-info-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  padding: 30px 15px 15px;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.masonry-item:hover .photo-info-overlay {
+  opacity: 1;
+}
+
+.photo-info-overlay h3 {
+  margin: 0 0 5px 0;
+  font-size: 1rem;
+}
+
+.photo-info-overlay p {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+/* FIXED: Improved Image Loading States - With CORS Support */
+.image-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 150px;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.loading-spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid rgba(25, 25, 112, 0.3);
+  border-radius: 50%;
+  border-top-color: #191970;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
-  
-  .masonry-item.new {
-    animation: fadeIn 0.5s ease forwards;
-  }
-  
-  /* Category and Tag Filters */
-  .filter-controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
-    justify-content: center;
-  }
-  
-  .filter-button {
-    padding: 8px 16px;
-    background-color: #f0f0f0;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.9rem;
-  }
-  
-  .filter-button:hover {
-    background-color: #e0e0e0;
-  }
-  
-  .filter-button.active {
-    background-color: #191970;
-    color: white;
-  }
-  
-  /* Photo Info Overlay */
-  .photo-info-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: linear-gradient(
-      to top,
-      rgba(0, 0, 0, 0.8) 0%,
-      rgba(0, 0, 0, 0) 100%
-    );
-    padding: 30px 15px 15px;
-    color: white;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  
-  .masonry-item:hover .photo-info-overlay {
+}
+
+/* Error States */
+.error-message,
+.no-photos-message {
+  width: 100%;
+  padding: 2rem;
+  text-align: center;
+  background-color: #f8f9f9;
+  border-radius: 8px;
+  margin: 2rem 0;
+}
+
+.error-message {
+  color: #721c24;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+}
+
+.retry-button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #191970;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.no-photos-message {
+  color: #856404;
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+}
+
+/* Search Functionality */
+.search-container {
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+}
+
+.search-container input {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.search-container input:focus {
+  outline: none;
+  border-color: #191970;
+  box-shadow: 0 0 0 2px rgba(25, 25, 112, 0.2);
+}
+
+.refresh-button {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mobile Touch Indicators */
+.swipe-indicator,
+.pinch-indicator {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 10px 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2003;
+}
+
+.swipe-indicator {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1rem;
+}
+
+.pinch-indicator {
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.9rem;
+}
+
+.swipe-indicator.visible,
+.pinch-indicator.visible {
+  opacity: 1;
+  animation: fadeOut 2s forwards;
+}
+
+@keyframes fadeOut {
+  0% {
     opacity: 1;
   }
-  
-  .photo-info-overlay h3 {
-    margin: 0 0 5px 0;
-    font-size: 1rem;
-  }
-  
-  .photo-info-overlay p {
-    margin: 0;
-    font-size: 0.85rem;
-    opacity: 0.9;
-  }
-  
-  /* FIXED: Improved Image Loading States - With CORS Support */
-  .image-loading {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    min-height: 150px;
-    background-color: #f0f0f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1;
-  }
-  
-  .loading-spinner {
-    width: 30px;
-    height: 30px;
-    border: 3px solid rgba(25, 25, 112, 0.3);
-    border-radius: 50%;
-    border-top-color: #191970;
-    animation: spin 1s ease-in-out infinite;
-  }
-  
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  
-  /* Error States */
-  .error-message,
-  .no-photos-message {
-    width: 100%;
-    padding: 2rem;
-    text-align: center;
-    background-color: #f8f9f9;
-    border-radius: 8px;
-    margin: 2rem 0;
-  }
-  
-  .error-message {
-    color: #721c24;
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-  }
-  
-  .retry-button {
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    background-color: #191970;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .no-photos-message {
-    color: #856404;
-    background-color: #fff3cd;
-    border: 1px solid #ffeeba;
-  }
-  
-  /* Search Functionality */
-  .search-container {
-    margin-bottom: 20px;
-    width: 100%;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    position: relative;
-  }
-  
-  .search-container input {
-    width: 100%;
-    padding: 10px 15px;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-  }
-  
-  .search-container input:focus {
-    outline: none;
-    border-color: #191970;
-    box-shadow: 0 0 0 2px rgba(25, 25, 112, 0.2);
-  }
-  
-  .refresh-button {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: #f0f0f0;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  /* Mobile Touch Indicators */
-  .swipe-indicator,
-  .pinch-indicator {
-    position: absolute;
-    color: rgba(255, 255, 255, 0.7);
-    padding: 10px 20px;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 20px;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 2003;
-  }
-  
-  .swipe-indicator {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1rem;
-  }
-  
-  .pinch-indicator {
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.9rem;
-  }
-  
-  .swipe-indicator.visible,
-  .pinch-indicator.visible {
+  70% {
     opacity: 1;
-    animation: fadeOut 2s forwards;
   }
-  
-  @keyframes fadeOut {
-    0% {
-      opacity: 1;
-    }
-    70% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-    }
+  100% {
+    opacity: 0;
   }
-  
-  /* FIXED: Added fallback styles for images that fail to load */
-  .masonry-item img.error {
-    min-height: 150px;
-    background-color: #f0f0f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #666;
-    font-size: 0.9rem;
-  }
-  
-  /* FIXED: Removed fixed aspect ratio styles */
-  /*
+}
+
+/* FIXED: Added fallback styles for images that fail to load */
+.masonry-item img.error {
+  min-height: 150px;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* FIXED: Removed fixed aspect ratio styles */
+/*
   .masonry-item[data-aspect="portrait"] .masonry-image-container {
    aspect-ratio: 3/4;
   }
@@ -853,86 +853,85 @@
    aspect-ratio: 16/9;
   }
   */
-  
-  /* Responsive Adjustments */
-  @media (max-width: 768px) {
-    .landscape-header h1 {
-      font-size: 2rem;
-    }
-  
-    .landscape-header p {
-      font-size: 1rem;
-    }
-  
-    .lightbox-container {
-      grid-template-rows: 75vh 25vh;
-    }
-  
-    /* FIXED: Make related thumbnails smaller on mobile */
-    .related-thumb {
-      height: calc(20vh - 20px);
-      min-width: 100px; /* Smaller thumbs on mobile */
-    }
-  
-    .lightbox-navigation {
-      padding: 0 10px;
-    }
-  
-    .lightbox-prev,
-    .lightbox-next {
-      width: 40px;
-      height: 40px;
-      font-size: 1.2rem;
-      opacity: 0.7; /* Make buttons more visible on mobile */
-    }
-  
-    .related-photo {
-      width: 120px;
-      height: 120px;
-    }
-  
-    /* FIXED: Make info section more compact on mobile */
-    .lightbox-info {
-      padding: 8px 10px;
-    }
-  
-    .lightbox-info h3 {
-      font-size: 0.95rem;
-      margin-bottom: 2px;
-    }
-  
-    .lightbox-info p {
-      font-size: 0.75rem;
-    }
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .landscape-header h1 {
+    font-size: 2rem;
   }
-  
-  @media (max-width: 480px) {
-    .masonry-title {
-      font-size: 0.9rem;
-    }
-  
-    .masonry-location {
-      font-size: 0.75rem;
-    }
-  
-    .back-to-portfolio {
-      padding: 0.6rem 1.2rem;
-      font-size: 0.9rem;
-    }
-  
-    .lightbox-container {
-      grid-template-rows: 70vh 30vh;
-    }
-  
-    /* FIXED: Make related thumbnails even smaller on small mobile screens */
-    .related-thumb {
-      height: calc(25vh - 20px);
-      min-width: 90px;
-    }
-  
-    .related-photo {
-      width: 100px;
-      height: 100px;
-    }
+
+  .landscape-header p {
+    font-size: 1rem;
   }
-  
+
+  .lightbox-container {
+    grid-template-rows: 75vh 25vh;
+  }
+
+  /* FIXED: Make related thumbnails smaller on mobile */
+  .related-thumb {
+    height: calc(20vh - 20px);
+    min-width: 100px; /* Smaller thumbs on mobile */
+  }
+
+  .lightbox-navigation {
+    padding: 0 10px;
+  }
+
+  .lightbox-prev,
+  .lightbox-next {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    opacity: 0.7; /* Make buttons more visible on mobile */
+  }
+
+  .related-photo {
+    width: 120px;
+    height: 120px;
+  }
+
+  /* FIXED: Make info section more compact on mobile */
+  .lightbox-info {
+    padding: 8px 10px;
+  }
+
+  .lightbox-info h3 {
+    font-size: 0.95rem;
+    margin-bottom: 2px;
+  }
+
+  .lightbox-info p {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .masonry-title {
+    font-size: 0.9rem;
+  }
+
+  .masonry-location {
+    font-size: 0.75rem;
+  }
+
+  .back-to-portfolio {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .lightbox-container {
+    grid-template-rows: 70vh 30vh;
+  }
+
+  /* FIXED: Make related thumbnails even smaller on small mobile screens */
+  .related-thumb {
+    height: calc(25vh - 20px);
+    min-width: 90px;
+  }
+
+  .related-photo {
+    width: 100px;
+    height: 100px;
+  }
+}
