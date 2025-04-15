@@ -746,3 +746,23 @@ document.head.insertAdjacentHTML(
   </style>
 `
 );
+// Add Vercel Analytics
+function addVercelAnalytics() {
+  // Add the initialization function
+  window.va =
+    window.va ||
+    (() => {
+      (window.vaq = window.vaq || []).push(arguments);
+    });
+
+  // Create and add the script element
+  const script = document.createElement("script");
+  script.src = "/_vercel/insights/script.js";
+  script.defer = true;
+  document.head.appendChild(script);
+}
+
+// Call the function to add analytics
+addVercelAnalytics();
+
+// Rest of your existing JavaScript code
