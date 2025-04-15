@@ -746,23 +746,37 @@ document.head.insertAdjacentHTML(
   </style>
 `
 );
-// Add Vercel Analytics
-function addVercelAnalytics() {
-  // Add the initialization function
+
+// Add Vercel Analytics and Speed Insights
+function addVercelInsights() {
+  // Set up Analytics
   window.va =
     window.va ||
     (() => {
       (window.vaq = window.vaq || []).push(arguments);
     });
 
-  // Create and add the script element
-  const script = document.createElement("script");
-  script.src = "/_vercel/insights/script.js";
-  script.defer = true;
-  document.head.appendChild(script);
+  // Create and add the Analytics script
+  const analyticsScript = document.createElement("script");
+  analyticsScript.src = "/_vercel/insights/script.js";
+  analyticsScript.defer = true;
+  document.head.appendChild(analyticsScript);
+
+  // Set up Speed Insights
+  window.vsi =
+    window.vsi ||
+    (() => {
+      (window.vsiq = window.vsiq || []).push(arguments);
+    });
+
+  // Create and add the Speed Insights script
+  const speedInsightsScript = document.createElement("script");
+  speedInsightsScript.src = "/_vercel/speed-insights/script.js";
+  speedInsightsScript.defer = true;
+  document.head.appendChild(speedInsightsScript);
 }
 
-// Call the function to add analytics
-addVercelAnalytics();
+// Call the function to add Vercel insights
+addVercelInsights();
 
 // Rest of your existing JavaScript code
