@@ -1,6 +1,31 @@
-/* Certificate Image Handling Styles */
+/* Certificate-specific styles */
 
-/* Certificate Image Container */
+/* Certificate container */
+.certificates-section {
+  padding: 2rem 0;
+}
+
+/* Carousel layout */
+.carousel-container {
+  position: relative;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.carousel-slide {
+  min-width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* Certificate Image Handling Styles */
 .certificate-image-container {
   width: 100%;
   display: flex;
@@ -61,14 +86,188 @@
   opacity: 1;
 }
 
+.certificate-info {
+  padding: 1.5rem;
+  background: rgba(25, 25, 112, 0.05);
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.certificate-info h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+  color: #191970;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.issuer {
+  font-weight: 600;
+}
+
+/* Description styling with see more/less functionality */
+.description-container {
+  position: relative;
+  width: 100%;
+}
+
+.description {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+.toggle-description {
+  background: none;
+  border: none;
+  color: #191970;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.25rem 0;
+  font-size: 0.85rem;
+  text-decoration: underline;
+}
+
+.toggle-description:hover {
+  color: #0f0f50;
+}
+
+/* Carousel navigation - Restored to original styling */
+.carousel-nav {
+  text-align: center;
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.carousel-nav button {
+  border: none;
+  background-color: #ddd;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.carousel-nav button.active {
+  background-color: #ffd700;
+  transform: scale(1.2);
+}
+
+/* Carousel Controls - Restored to original styling */
+.carousel-prev,
+.carousel-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(25, 25, 112, 0.85);
+  border: none;
+  color: #ffd700;
+  font-size: 2rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.carousel-prev:hover,
+.carousel-next:hover {
+  background: #191970;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-prev {
+  left: 30px;
+}
+
+.carousel-next {
+  right: 30px;
+}
+
+/* Loading and error states */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #191970;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  text-align: center;
+  padding: 2rem;
+  background-color: #f8d7da;
+  color: #721c24;
+  border-radius: 8px;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .carousel-slide {
+    padding: 0.75rem;
+  }
+
   .certificate-image-container {
     max-height: 350px;
   }
 
   .carousel-slide img.portrait {
     max-height: 330px;
+  }
+
+  .certificate-info h3 {
+    font-size: 1.1rem;
+  }
+
+  .description {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .meta {
+    font-size: 0.8rem;
+  }
+
+  .carousel-prev,
+  .carousel-next {
+    padding: 0.5rem 0.75rem;
+    font-size: 1.5rem;
+  }
+
+  .carousel-prev {
+    left: 10px;
+  }
+
+  .carousel-next {
+    right: 10px;
   }
 }
 
@@ -79,6 +278,18 @@
 
   .carousel-slide img.portrait {
     max-height: 230px;
+  }
+
+  .carousel-slide {
+    padding: 0.75rem;
+  }
+
+  .certificate-info {
+    padding: 1rem;
+  }
+
+  .description {
+    font-size: 0.9rem;
   }
 }
 
@@ -113,4 +324,168 @@
     box-shadow: none;
     max-height: none;
   }
+}
+
+/* Image zoom modal */
+.zoom-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.zoom-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.zoom-modal img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+}
+
+.zoom-modal .close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+/* Image controls */
+.image-controls {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.certificate-image-container:hover .image-controls {
+  opacity: 1;
+}
+
+.zoom-btn,
+.download-btn {
+  background-color: rgba(25, 25, 112, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.zoom-btn:hover,
+.download-btn:hover {
+  background-color: rgba(25, 25, 112, 1);
+}
+
+/* Certificate controls styling */
+.certificate-controls {
+  margin-bottom: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.search-container {
+  flex: 1;
+  min-width: 250px;
+  position: relative;
+}
+
+.search-container input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.search-container svg {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+
+.filter-container {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-select {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  min-width: 150px;
+}
+
+/* Accessibility styles */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus styles for better accessibility */
+a:focus,
+button:focus,
+input:focus,
+select:focus,
+[tabindex]:focus {
+  outline: 3px solid rgba(25, 25, 112, 0.5);
+  outline-offset: 2px;
+}
+
+/* No results message */
+.no-results {
+  text-align: center;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.reset-btn {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.reset-btn:hover {
+  background-color: #5a6268;
 }

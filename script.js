@@ -1,5 +1,33 @@
+/**
+ * Main JavaScript file for the portfolio website
+ * Contains core functionality for navigation, UI interactions, and general features
+ * @author Original code by Shain, enhanced by v0
+ * @version 2.0
+ */
+
 document.addEventListener("DOMContentLoaded", () => {
-  // Smooth scroll for nav links, CTA buttons, bottom links
+  // Initialize all core functionality
+  initSmoothScroll();
+  initHoverEffects();
+  initPortfolioItems();
+  initContactForm();
+  initHamburgerMenu();
+  initActiveNavHighlight();
+  initViewportCleanup();
+  initScrollAnimation();
+  initThemePreference();
+  initAccessibility();
+  addVercelInsights();
+
+  // Initialize performance monitoring
+  if (window.performance && window.performance.mark) {
+    window.performance.mark("app-loaded");
+    console.log("App fully loaded and initialized");
+  }
+});
+
+// Smooth scroll for navigation links
+function initSmoothScroll() {
   document
     .querySelectorAll(".nav a, .cta-btn, .link-bottom")
     .forEach((anchor) => {
@@ -8,7 +36,18 @@ document.addEventListener("DOMContentLoaded", () => {
           e.preventDefault();
           const target = document.querySelector(this.hash);
           if (target) {
-            target.scrollIntoView({ behavior: "smooth" });
+            // Get header height for offset
+            const headerHeight =
+              document.querySelector("header")?.offsetHeight || 0;
+            const targetPosition =
+              target.getBoundingClientRect().top +
+              window.pageYOffset -
+              headerHeight;
+
+            window.scrollTo({
+              top: targetPosition,
+              behavior: "smooth",
+            });
           }
           // Close menu on mobile after clicking a link
           const nav = document.querySelector(".nav");
@@ -19,8 +58,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
     });
+}
 
-  // Hover effect on CTA and bottom links
+// Hover effects for CTA and bottom links
+function initHoverEffects() {
   document.querySelectorAll(".cta-btn, .link-bottom").forEach((button) => {
     button.addEventListener("mousemove", function (e) {
       const rect = this.getBoundingClientRect();
@@ -30,8 +71,10 @@ document.addEventListener("DOMContentLoaded", () => {
       this.style.setProperty("--y", `${y}px`);
     });
   });
+}
 
-  // Portfolio hover effect
+// Portfolio item hover animations
+function initPortfolioItems() {
   document.querySelectorAll(".portfolio-item").forEach((item) => {
     item.addEventListener("mouseenter", () => {
       item.style.transform = "translateY(-5px) scale(1.05)";
@@ -39,21 +82,138 @@ document.addEventListener("DOMContentLoaded", () => {
     item.addEventListener("mouseleave", () => {
       item.style.transform = "translateY(0) scale(1)";
     });
-  });
 
-  // Contact form
+    // Add click event for portfolio items
+    item.addEventListener("click", function () {
+      const link = this.querySelector("a");
+      if (link && link.href) {
+        if (link.target === "_blank") {
+          window.open(link.href, "_blank");
+        } else {
+          window.location.href = link.href;
+        }
+      }
+    });
+  });
+}
+
+// Contact form submission handling with validation
+function initContactForm() {
   const contactForm = document.getElementById("contactForm");
   if (contactForm) {
+    // Add input validation
+    const inputs = contactForm.querySelectorAll("input, textarea");
+    inputs.forEach((input) => {
+      input.addEventListener("blur", validateInput);
+      input.addEventListener("input", () => {
+        if (input.classList.contains("error")) {
+          validateInput.call(input);
+        }
+      });
+    });
+
     contactForm.addEventListener("submit", (e) => {
       e.preventDefault();
+
+      // Validate all inputs before submission
+      let isValid = true;
+      inputs.forEach((input) => {
+        if (!validateInput.call(input)) {
+          isValid = false;
+        }
+      });
+
+      if (!isValid) {
+        showFormMessage("Please fix the errors before submitting.", "error");
+        return;
+      }
+
       const formData = new FormData(contactForm);
       console.log("Form Submission:", Object.fromEntries(formData));
-      alert("Thank you for your message! I will get back to you soon.");
+
+      // Show success message with animation
+      showFormMessage(
+        "Thank you for your message! I will get back to you soon.",
+        "success"
+      );
       contactForm.reset();
     });
   }
 
-  // Off-canvas Hamburger Menu
+  // Input validation function
+  function validateInput() {
+    const value = this.value.trim();
+    const errorElement = this.nextElementSibling?.classList.contains(
+      "error-message"
+    )
+      ? this.nextElementSibling
+      : null;
+
+    let errorMessage = "";
+
+    if (this.required && value === "") {
+      errorMessage = `${
+        this.name.charAt(0).toUpperCase() + this.name.slice(1)
+      } is required`;
+    } else if (
+      this.type === "email" &&
+      value !== "" &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+    ) {
+      errorMessage = "Please enter a valid email address";
+    }
+
+    if (errorMessage) {
+      this.classList.add("error");
+      if (errorElement) {
+        errorElement.textContent = errorMessage;
+      } else {
+        const error = document.createElement("div");
+        error.className = "error-message";
+        error.textContent = errorMessage;
+        this.insertAdjacentElement("afterend", error);
+      }
+      return false;
+    } else {
+      this.classList.remove("error");
+      if (errorElement) {
+        errorElement.textContent = "";
+      }
+      return true;
+    }
+  }
+
+  // Show form message
+  function showFormMessage(message, type) {
+    let messageElement = document.querySelector(".form-message");
+
+    if (!messageElement) {
+      messageElement = document.createElement("div");
+      messageElement.className = "form-message";
+      contactForm.insertAdjacentElement("afterend", messageElement);
+    }
+
+    messageElement.textContent = message;
+    messageElement.className = `form-message ${type}`;
+    messageElement.style.opacity = "0";
+
+    // Fade in
+    setTimeout(() => {
+      messageElement.style.opacity = "1";
+    }, 10);
+
+    // Fade out after 5 seconds
+    setTimeout(() => {
+      messageElement.style.opacity = "0";
+      setTimeout(() => {
+        messageElement.remove();
+      }, 300);
+    }, 5000);
+  }
+}
+
+// Hamburger menu toggle functionality
+function initHamburgerMenu() {
   const hamburger = document.querySelector(".hamburger");
   const navMenu = document.querySelector(".nav");
   if (hamburger && navMenu) {
@@ -61,13 +221,31 @@ document.addEventListener("DOMContentLoaded", () => {
       hamburger.classList.toggle("active");
       navMenu.classList.toggle("active");
       document.body.classList.toggle("menu-open");
+
+      // Set aria-expanded for accessibility
+      const expanded = hamburger.classList.contains("active");
+      hamburger.setAttribute("aria-expanded", expanded.toString());
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener("click", (e) => {
+      if (
+        navMenu.classList.contains("active") &&
+        !navMenu.contains(e.target) &&
+        !hamburger.contains(e.target)
+      ) {
+        hamburger.classList.remove("active");
+        navMenu.classList.remove("active");
+        document.body.classList.remove("menu-open");
+        hamburger.setAttribute("aria-expanded", "false");
+      }
     });
   }
+}
 
-  // Highlight active section - With null checks
+// Highlight active navigation section
+function initActiveNavHighlight() {
   const path = window.location.pathname;
-
-  // Use querySelectorAll to find all nav links
   const navLinks = document.querySelectorAll(".nav a");
 
   // Reset all links to default color
@@ -90,10 +268,54 @@ document.addEventListener("DOMContentLoaded", () => {
       (path.includes("index.html") && href === "index.html")
     ) {
       link.classList.add("active");
+      link.setAttribute("aria-current", "page");
     }
   });
 
-  // Function to ensure menu-open class is removed in desktop view
+  // Also highlight based on scroll position for single-page sites
+  if (path === "/" || path.includes("index.html")) {
+    highlightNavOnScroll();
+  }
+}
+
+// Highlight nav items based on scroll position
+function highlightNavOnScroll() {
+  const sections = document.querySelectorAll("section[id]");
+  const navLinks = document.querySelectorAll(".nav a");
+
+  if (!sections.length) return;
+
+  window.addEventListener("scroll", () => {
+    let current = "";
+    const scrollPosition = window.scrollY + 100; // Offset for header
+
+    sections.forEach((section) => {
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.offsetHeight;
+
+      if (
+        scrollPosition >= sectionTop &&
+        scrollPosition < sectionTop + sectionHeight
+      ) {
+        current = "#" + section.getAttribute("id");
+      }
+    });
+
+    navLinks.forEach((link) => {
+      link.classList.remove("active");
+      link.removeAttribute("aria-current");
+
+      if (link.getAttribute("href") === current) {
+        link.classList.add("active");
+        link.setAttribute("aria-current", "page");
+      }
+    });
+  });
+}
+
+// Ensure menu-open class is removed in desktop view
+function initViewportCleanup() {
+  // Function to check viewport and clean up menu state
   function checkViewportAndCleanup() {
     if (
       window.innerWidth > 768 &&
@@ -105,7 +327,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const hamburger = document.querySelector(".hamburger");
       const nav = document.querySelector(".nav");
 
-      if (hamburger) hamburger.classList.remove("active");
+      if (hamburger) {
+        hamburger.classList.remove("active");
+        hamburger.setAttribute("aria-expanded", "false");
+      }
       if (nav) nav.classList.remove("active");
     }
   }
@@ -115,637 +340,140 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Also run when window is resized
   window.addEventListener("resize", checkViewportAndCleanup);
+}
 
-  // Certificate carousel functionality
-  if (document.getElementById("certificates-container")) {
-    fetchCertificates();
-  }
-});
+// Initialize scroll animations
+function initScrollAnimation() {
+  const animatedElements = document.querySelectorAll(".animate-on-scroll");
 
-// Function to handle image loading and aspect ratio detection
-function handleImageLoad(img) {
-  // Get natural dimensions of the image
-  const width = img.naturalWidth;
-  const height = img.naturalHeight;
+  if (!animatedElements.length) return;
 
-  // Determine if image is landscape, portrait, or square
-  if (width > height) {
-    img.classList.add("landscape");
-  } else if (height > width) {
-    img.classList.add("portrait");
+  // Check if IntersectionObserver is supported
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("animated");
+            // Stop observing after animation is triggered
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      }
+    );
+
+    animatedElements.forEach((element) => {
+      // Add initial state class
+      element.classList.add("pre-animation");
+      observer.observe(element);
+    });
   } else {
-    img.classList.add("square");
-  }
-
-  // Remove loading class once image is loaded
-  img.classList.remove("loading");
-  img.classList.add("loaded");
-
-  // Adjust parent container if needed
-  const slide = img.closest(".carousel-slide");
-  if (slide) {
-    slide.classList.add("image-loaded");
+    // Fallback for browsers that don't support IntersectionObserver
+    animatedElements.forEach((element) => {
+      element.classList.add("animated");
+    });
   }
 }
 
-// Make sure the function is available globally
-window.handleImageLoad = handleImageLoad;
+// Initialize theme preference (light/dark mode)
+function initThemePreference() {
+  const themeToggle = document.getElementById("theme-toggle");
 
-// Function to generate placeholder image data URLs
-function generatePlaceholderImage(
-  width = 300,
-  height = 200,
-  text = "Certificate"
-) {
-  // Create a canvas element
-  const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
+  if (!themeToggle) return;
 
-  // Get the drawing context
-  const ctx = canvas.getContext("2d");
+  // Check for saved theme preference or use system preference
+  const savedTheme = localStorage.getItem("theme");
+  const systemPrefersDark = window.matchMedia(
+    "(prefers-color-scheme: dark)"
+  ).matches;
 
-  // Draw background
-  ctx.fillStyle = "#f0f0f0";
-  ctx.fillRect(0, 0, width, height);
+  // Set initial theme
+  if (savedTheme === "dark" || (!savedTheme && systemPrefersDark)) {
+    document.documentElement.classList.add("dark-theme");
+    themeToggle.checked = true;
+  }
 
-  // Draw border
-  ctx.strokeStyle = "#191970";
-  ctx.lineWidth = 5;
-  ctx.strokeRect(5, 5, width - 10, height - 10);
-
-  // Draw text
-  ctx.fillStyle = "#191970";
-  ctx.font = "bold 24px Arial";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-
-  // Handle multi-line text
-  const words = text.split("+");
-  const lineHeight = 30;
-  const startY = height / 2 - ((words.length - 1) * lineHeight) / 2;
-
-  words.forEach((word, index) => {
-    ctx.fillText(word, width / 2, startY + index * lineHeight);
+  // Toggle theme when button is clicked
+  themeToggle.addEventListener("change", () => {
+    if (themeToggle.checked) {
+      document.documentElement.classList.add("dark-theme");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark-theme");
+      localStorage.setItem("theme", "light");
+    }
   });
 
-  // Return data URL
-  return canvas.toDataURL("image/png");
-}
-
-// Debug function to test API connectivity
-async function testApiConnection() {
-  const API_URL =
-    "https://backend-cms-89la.onrender.com/api/certificates?populate=*";
-
-  try {
-    console.log("Testing API connection to:", API_URL);
-
-    const response = await fetch(API_URL, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      mode: "cors",
-      credentials: "omit",
-    });
-
-    console.log("API Response Status:", response.status);
-    console.log("API Response OK:", response.ok);
-
-    if (response.ok) {
-      const data = await response.json();
-      console.log("API Data received:", data);
-      return { success: true, data };
-    } else {
-      console.error("API returned error status:", response.status);
-      return { success: false, status: response.status };
-    }
-  } catch (error) {
-    console.error("API connection test failed:", error);
-    return { success: false, error: error.message };
-  }
-}
-
-// Improved fetchCertificates function - ALWAYS try API first
-async function fetchCertificates() {
-  const API_URL =
-    "https://backend-cms-89la.onrender.com/api/certificates?populate=*";
-  const container = document.getElementById("certificates-container");
-
-  if (!container) return;
-
-  // Show loading state
-  container.innerHTML = `
-    <li class="loading-state">
-      <div class="loading-spinner"></div>
-      <p>Loading certificates...</p>
-    </li>
-  `;
-
-  try {
-    console.log("Attempting to fetch certificates from API...");
-
-    // Always try to fetch from API first
-    const response = await fetch(API_URL, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      mode: "cors",
-      credentials: "omit", // Try without credentials to avoid CORS preflight issues
-    });
-
-    if (!response.ok) {
-      throw new Error(`API returned status: ${response.status}`);
-    }
-
-    const result = await response.json();
-    console.log("API data received:", result);
-
-    // Validate data structure
-    if (!result || !result.data) {
-      throw new Error("Invalid API response structure");
-    }
-
-    // Check if we have certificates
-    if (!Array.isArray(result.data) || result.data.length === 0) {
-      throw new Error("No certificates found in the CMS");
-    }
-
-    // Clear loading state
-    container.innerHTML = "";
-
-    // Process each certificate
-    result.data.forEach((cert) => {
-      // Handle both Strapi 4.x and potential 5.x structures
-      const attributes = cert.attributes || cert || {};
-      const title =
-        attributes.Title || attributes.title || "Untitled Certificate";
-      const issuer = attributes.Issuer || attributes.issuer || "Unknown Issuer";
-      const description =
-        attributes.Description ||
-        attributes.description ||
-        "No description available";
-      const date = attributes.Date || attributes.date || "";
-
-      // Extract image URL - Handle different Strapi versions
-      let imageUrl = generatePlaceholderImage(
-        300,
-        200,
-        title.replace(/\s+/g, "+")
-      );
-
-      // Try different possible image structures
-      const imageField = attributes.Image || attributes.image;
-
-      if (imageField) {
-        // Strapi 4.x structure
-        if (imageField.data && imageField.data.attributes) {
-          const imageData = imageField.data.attributes;
-
-          if (imageData.url) {
-            imageUrl = imageData.url.startsWith("http")
-              ? imageData.url
-              : `https://backend-cms-89la.onrender.com${imageData.url}`;
-          } else if (imageData.formats) {
-            const formats = ["large", "medium", "small", "thumbnail"];
-            for (const format of formats) {
-              if (imageData.formats[format] && imageData.formats[format].url) {
-                const formatUrl = imageData.formats[format].url;
-                imageUrl = formatUrl.startsWith("http")
-                  ? formatUrl
-                  : `https://backend-cms-89la.onrender.com${formatUrl}`;
-                break;
-              }
-            }
-          }
-        }
-        // Direct URL structure (older Strapi or custom)
-        else if (imageField.url) {
-          imageUrl = imageField.url.startsWith("http")
-            ? imageField.url
-            : `https://backend-cms-89la.onrender.com${imageField.url}`;
-        }
-        // Formats directly on the image field
-        else if (imageField.formats) {
-          const formats = ["large", "medium", "small", "thumbnail"];
-          for (const format of formats) {
-            if (imageField.formats[format] && imageField.formats[format].url) {
-              const formatUrl = imageField.formats[format].url;
-              imageUrl = formatUrl.startsWith("http")
-                ? formatUrl
-                : `https://backend-cms-89la.onrender.com${formatUrl}`;
-              break;
-            }
-          }
+  // Listen for system theme changes
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", (e) => {
+      if (!localStorage.getItem("theme")) {
+        if (e.matches) {
+          document.documentElement.classList.add("dark-theme");
+          themeToggle.checked = true;
+        } else {
+          document.documentElement.classList.remove("dark-theme");
+          themeToggle.checked = false;
         }
       }
-
-      // Create the certificate slide
-      const slide = document.createElement("li");
-      slide.className = "carousel-slide";
-
-      // Format the date
-      const certDate = date
-        ? new Date(date).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })
-        : "No date provided";
-
-      // Set the slide HTML with improved image container
-      slide.innerHTML = `
-        <div class="certificate-image-container">
-          <img src="${imageUrl}" 
-               alt="${title}"
-               class="loading"
-               loading="lazy"
-               onload="handleImageLoad(this)"
-               onerror="this.src='${generatePlaceholderImage(
-                 300,
-                 200,
-                 title.replace(/\s+/g, "+")
-               )}'; this.onerror=null; handleImageLoad(this);">
-        </div>
-        <div class="certificate-info">
-          <h3>${title}</h3>
-          <div class="meta">
-            <span class="issuer">${issuer}</span>
-            <time datetime="${date}">${certDate}</time>
-          </div>
-          <p class="description">${description}</p>
-        </div>
-      `;
-
-      container.appendChild(slide);
     });
-
-    // Initialize the carousel after adding all slides
-    if (container.children.length > 0) {
-      initCarousel();
-    } else {
-      container.innerHTML = `
-        <li class="error">
-          <p>⚠️ No certificates could be displayed.</p>
-          <button onclick="fetchCertificates()" class="retry-btn">Retry</button>
-        </li>
-      `;
-    }
-  } catch (error) {
-    console.error("Error fetching certificates:", error);
-
-    // Show detailed error information
-    container.innerHTML = `
-      <li class="error">
-        <p>⚠️ Failed to load certificates from API</p>
-        <small>${error.message || ""}</small>
-        <div class="error-details">
-          <p>This could be due to:</p>
-          <ul>
-            <li>CORS restrictions on the Strapi server</li>
-            <li>Network connectivity issues</li>
-            <li>Strapi server being offline</li>
-          </ul>
-        </div>
-        <div class="action-buttons">
-          <button onclick="fetchCertificates()" class="retry-btn">Retry API</button>
-          <button onclick="useSampleCertificates(document.getElementById('certificates-container'))" class="sample-btn">Use Sample Data</button>
-        </div>
-      </li>
-    `;
-
-    // Add style for error details
-    document.head.insertAdjacentHTML(
-      "beforeend",
-      `
-      <style>
-        .error-details {
-          margin-top: 1rem;
-          text-align: left;
-          font-size: 0.85rem;
-        }
-        .error-details ul {
-          margin-top: 0.5rem;
-          padding-left: 1.5rem;
-        }
-        .action-buttons {
-          display: flex;
-          gap: 1rem;
-          justify-content: center;
-          margin-top: 1rem;
-        }
-        .sample-btn {
-          padding: 0.5rem 1rem;
-          background-color: #6c757d;
-          color: white;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          transition: background-color 0.3s;
-        }
-        .sample-btn:hover {
-          background-color: #5a6268;
-        }
-      </style>
-    `
-    );
-  }
 }
 
-// Function to use sample certificates in development mode
-function useSampleCertificates(container) {
-  if (!container) return;
+// Initialize accessibility features
+function initAccessibility() {
+  // Add proper ARIA attributes
+  const hamburger = document.querySelector(".hamburger");
+  if (hamburger) {
+    hamburger.setAttribute("aria-label", "Menu");
+    hamburger.setAttribute("aria-expanded", "false");
+    hamburger.setAttribute("role", "button");
+    hamburger.setAttribute("tabindex", "0");
 
-  console.log("Using sample certificates for development");
+    // Allow keyboard activation
+    hamburger.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        hamburger.click();
+      }
+    });
+  }
 
-  // Sample certificate data for development
-  const sampleCertificates = [
-    {
-      title: "Web Development Certification",
-      issuer: "Coding Academy",
-      date: "2023-05-15",
-      description:
-        "Comprehensive certification in modern web development technologies including HTML5, CSS3, JavaScript, and responsive design principles.",
-      imageUrl: generatePlaceholderImage(300, 200, "Web+Development"),
-    },
-    {
-      title: "JavaScript Advanced Course",
-      issuer: "JS Masters",
-      date: "2022-11-20",
-      description:
-        "Advanced JavaScript concepts including ES6+, async programming, functional programming, and modern frameworks.",
-      imageUrl: generatePlaceholderImage(300, 200, "JavaScript"),
-    },
-    {
-      title: "UI/UX Design Fundamentals",
-      issuer: "Design Institute",
-      date: "2023-02-10",
-      description:
-        "Principles of user interface and user experience design, including wireframing, prototyping, and user testing methodologies.",
-      imageUrl: generatePlaceholderImage(300, 200, "UI/UX+Design"),
-    },
-  ];
+  // Make portfolio items keyboard accessible
+  document.querySelectorAll(".portfolio-item").forEach((item) => {
+    if (!item.getAttribute("tabindex")) {
+      item.setAttribute("tabindex", "0");
+    }
 
-  // Clear loading state
-  container.innerHTML = "";
-
-  // Add sample certificates
-  sampleCertificates.forEach((cert) => {
-    const slide = document.createElement("li");
-    slide.className = "carousel-slide";
-
-    // Format the date
-    const certDate = cert.date
-      ? new Date(cert.date).toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })
-      : "No date provided";
-
-    // Set the slide HTML with improved image container
-    slide.innerHTML = `
-      <div class="certificate-image-container">
-        <img src="${cert.imageUrl}" 
-             alt="${cert.title}"
-             class="loading"
-             loading="lazy"
-             onload="handleImageLoad(this)"
-             onerror="this.src='${generatePlaceholderImage(
-               300,
-               200,
-               cert.title.replace(/\s+/g, "+")
-             )}'; this.onerror=null; handleImageLoad(this);">
-      </div>
-      <div class="certificate-info">
-        <h3>${cert.title}</h3>
-        <div class="meta">
-          <span class="issuer">${cert.issuer}</span>
-          <time datetime="${cert.date}">${certDate}</time>
-        </div>
-        <p class="description">${cert.description}</p>
-      </div>
-    `;
-
-    container.appendChild(slide);
+    item.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        item.click();
+      }
+    });
   });
 
-  // Initialize the carousel
-  initCarousel();
+  // Add skip to content link for keyboard users
+  if (!document.getElementById("skip-link")) {
+    const skipLink = document.createElement("a");
+    skipLink.id = "skip-link";
+    skipLink.className = "skip-to-content";
+    skipLink.href = "#main-content";
+    skipLink.textContent = "Skip to content";
+    document.body.insertAdjacentElement("afterbegin", skipLink);
 
-  // Add development mode notice
-  const notice = document.createElement("div");
-  notice.className = "dev-notice";
-  notice.innerHTML = `
-    <p>⚠️ Using Sample Data</p>
-    <small>Could not connect to Strapi API. Using sample certificates instead.</small>
-    <button onclick="fetchCertificates()" class="retry-api-btn">Try API Again</button>
-  `;
-  container.parentNode.insertAdjacentElement("afterend", notice);
-
-  // Add style for the notice
-  document.head.insertAdjacentHTML(
-    "beforeend",
-    `
-    <style>
-      .dev-notice {
-        background-color: #fff3cd;
-        color: #856404;
-        padding: 0.75rem;
-        margin-top: 1rem;
-        border-radius: 0.25rem;
-        text-align: center;
-        font-size: 0.9rem;
-      }
-      .dev-notice small {
-        display: block;
-        margin-top: 0.5rem;
-        opacity: 0.8;
-      }
-      .retry-api-btn {
-        margin-top: 0.75rem;
-        padding: 0.4rem 0.8rem;
-        background-color: #856404;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 0.8rem;
-      }
-      .retry-api-btn:hover {
-        background-color: #6d5204;
-      }
-    </style>
-  `
-  );
+    // Add main-content id to main content if it doesn't exist
+    const main = document.querySelector("main");
+    if (main && !document.getElementById("main-content")) {
+      main.id = "main-content";
+      main.setAttribute("tabindex", "-1");
+    }
+  }
 }
-
-// Initialize carousel functionality
-function initCarousel() {
-  const track = document.querySelector(".carousel-track");
-  const slides = Array.from(track?.children || []);
-  const dotNav = document.querySelector(".carousel-nav");
-  const prevArrow = document.querySelector(".carousel-prev");
-  const nextArrow = document.querySelector(".carousel-next");
-  let currentIndex = 0;
-  let autoplayInterval;
-
-  // Exit if no slides or track
-  if (!slides.length || !track) return;
-
-  // Setup navigation dots
-  if (dotNav) {
-    dotNav.innerHTML = "";
-    const totalSlides = slides.length;
-    const maxDots = totalSlides < 7 ? totalSlides : 7;
-
-    for (let i = 0; i < maxDots; i++) {
-      const dot = document.createElement("button");
-      dot.setAttribute("aria-label", `Go to slide ${i + 1}`);
-      dot.setAttribute("data-slide", i);
-      if (i === 0) dot.classList.add("active");
-      dotNav.appendChild(dot);
-    }
-  }
-
-  // Function to move to a specific slide
-  function moveToSlide(index) {
-    if (!slides.length || !track) return;
-
-    // Ensure index is within bounds
-    const safeIndex = ((index % slides.length) + slides.length) % slides.length;
-
-    // Move the track
-    track.style.transform = `translateX(-${safeIndex * 100}%)`;
-
-    // Update active dot
-    if (dotNav) {
-      const dots = dotNav.querySelectorAll("button");
-      dots.forEach((dot) => dot.classList.remove("active"));
-
-      // Calculate which dot to activate (for when we have more slides than dots)
-      const activeDotIndex = safeIndex % dots.length;
-      if (dots[activeDotIndex]) {
-        dots[activeDotIndex].classList.add("active");
-      }
-    }
-
-    currentIndex = safeIndex;
-  }
-
-  // Start autoplay
-  function startAutoplay() {
-    stopAutoplay(); // Clear any existing interval
-    autoplayInterval = setInterval(() => {
-      moveToSlide(currentIndex + 1);
-    }, 5000);
-  }
-
-  // Stop autoplay
-  function stopAutoplay() {
-    if (autoplayInterval) {
-      clearInterval(autoplayInterval);
-    }
-  }
-
-  // Event listeners for navigation
-  if (dotNav) {
-    dotNav.addEventListener("click", (e) => {
-      if (e.target.tagName === "BUTTON") {
-        const index = Number.parseInt(
-          e.target.getAttribute("data-slide") || "0"
-        );
-        moveToSlide(index);
-        startAutoplay(); // Reset autoplay timer
-      }
-    });
-  }
-
-  if (prevArrow) {
-    prevArrow.addEventListener("click", () => {
-      moveToSlide(currentIndex - 1);
-      startAutoplay(); // Reset autoplay timer
-    });
-  }
-
-  if (nextArrow) {
-    nextArrow.addEventListener("click", () => {
-      moveToSlide(currentIndex + 1);
-      startAutoplay(); // Reset autoplay timer
-    });
-  }
-
-  // Pause autoplay when user interacts with carousel
-  if (track) {
-    track.addEventListener("mouseenter", stopAutoplay);
-    track.addEventListener("mouseleave", startAutoplay);
-
-    // Touch events for mobile
-    let touchStartX = 0;
-    let touchEndX = 0;
-
-    track.addEventListener(
-      "touchstart",
-      (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-        stopAutoplay();
-      },
-      { passive: true }
-    );
-
-    track.addEventListener(
-      "touchend",
-      (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        const diff = touchStartX - touchEndX;
-
-        // Swipe threshold
-        if (Math.abs(diff) > 50) {
-          if (diff > 0) {
-            // Swipe left, go to next slide
-            moveToSlide(currentIndex + 1);
-          } else {
-            // Swipe right, go to previous slide
-            moveToSlide(currentIndex - 1);
-          }
-        }
-
-        startAutoplay();
-      },
-      { passive: true }
-    );
-  }
-
-  // Initialize with first slide
-  moveToSlide(0);
-  startAutoplay();
-}
-
-// Add this style for the retry button
-document.head.insertAdjacentHTML(
-  "beforeend",
-  `
-  <style>
-    .retry-btn {
-      margin-top: 1rem;
-      padding: 0.5rem 1rem;
-      background-color: #191970;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    .retry-btn:hover {
-      background-color: #0f0f50;
-    }
-  </style>
-`
-);
 
 // Add Vercel Analytics and Speed Insights
 function addVercelInsights() {
@@ -776,7 +504,102 @@ function addVercelInsights() {
   document.head.appendChild(speedInsightsScript);
 }
 
-// Call the function to add Vercel insights
-addVercelInsights();
-
-// Rest of your existing JavaScript code
+// Add CSS styles for new features
+document.addEventListener("DOMContentLoaded", () => {
+  const style = document.createElement("style");
+  style.textContent = `
+    /* Form validation styles */
+    input.error, textarea.error {
+      border-color: #dc3545 !important;
+      background-color: rgba(220, 53, 69, 0.05);
+    }
+    
+    .error-message {
+      color: #dc3545;
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+    }
+    
+    .form-message {
+      padding: 0.75rem 1rem;
+      border-radius: 4px;
+      margin-top: 1rem;
+      transition: opacity 0.3s ease;
+    }
+    
+    .form-message.success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .form-message.error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    /* Animation classes */
+    .pre-animation {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    
+    .animated {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* Skip to content link */
+    .skip-to-content {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: #191970;
+      color: white;
+      padding: 8px;
+      z-index: 100;
+      transition: top 0.3s ease;
+    }
+    
+    .skip-to-content:focus {
+      top: 0;
+    }
+    
+    /* Dark theme support */
+    .dark-theme {
+      --bg-color: #121212;
+      --text-color: #e0e0e0;
+      --card-bg: #1e1e1e;
+      --border-color: #333;
+    }
+    
+    .dark-theme body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    
+    .dark-theme .certificate-image-container {
+      background-color: #2a2a2a;
+      border-color: #444;
+    }
+    
+    .dark-theme .certificate-info h3 {
+      color: #a0c4ff;
+    }
+    
+    .dark-theme .toggle-description {
+      color: #a0c4ff;
+    }
+    
+    .dark-theme .carousel-nav button {
+      background-color: #555;
+    }
+    
+    .dark-theme .carousel-nav button.active {
+      background-color: #a0c4ff;
+    }
+  `;
+  document.head.appendChild(style);
+});
