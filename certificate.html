@@ -36,31 +36,34 @@
         A collection of my professional certifications and achievements
       </p>
 
-      <section class="carousel">
-        <div class="carousel-track-container">
-          <ul class="carousel-track" id="certificates-container">
-            <!-- Loading state shown initially -->
-            <li class="loading-state">
-              <div class="loading-spinner"></div>
-              <p>Loading certificates...</p>
-            </li>
-          </ul>
-        </div>
-        <!-- Carousel Controls -->
-        <button
-          class="carousel-arrow carousel-prev"
-          aria-label="Previous Slide"
-        >
-          &#10094;
-        </button>
-        <button class="carousel-arrow carousel-next" aria-label="Next Slide">
-          &#10095;
-        </button>
-        <!-- Dot Navigation -->
-        <div class="carousel-nav" aria-label="Carousel Navigation">
-          <!-- Dots generated dynamically -->
-        </div>
-      </section>
+      <!-- New wrapper div to fix z-index issues -->
+      <div class="certificate-content-wrapper">
+        <section class="carousel">
+          <div class="carousel-track-container">
+            <ul class="carousel-track" id="certificates-container">
+              <!-- Loading state shown initially -->
+              <li class="loading-state">
+                <div class="loading-spinner"></div>
+                <p>Loading certificates...</p>
+              </li>
+            </ul>
+          </div>
+          <!-- Carousel Controls -->
+          <button
+            class="carousel-arrow carousel-prev"
+            aria-label="Previous Slide"
+          >
+            &#10094;
+          </button>
+          <button class="carousel-arrow carousel-next" aria-label="Next Slide">
+            &#10095;
+          </button>
+          <!-- Dot Navigation -->
+          <div class="carousel-nav" aria-label="Carousel Navigation">
+            <!-- Dots generated dynamically -->
+          </div>
+        </section>
+      </div>
     </main>
 
     <footer class="footer slide-in-up">
@@ -69,5 +72,6 @@
 
     <script src="script.js"></script>
     <script src="certificate.js"></script>
+    <script src="certificate-swipe-hint.js"></script>
   </body>
 </html>

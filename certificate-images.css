@@ -1,170 +1,235 @@
-/* Certificate-specific styles */
+/* Certificate Carousel Stylesheet
+ * Author: v0
+ * Description: Responsive styles for certificate carousel component
+ * Version: 1.0
+ */
 
-/* Certificate container */
-.certificates-section {
-  padding: 2rem 0;
+/* Add CSS custom properties at the top of the file */
+:root {
+  --certificate-primary: #191970;
+  --certificate-primary-light: rgba(25, 25, 112, 0.8);
+  --certificate-primary-lighter: rgba(25, 25, 112, 0.2);
+  --certificate-accent: #e3eeff;
+  --certificate-bg-light: #f6f9ff;
+  --certificate-bg-gradient: linear-gradient(15deg, #f8fbff 0%, #f4f7ff 100%);
+  --certificate-text: #333;
+  --certificate-text-light: #666;
+  --certificate-border: #eee;
+  --certificate-shadow: rgba(0, 0, 0, 0.1);
+  --certificate-transition-fast: 0.2s ease-out;
+  --certificate-transition-normal: 0.3s ease;
 }
 
-/* Carousel layout */
-.carousel-container {
+/* ===== Main Container Structure ===== */
+.certificate {
+  margin-top: 80px; /* Space for fixed header */
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Fix z-index issues with the certificate content */
+.certificate-content-wrapper {
+  position: relative;
+  width: 100%;
+  z-index: 1; /* Ensure content is above any background elements */
+}
+
+/* ===== Carousel Structure ===== */
+.carousel {
+  width: 100%;
+  max-width: 1000px;
+  margin: 2rem auto;
   position: relative;
   overflow: hidden;
-  margin: 2rem 0;
+}
+
+.carousel-track-container {
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
 }
 
 .carousel-track {
   display: flex;
-  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.5s ease;
+  min-height: 500px; /* Minimum height to prevent layout shifts */
 }
 
+/* ===== Slide Structure ===== */
 .carousel-slide {
   min-width: 100%;
   display: flex;
-  flex-direction: column;
-  padding: 1rem;
+  flex-direction: row; /* Horizontal layout for desktop */
+  padding: 2rem;
   box-sizing: border-box;
 }
 
-/* Certificate Image Handling Styles */
+/* ===== Certificate Image Container ===== */
 .certificate-image-container {
-  width: 100%;
+  width: 50%;
+  padding: 1rem;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 1rem;
-  min-height: 200px;
-  max-height: 500px;
-  overflow: hidden;
+  justify-content: center;
   position: relative;
   background-color: #f9f9f9;
   border-radius: 8px;
-  border: 2px solid #191970;
+  overflow: hidden;
 }
 
-/* Certificate Image - Base Styles */
-.carousel-slide img {
+.certificate-image {
   max-width: 100%;
-  height: auto;
-  border: none;
-  border-radius: 6px;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  object-fit: contain; /* Show full image without cropping */
-  max-height: 450px;
+  max-height: 400px;
+  object-fit: contain; /* Maintain aspect ratio */
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 }
 
-/* Image hover effect */
-.carousel-slide img:hover {
-  transform: scale(1.02);
-}
-
-/* Image orientation classes */
-.carousel-slide img.landscape {
-  width: 100%;
-  height: auto;
-}
-
-.carousel-slide img.portrait {
-  height: auto;
-  max-height: 450px;
+/* Image aspect ratio handling */
+.certificate-image.portrait {
+  max-height: 400px;
   width: auto;
-  max-width: 100%;
 }
 
-.carousel-slide img.square {
-  width: auto;
+.certificate-image.landscape {
+  max-width: 100%;
   height: auto;
-  max-width: 100%;
-  max-height: 450px;
 }
 
-/* Loading state for images */
-.carousel-slide img.loading {
-  opacity: 0.6;
+.certificate-image.square {
+  max-width: 350px;
+  max-height: 350px;
 }
 
-.carousel-slide img.loaded {
+/* Image loading state */
+.certificate-image.loading {
+  opacity: 0.5;
+}
+
+.certificate-image.loaded {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* Image controls (zoom button) */
+.image-controls {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.certificate-image-container:hover .image-controls {
   opacity: 1;
 }
 
-.certificate-info {
-  padding: 1.5rem;
-  background: rgba(25, 25, 112, 0.05);
-  border-radius: 8px;
-  margin-top: 1rem;
+.zoom-btn {
+  background-color: rgba(25, 25, 112, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.certificate-info h3 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.2rem;
-  color: #191970;
+.zoom-btn:hover {
+  background-color: rgba(25, 25, 112, 1);
+}
+
+/* ===== Certificate Info ===== description box setting and colour*/
+.certificate-info {
+  width: 50%;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center alignment vertically */
+  align-items: flex-start; /* Left-align content */
+  background: #f8f9fa; /* Subtle gradient */
+  border: 4px solid #f2f2f2; /* Decorative border */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.certificate-title {
+  font-size: 1.5rem;
+  color: var(--certificate-primary);
+  margin-bottom: 1rem;
+  line-height: 1.3;
+  width: 80%; /* Text width constraint */
+  margin: 0 0 1rem 0; /* Remove auto margins to maintain left alignment */
+  text-align: left; /* Explicitly set left alignment */
 }
 
 .meta {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0.75rem;
-  font-size: 0.9rem;
-  color: #555;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  color: var(--certificate-text-light);
+  width: 80%; /* Text width constraint */
+  margin: 0 0 1.5rem 0; /* Remove auto margins to maintain left alignment */
 }
 
-.issuer {
-  font-weight: 600;
-}
-
-/* Description styling with see more/less functionality */
+/* Description container with updated styling for left alignment */
 .description-container {
   position: relative;
-  width: 100%;
+  margin-top: 1rem;
+  max-height: 300px;
+  overflow: hidden;
+  width: 80%; /* Text width constraint */
+  margin: 1rem 0 0 0; /* Remove auto margins to maintain left alignment */
 }
 
 .description {
+  line-height: 1.6;
   margin-bottom: 0.5rem;
-  line-height: 1.5;
-  font-size: 0.95rem;
+  color: var(--certificate-text);
+  text-align: left; /* Explicitly set left alignment */
+}
+
+.description-short {
+  display: block;
+}
+
+.description-full {
+  display: none;
 }
 
 .toggle-description {
   background: none;
   border: none;
-  color: #191970;
+  color: var(--certificate-primary);
   font-weight: 600;
   cursor: pointer;
   padding: 0.25rem 0;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   text-decoration: underline;
+  margin-top: 0.5rem;
+  align-self: flex-start; /* Align to the left */
+  display: block;
+  margin-left: 0; /* Remove auto margins */
+  margin-right: auto;
 }
 
-.toggle-description:hover {
-  color: #0f0f50;
-}
-
-/* Carousel navigation - Restored to original styling */
-.carousel-nav {
-  text-align: center;
-  margin-top: 1.5rem;
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.carousel-nav button {
-  border: none;
-  background-color: #ddd;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.carousel-nav button.active {
-  background-color: #ffd700;
-  transform: scale(1.2);
-}
-
-/* Carousel Controls - Restored to original styling */
-.carousel-prev,
-.carousel-next {
+/* ===== Carousel Navigation ===== */
+/* Carousel Controls - FIXED to prevent cropping */
+.carousel-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -174,159 +239,67 @@
   font-size: 2rem;
   padding: 0.75rem 1rem;
   cursor: pointer;
-  z-index: 10;
+  z-index: 100; /* Adjusted z-index */
   transition: all 0.3s ease;
   border-radius: 4px;
+  width: 50px; /* Fixed width */
+  height: 50px; /* Fixed height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.carousel-prev:hover,
-.carousel-next:hover {
-  background: #191970;
-  transform: translateY(-50%) scale(1.1);
+.carousel-arrow:hover {
+  background-color: var(--certificate-primary);
+  transform: translateY(-50%) scale(1.15); /* 15% scale increase on hover */
 }
 
 .carousel-prev {
-  left: 30px;
+  left: -6px; /* Increased side spacing */
 }
 
 .carousel-next {
-  right: 30px;
+  right: -6px; /* Increased side spacing */
 }
 
-/* Loading and error states */
-.loading-state {
+/* Dot navigation */
+.carousel-nav {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  min-height: 300px;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
 }
-
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #191970;
+/*dot colour and setting up theme */
+.carousel-nav button {
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
+  background-color: #191970;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.carousel-nav button.active {
+  background-color: #ffd700 !important;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+.carousel-nav button:hover {
+  background-color: #9790eb;
 }
 
-.error {
-  text-align: center;
-  padding: 2rem;
-  background-color: #f8d7da;
-  color: #721c24;
-  border-radius: 8px;
+/* ===== Mobile Controls Container ===== */
+.carousel-controls-container {
+  display: none; /* Hidden by default, shown on mobile */
+  width: 100%;
+  padding: 0.75rem 0;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f9f9;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .carousel-slide {
-    padding: 0.75rem;
-  }
-
-  .certificate-image-container {
-    max-height: 350px;
-  }
-
-  .carousel-slide img.portrait {
-    max-height: 330px;
-  }
-
-  .certificate-info h3 {
-    font-size: 1.1rem;
-  }
-
-  .description {
-    font-size: 0.9rem;
-    line-height: 1.4;
-  }
-
-  .meta {
-    font-size: 0.8rem;
-  }
-
-  .carousel-prev,
-  .carousel-next {
-    padding: 0.5rem 0.75rem;
-    font-size: 1.5rem;
-  }
-
-  .carousel-prev {
-    left: 10px;
-  }
-
-  .carousel-next {
-    right: 10px;
-  }
-}
-
-@media (max-width: 480px) {
-  .certificate-image-container {
-    max-height: 250px;
-  }
-
-  .carousel-slide img.portrait {
-    max-height: 230px;
-  }
-
-  .carousel-slide {
-    padding: 0.75rem;
-  }
-
-  .certificate-info {
-    padding: 1rem;
-  }
-
-  .description {
-    font-size: 0.9rem;
-  }
-}
-
-/* Improved layout for larger screens */
-@media (min-width: 1200px) {
-  .carousel-slide {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    align-items: center;
-  }
-
-  .certificate-image-container {
-    margin-bottom: 0;
-  }
-
-  .certificate-info {
-    margin-top: 0;
-  }
-}
-
-/* Print layout improvements */
-@media print {
-  .carousel-slide img {
-    max-height: none !important;
-    max-width: 100%;
-    object-fit: contain;
-  }
-
-  .certificate-image-container {
-    border: none;
-    box-shadow: none;
-    max-height: none;
-  }
-}
-
-/* Image zoom modal */
+/* ===== Zoom Modal ===== */
 .zoom-modal {
   position: fixed;
   top: 0;
@@ -365,44 +338,42 @@
   cursor: pointer;
 }
 
-/* Image controls */
-.image-controls {
+/* Lightbox navigation */
+.zoom-modal .lightbox-nav {
   position: absolute;
-  bottom: 10px;
-  right: 10px;
+  top: 50%;
+  left: 0;
+  right: 0;
   display: flex;
-  gap: 8px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  padding: 0 2rem;
 }
 
-.certificate-image-container:hover .image-controls {
-  opacity: 1;
-}
-
-.zoom-btn,
-.download-btn {
-  background-color: rgba(25, 25, 112, 0.8);
+.zoom-modal .lightbox-nav button {
+  background: rgba(0, 0, 0, 0.5);
   color: white;
   border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.zoom-btn:hover,
-.download-btn:hover {
-  background-color: rgba(25, 25, 112, 1);
+.zoom-modal .lightbox-nav button:hover {
+  background: rgba(0, 0, 0, 0.8);
 }
 
-/* Certificate controls styling */
+/* ===== Search and Filter Controls ===== */
 .certificate-controls {
-  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto 2rem;
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
@@ -445,7 +416,336 @@
   min-width: 150px;
 }
 
-/* Accessibility styles */
+/* ===== Error and Loading States ===== */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  width: 100%;
+  gap: 1rem;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #191970;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.error,
+.no-results {
+  text-align: center;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin: 2rem auto;
+  max-width: 600px;
+  width: 100%;
+}
+
+.retry-btn,
+.reset-btn {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #191970;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.retry-btn:hover,
+.reset-btn:hover {
+  background-color: #0f0f50;
+}
+
+/* Add swipe education overlay for mobile */
+.swipe-hint {
+  display: none; /* Hidden by default, shown on mobile */
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 400px;
+  background-color: rgba(25, 25, 112, 0.9);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  text-align: center;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  pointer-events: none;
+  animation: fadeInOut 4s forwards;
+}
+
+.swipe-hint-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.swipe-arrow {
+  font-size: 1.2rem;
+  animation: arrowPulse 1.5s infinite;
+}
+
+.swipe-arrow-left {
+  animation-delay: 0s;
+}
+
+.swipe-arrow-right {
+  animation-delay: 0.75s;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes arrowPulse {
+  0% {
+    opacity: 0.5;
+    transform: translateX(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  75% {
+    opacity: 0.8;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0.5;
+    transform: translateX(0);
+  }
+}
+
+/* Add prefers-reduced-motion media query */
+@media (prefers-reduced-motion: reduce) {
+  .carousel-track {
+    transition: none;
+  }
+
+  .carousel-arrow:hover {
+    transform: translateY(-50%);
+  }
+
+  .certificate-image {
+    transition: none;
+  }
+
+  .swipe-arrow {
+    animation: none;
+  }
+
+  @keyframes fadeInOut {
+    0% {
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+}
+
+/* ===== Mobile Styles (< 768px) ===== */
+@media (max-width: 768px) {
+  /* Hide all arrow navigation on mobile */
+  .carousel-arrow,
+  .mobile-arrow,
+  .carousel-prev,
+  .carousel-next {
+    display: none !important; /* Use !important to override any other styles */
+  }
+
+  /* Hide the carousel-controls-container that might contain arrows */
+  .carousel-controls-container {
+    display: none !important;
+  }
+
+  /* Ensure the touch-action is properly set for swiping */
+  .carousel-track {
+    touch-action: pan-y;
+  }
+
+  /* Adjust the certificate-info for mobile */
+  .certificate-info {
+    width: 100%;
+    border-left: none;
+    border-top: 4px solid var(--certificate-accent);
+    margin-top: 0;
+    padding: 1.5rem 1rem;
+    align-items: flex-start; /* Maintain left alignment on mobile */
+  }
+
+  /* Ensure title, meta, and description maintain left alignment on mobile */
+  .certificate-title,
+  .meta,
+  .description-container {
+    width: 100%; /* Full width on mobile */
+    text-align: left;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .certificate {
+    padding: 1rem 0;
+  }
+
+  /* Strict vertical stack */
+  .carousel-slide {
+    flex-direction: column;
+    padding: 0 0 1rem 0;
+  }
+
+  /* Full-bleed images */
+  .certificate-image-container {
+    width: 100vw;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    border-radius: 0;
+    padding: 0;
+    margin-bottom: 0;
+  }
+
+  .certificate-image {
+    width: 100%;
+    border-radius: 0;
+    max-height: 350px;
+  }
+
+  /* Show swipe hint on mobile */
+  .swipe-hint {
+    display: block;
+  }
+
+  /* Add touch-action for mobile optimization */
+  .carousel-track {
+    touch-action: pan-y;
+  }
+
+  /* Adjust info section for mobile */
+  .certificate-info {
+    border-left: none;
+    border-top: 4px solid var(--certificate-accent);
+    margin-top: 0;
+    padding-top: 1.5rem;
+  }
+
+  /* Ensure controls container appears after image but before info */
+  .carousel-controls-container {
+    order: 1;
+    display: flex;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Ensure mobile arrows have minimum touch target size */
+  .mobile-arrow {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Move dot navigation to bottom */
+  .carousel-nav {
+    order: 3;
+    margin-top: 1rem;
+  }
+
+  /* Ensure dot navigation buttons have adequate touch targets */
+  .carousel-nav button {
+    width: 12px;
+    height: 12px;
+    padding: 0;
+    margin: 0 6px;
+  }
+
+  /* Adjust search and filter for mobile */
+  .certificate-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-container,
+  .filter-container {
+    width: 100%;
+  }
+
+  /* Adjust description for mobile */
+  .description-container {
+    max-height: none;
+  }
+
+  .description {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  /* Touch hint for mobile */
+  .touch-hint {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    text-align: center;
+    padding: 0.25rem 0;
+  }
+}
+
+/* ===== Landscape Mode on Mobile ===== */
+@media (max-width: 768px) and (orientation: landscape) {
+  .carousel-slide {
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .certificate-image-container,
+  .certificate-info {
+    width: 50%;
+  }
+
+  .certificate-image-container {
+    margin-bottom: 0;
+  }
+
+  /* Adjust image size for landscape */
+  .certificate-image {
+    max-height: 250px;
+  }
+}
+
+/* ===== Accessibility ===== */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -464,28 +764,45 @@ button:focus,
 input:focus,
 select:focus,
 [tabindex]:focus {
-  outline: 3px solid rgba(25, 25, 112, 0.5);
+  outline: 2px solid rgba(25, 25, 112, 0.5);
   outline-offset: 2px;
 }
 
-/* No results message */
-.no-results {
-  text-align: center;
-  padding: 2rem;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-}
+/* ===== Print Styles ===== */
+@media print {
+  .certificate {
+    margin: 0;
+    padding: 0.5cm;
+  }
 
-.reset-btn {
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
+  .carousel-track-container {
+    overflow: visible;
+    box-shadow: none;
+  }
 
-.reset-btn:hover {
-  background-color: #5a6268;
+  .carousel-track {
+    display: block;
+    transform: none !important;
+  }
+
+  .carousel-slide {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin-bottom: 1cm;
+  }
+
+  .carousel-arrow,
+  .carousel-nav,
+  .image-controls,
+  .toggle-description {
+    display: none !important;
+  }
+
+  .description-short {
+    display: none !important;
+  }
+
+  .description-full {
+    display: block !important;
+  }
 }
