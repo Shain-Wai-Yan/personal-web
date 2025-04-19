@@ -18,7 +18,8 @@
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="portfolio-nav.css" />
     <link rel="stylesheet" href="photography.css" />
-    <!-- Open Graph tags for social sharing -->
+
+    <!-- Open Graph tags -->
     <meta
       property="og:title"
       content="Photography Portfolio | Shain's Portfolio"
@@ -32,11 +33,10 @@
       property="og:url"
       content="https://yourportfolio.com/photography.html"
     />
-    <!-- Add an og:image if you have one -->
-    <!-- <meta property="og:image" content="https://yourportfolio.com/images/landscape-preview.jpg"> -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
   </head>
+
   <body>
     <header class="header slide-in">
       <div class="nav-container">
@@ -109,8 +109,6 @@
         </p>
       </section>
 
-      <!-- Add filter controls after the landscape-header section -->
-      <!-- Update the filter controls section to be dynamically populated from API -->
       <section class="filter-controls">
         <button class="filter-button active" data-filter="all">
           All Photos
@@ -126,20 +124,49 @@
         <button class="filter-button" data-filter="clouds">Clouds</button>
       </section>
 
-      <!-- Update the masonry-container div to include a search input -->
       <div class="masonry-container">
         <div class="search-container">
           <input
             type="text"
             id="photo-search"
             placeholder="Search photos by title or location..."
+            aria-label="Search photos"
           />
-        </div>
-        <div class="masonry-grid" id="masonry-grid">
-          <!-- Images will be loaded dynamically via JavaScript -->
+          <button class="refresh-button" aria-label="Reset search">
+            <svg
+              class="refresh-icon"
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+            >
+              <path
+                fill="currentColor"
+                d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
+              />
+            </svg>
+          </button>
         </div>
 
-        <!-- Related Photos Feature -->
+        <div class="masonry-grid" id="masonry-grid">
+          <!-- Dynamic content will be injected here -->
+          <div class="no-photos-message">
+            <svg
+              class="photo-warning-icon"
+              viewBox="0 0 24 24"
+              width="48"
+              height="48"
+            >
+              <path
+                fill="#191970"
+                d="M11 15h2v2h-2zm0-8h2v6h-2zm1-5C6.47 2 2 6.5 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2zm0 18a8 8 0 0 1-8-8 8 8 0 0 1 8-8 8 8 0 0 1 8 8 8 8 0 0 1-8 8z"
+              />
+            </svg>
+            <h3>No Photos Found</h3>
+            <p>Try adjusting your search terms or filters</p>
+            <button class="reset-filters-btn">Reset All Filters</button>
+          </div>
+        </div>
+
         <div class="related-photos-overlay" id="related-photos-overlay"></div>
         <div
           class="related-photos-container"
@@ -152,7 +179,6 @@
 
       <div class="photo-lightbox" id="photo-lightbox">
         <div class="lightbox-overlay"></div>
-        <!-- Lightbox container will be dynamically created by JavaScript -->
       </div>
 
       <div class="load-more-container">
