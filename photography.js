@@ -1,3 +1,636 @@
+// Assuming these variables are defined elsewhere or will be populated later
+const allPhotos = []; // Initialize as an empty array
+let filteredPhotos = []; // Initialize as an empty array
+let processedPhotoIds = new Set(); // Initialize as a Set
+const API_URL = process.env.API_URL || "http://localhost:1337";
+const IMAGE_SIZES = {
+  thumbnail: 150,
+  small: 300,
+  medium: 600,
+  large: 1000,
+};
+
+// Helper function to reset the processed photo IDs
+function resetProcessedPhotoIds() {
+  processedPhotoIds = new Set();
+}
+
+// Helper function to shuffle an array (Fisher-Yates shuffle)
+function shuffleArray(array) {
+  let currentIndex = array.length,
+    randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex != 0) {
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+
+  return array;
+}
+
+// Helper function to check if a photo object is valid
+function isValidPhoto(photo) {
+  return photo && photo.src; // Basic validation: check if photo and src exist
+}
+
+// Helper function to generate a random title
+function generateRandomTitle() {
+  const adjectives = ["Amazing", "Beautiful", "Stunning", "Incredible"];
+  const nouns = ["Landscape", "View", "Scene", "Moment"];
+  const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+  const noun = nouns[Math.floor(Math.random() * nouns.length)];
+  return `${adjective} ${noun}`;
+}
+
+// Helper function to create an adaptive placeholder SVG
+function createAdaptivePlaceholder(width, aspectRatio = "landscape") {
+  const height =
+    aspectRatio === "square"
+      ? width
+      : aspectRatio === "portrait"
+      ? width * 1.33
+      : width * 0.75; // Default to landscape
+  const svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" fill="#eee" xmlns="http://www.w3.org/2000/svg/></svg>`;
+  return `data:image/svg+xml;base64,${btoa(svg)}`;
+}
+
+// Helper function to get optimized image URL
+function getOptimizedImageUrl(originalUrl, size) {
+  if (!originalUrl) return null;
+
+  const url = new URL(originalUrl);
+  const pathname = url.pathname;
+
+  // Check if the URL already has query parameters
+  const hasParams = originalUrl.includes("?");
+
+  // Construct the new URL with the desired width parameter
+  const optimizedUrl = hasParams
+    ? `${originalUrl}&width=${size}`
+    : `${originalUrl}?width=${size}`;
+
+  return optimizedUrl;
+}
+
+// Helper function to determine responsive image size
+function getResponsiveImageSize() {
+  const viewportWidth = window.innerWidth;
+
+  if (viewportWidth <= 600) {
+    return IMAGE_SIZES.small;
+  } else if (viewportWidth <= 1024) {
+    return IMAGE_SIZES.medium;
+  } else {
+    return IMAGE_SIZES.large;
+  }
+}
+
+// Helper function to handle image load errors
+function handleImageLoadError(img, fallbackImage) {
+  console.error("Image failed to load:", img.src);
+  img.src = fallbackImage;
+  img.alt = "Error loading image";
+}
+
+// Helper function to update gallery items (implementation depends on your gallery setup)
+function updateGalleryItems() {
+  // Implementation depends on your gallery setup
+  console.log("Gallery items updated.");
+}
+
+// Helper function to setup lazy loading (implementation depends on your lazy loading library)
+function setupLazyLoading() {
+  // Implementation depends on your lazy loading library
+  console.log("Lazy loading setup.");
+}
+
+// Helper function to recalculate grid layout (implementation depends on your masonry library)
+function recalculateGrid() {
+  // Implementation depends on your masonry library
+  console.log("Grid recalculated.");
+}
+
+// Replace the knownCategories object with your original categories
+const knownCategories = {
+  mountains: ["mountains", "mountain", "hill"],
+  lakes: ["lakes", "lake", "water", "river"],
+  scenic: ["scenic", "landscape", "nature", "view"],
+  "sunset & sunrise": ["sunset", "sunrise", "dusk", "dawn", "evening"],
+  building: ["building", "temple", "pagoda", "architecture", "structure"],
+  "cafe & bars": ["cafe", "bar", "restaurant", "coffee", "food"],
+  clouds: ["clouds", "cloud", "sky"],
+};
+
+// Update the updateCategoryFilters function to preserve your exact category names
+async function updateCategoryFilters() {
+  try {
+    console.log("Starting category filter update...");
+
+    // Get the filter controls container
+    const filterControls = document.querySelector(".filter-controls");
+    if (!filterControls) {
+      console.warn("Filter controls container not found");
+      return;
+    }
+
+    // Don't clear existing buttons - they're already set up correctly
+    // Instead, just make sure they have proper event listeners
+
+    // Add event listeners to all buttons
+    document.querySelectorAll(".filter-button").forEach((button) => {
+      // Remove any existing listeners by cloning
+      const newButton = button.cloneNode(true);
+      button.parentNode.replaceChild(newButton, button);
+
+      // Add fresh event listener
+      newButton.addEventListener("click", function () {
+        console.log(
+          "Category button clicked:",
+          this.dataset.filter,
+          "Button text:",
+          this.textContent
+        );
+
+        // Remove active class from all buttons
+        document.querySelectorAll(".filter-button").forEach((btn) => {
+          btn.classList.remove("active");
+        });
+
+        // Add active class to clicked button
+        this.classList.add("active");
+
+        // IMPORTANT: Use the exact text content of the button for filtering
+        // This ensures we match the exact category name in the Strapi data
+        const filterValue = this.dataset.filter;
+        console.log("Filtering by exact value:", filterValue);
+
+        // Filter photos using the button's data-filter attribute for exact matching
+        filterPhotos(filterValue);
+      });
+    });
+
+    // Make sure "All Photos" is active by default
+    const allButton = document.querySelector(
+      '.filter-button[data-filter="all"]'
+    );
+    if (allButton) {
+      allButton.classList.add("active");
+    }
+
+    console.log("Category filter event listeners updated successfully");
+  } catch (error) {
+    console.error("Error updating category filters:", error);
+  }
+}
+
+// Update the filterPhotos function to handle your original category names
+function filterPhotos(category) {
+  console.log("Filtering photos by category:", category);
+
+  // Reset the processed IDs when filtering
+  resetProcessedPhotoIds();
+
+  // Get the masonry grid
+  const masonryGrid = document.getElementById("masonry-grid");
+  if (!masonryGrid) {
+    console.error("Masonry grid not found!");
+    return;
+  }
+
+  // Clear the grid
+  masonryGrid.innerHTML = "";
+
+  if (category === "all") {
+    // Show all photos
+    filteredPhotos = shuffleArray(allPhotos.filter(isValidPhoto));
+    console.log("Showing all photos:", filteredPhotos.length);
+  } else {
+    // Filter photos by category or tags - using more flexible matching
+    filteredPhotos = shuffleArray(
+      allPhotos.filter((photo) => {
+        // Check if photo is valid
+        if (!isValidPhoto(photo)) return false;
+
+        // Get photo category and tags
+        const photoCategory = photo.category || "";
+        const photoTags = photo.tags || [];
+
+        // Log for debugging
+        console.log(
+          `Checking photo ${photo.id} with category "${photoCategory}" against filter "${category}"`
+        );
+
+        // Check if photo matches category - IMPROVED: Use includes for more flexible matching
+        const matchesCategory = photoCategory
+          .toLowerCase()
+          .includes(category.toLowerCase());
+
+        // Check if photo has matching tag - IMPROVED: Use some with includes for more flexible matching
+        const matchesTag =
+          Array.isArray(photoTags) &&
+          photoTags.some((tag) =>
+            tag.toLowerCase().includes(category.toLowerCase())
+          );
+
+        // Special case handling for compound categories like "sunset & sunrise" or "cafe & bars"
+        const isCompoundMatch =
+          ((category === "sunset" || category === "sunset & sunrise") &&
+            (photoCategory.toLowerCase().includes("sunset") ||
+              photoCategory.toLowerCase().includes("sunrise"))) ||
+          ((category === "cafe" || category === "cafe & bars") &&
+            (photoCategory.toLowerCase().includes("cafe") ||
+              photoCategory.toLowerCase().includes("bar"))) ||
+          (category === "clouds" &&
+            (photoCategory.toLowerCase().includes("cloud") ||
+              photoCategory.toLowerCase().includes("sky"))) ||
+          (category === "mountains" &&
+            (photoCategory.toLowerCase().includes("mountain") ||
+              photoCategory.toLowerCase().includes("hill"))) ||
+          (category === "lakes" &&
+            (photoCategory.toLowerCase().includes("lake") ||
+              photoCategory.toLowerCase().includes("water"))) ||
+          (category === "building" &&
+            (photoCategory.toLowerCase().includes("building") ||
+              photoCategory.toLowerCase().includes("temple") ||
+              photoCategory.toLowerCase().includes("pagoda")));
+
+        // Log matches for debugging
+        if (matchesCategory || matchesTag || isCompoundMatch) {
+          console.log(`Photo "${photo.title}" matches category ${category}:`, {
+            photoCategory: photoCategory,
+            tags: photoTags,
+            isCompoundMatch: isCompoundMatch,
+          });
+        }
+
+        return matchesCategory || matchesTag || isCompoundMatch;
+      })
+    );
+    console.log("Filtered photos count:", filteredPhotos.length);
+  }
+
+  // Display filtered photos
+  if (filteredPhotos.length === 0) {
+    // No photos in this category
+    const noCategoryMessage = document.createElement("div");
+    noCategoryMessage.className = "no-photos-message";
+    noCategoryMessage.innerHTML = `<p>No photos found in the "${category}" category.</p>`;
+    masonryGrid.appendChild(noCategoryMessage);
+    console.log("No photos found in category:", category);
+  } else {
+    // Create and append masonry items for filtered photos
+    filteredPhotos.forEach((photo) => {
+      const item = createMasonryItem(photo);
+      if (item) {
+        masonryGrid.appendChild(item);
+      }
+    });
+  }
+
+  // Update gallery items array
+  updateGalleryItems();
+
+  // Setup lazy loading for new items
+  setupLazyLoading();
+
+  // Recalculate grid layout
+  setTimeout(recalculateGrid, 300);
+}
+
+// Add this helper function to ensure photo objects have category and tags
+function transformPhotoData(strapiPhotos) {
+  if (!strapiPhotos || !Array.isArray(strapiPhotos)) {
+    console.error("Invalid photos data:", strapiPhotos);
+    return [];
+  }
+
+  return strapiPhotos.map((photo) => {
+    console.log(
+      "Processing photo ID:",
+      photo.id,
+      "Attributes exist:",
+      !!photo.attributes
+    );
+
+    // Initialize default values
+    let imageUrl = "";
+    let categoryName = "uncategorized";
+    let photoTags = [];
+    let title = "Untitled";
+    let alt_text = "Photo";
+    let location = "";
+
+    try {
+      // Handle Strapi v4 data structure
+      if (photo.attributes) {
+        // Extract image URL - FIXED to handle multiple formats
+        if (photo.attributes.image && photo.attributes.image.data) {
+          const imageData = photo.attributes.image.data;
+
+          // Try to get the URL from different possible locations
+          if (imageData.attributes && imageData.attributes.url) {
+            imageUrl = imageData.attributes.url;
+            console.log("Found image URL:", imageUrl);
+          } else if (imageData.attributes && imageData.attributes.formats) {
+            // Try to get the best format available
+            const formats = imageData.attributes.formats;
+            if (formats.large) {
+              imageUrl = formats.large.url;
+            } else if (formats.medium) {
+              imageUrl = formats.medium.url;
+            } else if (formats.small) {
+              imageUrl = formats.small.url;
+            } else if (formats.thumbnail) {
+              imageUrl = formats.thumbnail.url;
+            }
+            console.log("Found image format URL:", imageUrl);
+          } else if (imageData.url) {
+            imageUrl = imageData.url;
+          }
+        }
+
+        // Extract category - IMPORTANT: Preserve exact category name from Strapi
+        if (photo.attributes.category && photo.attributes.category.data) {
+          const categoryData = photo.attributes.category.data;
+          if (categoryData.attributes && categoryData.attributes.name) {
+            // Preserve exact category name including capitalization
+            categoryName = categoryData.attributes.name;
+            console.log("Found category:", categoryName);
+          } else if (categoryData.name) {
+            categoryName = categoryData.name;
+            console.log("Found category (direct):", categoryName);
+          }
+        }
+
+        // Extract tags - IMPORTANT: Preserve exact tag names from Strapi
+        if (
+          photo.attributes.tags &&
+          photo.attributes.tags.data &&
+          Array.isArray(photo.attributes.tags.data)
+        ) {
+          photoTags = photo.attributes.tags.data
+            .map((tag) => {
+              if (tag.attributes && tag.attributes.name) {
+                // Preserve exact tag name including capitalization
+                return tag.attributes.name;
+              } else if (tag.name) {
+                return tag.name;
+              }
+              return null;
+            })
+            .filter(Boolean);
+          console.log("Found tags:", photoTags);
+        }
+
+        // Improve title fallback with random titles if needed
+        title = photo.attributes.title || generateRandomTitle() || "Untitled";
+        alt_text =
+          photo.attributes.alt_text || photo.attributes.title || "Photo";
+        location = photo.attributes.location || "";
+      } else {
+        // Handle direct structure or older Strapi versions
+        if (photo.image) {
+          if (photo.image.data && photo.image.data.attributes) {
+            imageUrl = photo.image.data.attributes.url;
+          } else if (photo.image.data && photo.image.data.url) {
+            imageUrl = photo.image.data.url;
+          } else if (photo.image.url) {
+            imageUrl = photo.image.url;
+          }
+        }
+
+        if (photo.category) {
+          if (photo.category.data && photo.category.data.attributes) {
+            // Preserve exact category name including capitalization
+            categoryName = photo.category.data.attributes.name;
+          } else if (photo.category.data && photo.category.data.name) {
+            categoryName = photo.category.data.name;
+          } else if (photo.category.name) {
+            categoryName = photo.category.name;
+          }
+        }
+
+        if (photo.tags && photo.tags.data && Array.isArray(photo.tags.data)) {
+          photoTags = photo.tags.data
+            .map((tag) => {
+              if (tag.attributes && tag.attributes.name) {
+                // Preserve exact tag name including capitalization
+                return tag.attributes.name;
+              } else if (tag.name) {
+                return tag.name;
+              }
+              return null;
+            })
+            .filter(Boolean);
+        }
+
+        // Improve title fallback with random titles if needed
+        title = photo.title || generateRandomTitle() || "Untitled";
+        alt_text = photo.alt_text || photo.title || "Photo";
+        location = photo.location || "";
+      }
+
+      // If we still don't have an image URL, check for other possible structures
+      if (!imageUrl && photo.url) {
+        imageUrl = photo.url;
+      }
+
+      // Ensure we have a valid image URL or use a placeholder
+      if (!imageUrl) {
+        console.warn("No image URL found for photo:", photo);
+        // Use inline SVG data URL instead of placeholder.svg
+        imageUrl = createAdaptivePlaceholder(600, "landscape");
+      }
+
+      // Make sure the URL is absolute
+      if (imageUrl.startsWith("/")) {
+        // Convert relative URL to absolute using the API_URL base
+        const apiBase = API_URL.split("/api")[0];
+        imageUrl = `${apiBase}${imageUrl}`;
+        console.log("Converted to absolute URL:", imageUrl);
+      }
+
+      // Store the original URL to avoid creating multiple versions
+      const originalUrl = imageUrl;
+
+      return {
+        id: photo.id || Math.random().toString(36).substring(2, 9),
+        title: title,
+        alt_text: alt_text,
+        location: location,
+        src: originalUrl,
+        aspectRatio:
+          (photo.attributes
+            ? photo.attributes.aspect_ratio
+            : photo.aspect_ratio) || "landscape",
+        category: categoryName, // Using exact category name from Strapi
+        tags: photoTags, // Using exact tag names from Strapi
+        // Add responsive image URLs - use the same base URL for all sizes
+        thumbnailSrc: getOptimizedImageUrl(originalUrl, IMAGE_SIZES.thumbnail),
+        smallSrc: getOptimizedImageUrl(originalUrl, IMAGE_SIZES.small),
+        mediumSrc: getOptimizedImageUrl(originalUrl, IMAGE_SIZES.medium),
+        largeSrc: getOptimizedImageUrl(originalUrl, IMAGE_SIZES.large),
+      };
+    } catch (error) {
+      console.error("Error transforming photo data:", error, photo);
+      // Return a placeholder for failed photos
+      const fallbackSvg = createAdaptivePlaceholder(600, "landscape");
+      return {
+        id: photo.id || Math.random().toString(36).substring(2, 9),
+        title: "Photo Load Error",
+        alt_text: "Error loading photo",
+        location: "",
+        src: fallbackSvg,
+        aspectRatio: "landscape",
+        category: "uncategorized",
+        tags: [],
+        thumbnailSrc: fallbackSvg,
+        smallSrc: fallbackSvg,
+        mediumSrc: fallbackSvg,
+        largeSrc: fallbackSvg,
+      };
+    }
+  });
+}
+
+// Add this function to create masonry items with proper category data
+function createMasonryItem(photo) {
+  // Skip if this is a duplicate photo
+  if (!photo || !photo.id) {
+    console.warn("Invalid photo object:", photo);
+    return null;
+  }
+
+  // Check if we've already processed this photo ID
+  if (processedPhotoIds.has(photo.id.toString())) {
+    console.log(`Skipping duplicate photo ID: ${photo.id}`);
+    return null;
+  }
+
+  // Add this ID to our tracking set
+  processedPhotoIds.add(photo.id.toString());
+
+  // Validate photo object to prevent "Untitled" boxes
+  if (!photo || !photo.id) {
+    console.error("Invalid photo object:", photo);
+    return document.createElement("div"); // Return empty div instead of broken item
+  }
+
+  const item = document.createElement("div");
+  item.className = `masonry-item new`;
+  item.dataset.id = photo.id;
+
+  // Set category data attributes for filtering - use exact category name
+  item.dataset.category = photo.category || "uncategorized";
+  item.dataset.tags =
+    photo.tags && Array.isArray(photo.tags) ? photo.tags.join(",") : "";
+
+  // FIXED: Ensure we have valid data for all fields with strong fallbacks
+  const title = photo.title || generateRandomTitle() || "Untitled";
+  const location = photo.location || "";
+  const alt_text = photo.alt_text || title || "Photo";
+  const tags = photo.tags && Array.isArray(photo.tags) ? photo.tags : [];
+
+  // Determine appropriate image size based on viewport
+  const responsiveSize = getResponsiveImageSize();
+  const optimizedSrc =
+    photo.mediumSrc ||
+    (photo.src ? getOptimizedImageUrl(photo.src, responsiveSize) : null);
+  const thumbnailSrc = photo.thumbnailSrc || optimizedSrc;
+
+  // Use inline SVG as fallback for error images or missing sources
+  const fallbackImage = createAdaptivePlaceholder(
+    responsiveSize,
+    photo.aspectRatio || "landscape"
+  );
+
+  // Use the source that exists or fallback
+  const imgSrc = thumbnailSrc || fallbackImage;
+  const dataSrc = optimizedSrc || imgSrc;
+
+  // Log the image URLs for debugging
+  console.log("Creating masonry item with image:", {
+    id: photo.id,
+    title: title,
+    category: photo.category, // Log exact category name
+    tags: photo.tags, // Log exact tag names
+    original: photo.src,
+    optimized: optimizedSrc,
+    thumbnail: thumbnailSrc,
+    aspectRatio: photo.aspectRatio,
+  });
+
+  item.innerHTML = `
+  <div class="masonry-image-container">
+    <div class="image-loading">
+      <div class="loading-spinner"></div>
+    </div>
+    <img 
+      src="${imgSrc}" 
+      data-src="${dataSrc}"
+      alt="${alt_text}" 
+      loading="lazy" 
+      class="lazy-image"
+      crossorigin="anonymous"
+      onerror="handleImageLoadError(this, '${fallbackImage}')"
+    />
+    <div class="photo-info-overlay">
+      <h3>${title}</h3>
+      <p>${location}</p>
+      ${
+        photo.category
+          ? `<span class="photo-category">${photo.category}</span>`
+          : ""
+      }
+    </div>
+  </div>
+  <div class="masonry-info">
+    <h3 class="masonry-title">${title}</h3>
+    <p class="masonry-location">${location}</p>
+    <div class="masonry-tags">
+      ${tags.map((tag) => `<span class="masonry-tag">${tag}</span>`).join("")}
+    </div>
+  </div>
+`;
+
+  const imageContainer = item.querySelector(".masonry-image-container");
+  const img = item.querySelector("img");
+
+  // Handle image load event
+  img.onload = () => {
+    console.log("Image loaded successfully:", img.src);
+    // Hide loading spinner
+    const loadingElement = item.querySelector(".image-loading");
+    if (loadingElement) {
+      loadingElement.style.display = "none";
+    }
+  };
+
+  // Handle image error with better error handling
+  img.onerror = () => {
+    console.error("Image failed to load:", img.src);
+    // Hide loading spinner
+    const loadingElement = item.querySelector(".image-loading");
+    if (loadingElement) {
+      loadingElement.style.display = "none";
+    }
+
+    // Show error placeholder
+    img.src = fallbackImage;
+    img.alt = "Error loading image";
+  };
+
+  return item;
+}
+
 /**
  * Photography Main Module
  * Handles initialization and configuration for the photography gallery
@@ -9,13 +642,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // API Configuration
     apiUrl: "https://backend-cms-89la.onrender.com/api",
 
-    // Cloudinary Configuration - FIXED
+    // Cloudinary Configuration
     cloudinary: {
-      // Prevent duplicate uploads by using a single transformation approach
       useOriginalUrl: true,
-      // Quality settings for different image sizes
       quality: "auto:good",
-      // Format settings (auto selects best format for browser)
       format: "auto",
     },
 
@@ -25,7 +655,6 @@ document.addEventListener("DOMContentLoaded", () => {
       initialPage: 1,
       infiniteScroll: true,
       lazyLoad: true,
-      // Cache duration in milliseconds (1 hour)
       cacheDuration: 60 * 60 * 1000,
     },
 
@@ -61,8 +690,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function initializeGallery(config) {
   console.log("Initializing photography gallery with config:", config);
 
-  // FIXED: Add Cloudinary configuration to window object
-  // This allows the photography-fetch-fixed.js script to access the configuration
+  // Add Cloudinary configuration to window object
   window.photographyConfig = config;
 }
 
@@ -85,8 +713,7 @@ function loadScript(src) {
 }
 
 /**
- * FIXED: Cloudinary URL helper functions
- * These functions help prevent duplicate uploads by ensuring consistent URL handling
+ * Cloudinary URL helper functions
  */
 
 // Get optimized Cloudinary URL
@@ -112,7 +739,7 @@ window.getOptimizedCloudinaryUrl = (url, width, options = {}) => {
       const quality = options.quality || config.quality || "auto:good";
       const format = options.format || config.format || "auto";
 
-      // FIXED: Use c_scale instead of c_fill to preserve aspect ratio and show full image
+      // Use c_scale instead of c_fill to preserve aspect ratio
       return `${parts[0]}/upload/c_scale,w_${width},q_${quality},f_${format}/${parts[1]}`;
     }
 
@@ -216,6 +843,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let lastScrollPosition = 0;
   let navigationDirection = 0;
   let hasMorePhotos = true;
+  let imageObserver = null; // Store the observer reference
+  const processedPhotoIds = new Set(); // Use a Set for tracking processed photo IDs
 
   // API Configuration
   const API_URL = "https://backend-cms-89la.onrender.com/api";
@@ -264,11 +893,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Helper Functions
-  // FIXED: Simplified aspect ratio handling - no complex calculations
+  // Simplified aspect ratio handling - no complex calculations
   function setAspectRatio(img, container) {
     // Do nothing - let CSS handle natural aspect ratios
-    // This allows images to display at their natural proportions
-    // Initialize UI enhancements
   }
 
   // Cache management
@@ -308,7 +935,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // FIXED: Image optimization function that properly handles Cloudinary URLs
+  // Image optimization function that properly handles Cloudinary URLs
   function getOptimizedImageUrl(url, width, aspectRatio = "landscape") {
     if (!url || url.startsWith("data:")) {
       // Create an adaptive placeholder based on aspect ratio
@@ -327,7 +954,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const parts = url.split("/upload/");
         if (parts.length < 2) return url;
 
-        // FIXED: Use c_scale instead of c_fill to preserve aspect ratio
+        // Use c_scale instead of c_fill to preserve aspect ratio
         return `${parts[0]}/upload/c_scale,w_${width},q_auto:good,f_auto/${parts[1]}`;
       }
 
@@ -341,7 +968,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ADDED: Create adaptive placeholder based on image dimensions and aspect ratio
+  // Create adaptive placeholder based on image dimensions and aspect ratio
   function createAdaptivePlaceholder(width, aspectRatio = "landscape") {
     // Default height based on common aspect ratios
     let height;
@@ -410,7 +1037,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // FIXED: Preload images for smoother transitions with CORS support
+  // Preload images for smoother transitions with CORS support
   function preloadImage(src) {
     if (preloadedImages[src]) return preloadedImages[src];
 
@@ -482,8 +1109,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return cachedPhotos;
       }
 
-      // Fetch with pagination, sorting, and populate relations
-      const url = `${API_URL}/photographies?pagination[page]=${page}&pagination[pageSize]=${pageSize}&sort=createdAt:desc&populate=*`;
+      // Fetch with pagination and populate relations (no sorting for random display)
+      const url = `${API_URL}/photographies?pagination[page]=${page}&pagination[pageSize]=${pageSize}&populate=*`;
       console.log(`Fetching photos from: ${url}`);
 
       const response = await fetch(url, {
@@ -594,7 +1221,34 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // FIXED: Transform Strapi data to our format with improved URL handling
+  // Add this function above transformPhotoData:
+  function generateRandomTitle() {
+    const randomTitles = [
+      "Moment in Time",
+      "Captured Beauty",
+      "Visual Story",
+      "Perfect Frame",
+      "Light & Shadow",
+      "Perspective",
+      "Natural Wonder",
+      "Urban Scene",
+      "Artistic View",
+      "Composition",
+      "Scenic Vista",
+      "Quiet Moment",
+      "Vibrant Scene",
+      "Hidden Detail",
+      "Striking Image",
+      "Peaceful View",
+      "Dynamic Composition",
+      "Elegant Capture",
+      "Timeless Moment",
+      "Creative Vision",
+    ];
+    return randomTitles[Math.floor(Math.random() * randomTitles.length)];
+  }
+
+  // Transform Strapi data to our format with improved URL handling
   function transformPhotoData(strapiPhotos) {
     if (!strapiPhotos || !Array.isArray(strapiPhotos)) {
       console.error("Invalid photos data:", strapiPhotos);
@@ -602,7 +1256,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     return strapiPhotos.map((photo) => {
-      console.log("Processing photo:", photo); // Debug log
+      console.log(
+        "Processing photo ID:",
+        photo.id,
+        "Attributes exist:",
+        !!photo.attributes
+      );
 
       // Initialize default values
       let imageUrl = "";
@@ -641,17 +1300,20 @@ document.addEventListener("DOMContentLoaded", () => {
             }
           }
 
-          // Extract category
+          // Extract category - IMPORTANT: Preserve exact category name from Strapi
           if (photo.attributes.category && photo.attributes.category.data) {
             const categoryData = photo.attributes.category.data;
             if (categoryData.attributes && categoryData.attributes.name) {
-              categoryName = categoryData.attributes.name.toLowerCase();
+              // Preserve exact category name including capitalization
+              categoryName = categoryData.attributes.name;
+              console.log("Found category:", categoryName);
             } else if (categoryData.name) {
-              categoryName = categoryData.name.toLowerCase();
+              categoryName = categoryData.name;
+              console.log("Found category (direct):", categoryName);
             }
           }
 
-          // Extract tags
+          // Extract tags - IMPORTANT: Preserve exact tag names from Strapi
           if (
             photo.attributes.tags &&
             photo.attributes.tags.data &&
@@ -660,16 +1322,19 @@ document.addEventListener("DOMContentLoaded", () => {
             photoTags = photo.attributes.tags.data
               .map((tag) => {
                 if (tag.attributes && tag.attributes.name) {
-                  return tag.attributes.name.toLowerCase();
+                  // Preserve exact tag name including capitalization
+                  return tag.attributes.name;
                 } else if (tag.name) {
-                  return tag.name.toLowerCase();
+                  return tag.name;
                 }
                 return null;
               })
               .filter(Boolean);
+            console.log("Found tags:", photoTags);
           }
 
-          title = photo.attributes.title || "Untitled";
+          // Improve title fallback with random titles if needed
+          title = photo.attributes.title || generateRandomTitle() || "Untitled";
           alt_text =
             photo.attributes.alt_text || photo.attributes.title || "Photo";
           location = photo.attributes.location || "";
@@ -687,11 +1352,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
           if (photo.category) {
             if (photo.category.data && photo.category.data.attributes) {
-              categoryName = photo.category.data.attributes.name.toLowerCase();
+              // Preserve exact category name including capitalization
+              categoryName = photo.category.data.attributes.name;
             } else if (photo.category.data && photo.category.data.name) {
-              categoryName = photo.category.data.name.toLowerCase();
+              categoryName = photo.category.data.name;
             } else if (photo.category.name) {
-              categoryName = photo.category.name.toLowerCase();
+              categoryName = photo.category.name;
             }
           }
 
@@ -699,16 +1365,18 @@ document.addEventListener("DOMContentLoaded", () => {
             photoTags = photo.tags.data
               .map((tag) => {
                 if (tag.attributes && tag.attributes.name) {
-                  return tag.attributes.name.toLowerCase();
+                  // Preserve exact tag name including capitalization
+                  return tag.attributes.name;
                 } else if (tag.name) {
-                  return tag.name.toLowerCase();
+                  return tag.name;
                 }
                 return null;
               })
               .filter(Boolean);
           }
 
-          title = photo.title || "Untitled";
+          // Improve title fallback with random titles if needed
+          title = photo.title || generateRandomTitle() || "Untitled";
           alt_text = photo.alt_text || photo.title || "Photo";
           location = photo.location || "";
         }
@@ -733,7 +1401,7 @@ document.addEventListener("DOMContentLoaded", () => {
           console.log("Converted to absolute URL:", imageUrl);
         }
 
-        // FIXED: Store the original URL to avoid creating multiple versions
+        // Store the original URL to avoid creating multiple versions
         const originalUrl = imageUrl;
 
         return {
@@ -746,8 +1414,8 @@ document.addEventListener("DOMContentLoaded", () => {
             (photo.attributes
               ? photo.attributes.aspect_ratio
               : photo.aspect_ratio) || "landscape",
-          category: categoryName,
-          tags: photoTags,
+          category: categoryName, // Using exact category name from Strapi
+          tags: photoTags, // Using exact tag names from Strapi
           // Add responsive image URLs - use the same base URL for all sizes
           thumbnailSrc: getOptimizedImageUrl(
             originalUrl,
@@ -779,6 +1447,45 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Shuffle array using Fisher-Yates algorithm
+  function shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }
+
+  // Update the calculateRowSpan function if it exists
+  function calculateRowSpan(element) {
+    const ROW_HEIGHT = 10;
+    const GAP = 10;
+    const height = element.offsetHeight + GAP;
+    return Math.ceil(height / (ROW_HEIGHT + GAP));
+  }
+
+  // Add a recalculateGrid function if it doesn't exist
+  function recalculateGrid() {
+    const items = document.querySelectorAll(".masonry-item");
+    items.forEach((item) => {
+      const img = item.querySelector("img");
+      const imageContainer = item.querySelector(".masonry-image-container");
+
+      if (img.complete && img.naturalWidth > 0) {
+        // Image is already loaded
+        if (typeof setAspectRatio === "function") {
+          setAspectRatio(img, imageContainer);
+        }
+
+        if (typeof calculateRowSpan === "function") {
+          const rowSpan = calculateRowSpan(item);
+          item.style.gridRowEnd = `span ${Math.max(rowSpan, 20)}`; // Ensure minimum height
+        }
+      }
+    });
+  }
+
   // Add this function to handle image loading errors
   function handleImageLoadError(img, fallbackImage) {
     console.error("Image failed to load:", img.src);
@@ -788,63 +1495,100 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // FIXED: Create masonry item with optimized image loading
   function createMasonryItem(photo) {
+    // Skip if this is a duplicate photo
+    if (!photo || !photo.id) {
+      console.warn("Invalid photo object:", photo);
+      return null;
+    }
+
+    // Check if we've already processed this photo ID
+    if (processedPhotoIds.has(photo.id.toString())) {
+      console.log(`Skipping duplicate photo ID: ${photo.id}`);
+      return null;
+    }
+
+    // Add this ID to our tracking set
+    processedPhotoIds.add(photo.id.toString());
+
+    // Validate photo object to prevent "Untitled" boxes
+    if (!photo || !photo.id) {
+      console.error("Invalid photo object:", photo);
+      return document.createElement("div"); // Return empty div instead of broken item
+    }
+
     const item = document.createElement("div");
     item.className = `masonry-item new`;
     item.dataset.id = photo.id;
-    item.dataset.category = photo.category;
-    item.dataset.tags = photo.tags.join(",");
+    item.dataset.category = photo.category || "uncategorized";
+    item.dataset.tags =
+      photo.tags && Array.isArray(photo.tags) ? photo.tags.join(",") : "";
 
-    // FIXED: Add aspect ratio as data attribute for CSS targeting
-    // We're not setting a fixed aspect ratio anymore
+    // FIXED: Ensure we have valid data for all fields with strong fallbacks
+    const title = photo.title || generateRandomTitle() || "Untitled";
+    const location = photo.location || "";
+    const alt_text = photo.alt_text || title || "Photo";
+    const tags = photo.tags && Array.isArray(photo.tags) ? photo.tags : [];
 
     // Determine appropriate image size based on viewport
     const responsiveSize = getResponsiveImageSize();
     const optimizedSrc =
-      photo.mediumSrc || getOptimizedImageUrl(photo.src, responsiveSize);
+      photo.mediumSrc ||
+      (photo.src ? getOptimizedImageUrl(photo.src, responsiveSize) : null);
     const thumbnailSrc = photo.thumbnailSrc || optimizedSrc;
 
+    // Use inline SVG as fallback for error images or missing sources
+    const fallbackImage = createAdaptivePlaceholder(
+      responsiveSize,
+      photo.aspectRatio || "landscape"
+    );
+
+    // Use the source that exists or fallback
+    const imgSrc = thumbnailSrc || fallbackImage;
+    const dataSrc = optimizedSrc || imgSrc;
+
     // Log the image URLs for debugging
-    console.log("Creating masonry item with image:", {
+    console.log("Creating masonry item:", {
+      id: photo.id,
+      title: title,
+      category: photo.category,
+      tags: photo.tags,
       original: photo.src,
       optimized: optimizedSrc,
       thumbnail: thumbnailSrc,
     });
 
-    // Use inline SVG as fallback for error images
-    const fallbackImage = createAdaptivePlaceholder(
-      responsiveSize,
-      photo.aspectRatio
-    );
-
     item.innerHTML = `
-      <div class="masonry-image-container">
-        <div class="image-loading">
-          <div class="loading-spinner"></div>
-        </div>
-        <img 
-          src="${thumbnailSrc}" 
-          data-src="${optimizedSrc}"
-          alt="${photo.alt_text}" 
-          loading="lazy" 
-          class="lazy-image"
-          crossorigin="anonymous"
-          onerror="handleImageLoadError(this, '${fallbackImage}')"
-        />
-        <div class="photo-info-overlay">
-          <h3>${photo.title}</h3>
-          <p>${photo.location}</p>
-        </div>
+    <div class="masonry-image-container">
+      <div class="image-loading">
+        <div class="loading-spinner"></div>
       </div>
-      <div class="masonry-info">
-        <h3 class="masonry-title">${photo.title}</h3>
-        <p class="masonry-location">${photo.location}</p>
-        <div class="masonry-tags">
-          ${photo.tags
-            .map((tag) => `<span class="masonry-tag">${tag}</span>`)
-            .join("")}
-        </div>
+      <img 
+        src="${imgSrc}" 
+        data-src="${dataSrc}"
+        alt="${alt_text}" 
+        loading="lazy" 
+        class="lazy-image"
+        crossorigin="anonymous"
+        onerror="handleImageLoadError(this, '${fallbackImage}')"
+      />
+      <div class="photo-info-overlay">
+        <h3>${title}</h3>
+        <p>${location}</p>
+        ${
+          photo.category
+            ? `<span class="photo-category">${photo.category}</span>`
+            : ""
+        }
       </div>
-    `;
+    </div>
+    <div class="masonry-info">
+      <h3 class="masonry-title">${title}</h3>
+      <p class="masonry-location">${location}</p>
+      <div class="masonry-tags">
+        ${tags.map((tag) => `<span class="masonry-tag">${tag}</span>`).join("")}
+      </div>
+    </div>
+  `;
 
     const imageContainer = item.querySelector(".masonry-image-container");
     const img = item.querySelector("img");
@@ -853,16 +1597,22 @@ document.addEventListener("DOMContentLoaded", () => {
     img.onload = () => {
       console.log("Image loaded successfully:", img.src);
       // Hide loading spinner
-      item.querySelector(".image-loading").style.display = "none";
+      const loadingElement = item.querySelector(".image-loading");
+      if (loadingElement) {
+        loadingElement.style.display = "none";
+      }
     };
 
-    // Handle image error
+    // Handle image error with better error handling
     img.onerror = () => {
       console.error("Image failed to load:", img.src);
       // Hide loading spinner
-      item.querySelector(".image-loading").style.display = "none";
+      const loadingElement = item.querySelector(".image-loading");
+      if (loadingElement) {
+        loadingElement.style.display = "none";
+      }
 
-      // Show error placeholder (now using inline SVG data URL)
+      // Show error placeholder
       img.src = fallbackImage;
       img.alt = "Error loading image";
     };
@@ -1217,7 +1967,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // Lazy loading with Intersection Observer
   function setupLazyLoading() {
     if ("IntersectionObserver" in window) {
-      const imageObserver = new IntersectionObserver(
+      // Disconnect previous observer if it exists
+      if (imageObserver) {
+        imageObserver.disconnect();
+      }
+
+      imageObserver = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
@@ -1261,6 +2016,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // FIXED: Improved loadPhotos function to handle the Node error
   async function loadPhotos() {
     if (isLoading) return;
     isLoading = true;
@@ -1293,8 +2049,12 @@ document.addEventListener("DOMContentLoaded", () => {
       hasMorePhotos = pagination && page < pagination.pageCount;
 
       // Transform Strapi data to our format
-      const newPhotos = transformPhotoData(response.data);
-      console.log("Transformed photos:", newPhotos); // Debug log
+      let newPhotos = transformPhotoData(response.data);
+      console.log("Transformed photos before shuffle:", newPhotos); // Debug log
+
+      // Shuffle the new photos
+      newPhotos = shuffleArray(newPhotos);
+      console.log("Transformed photos after shuffle:", newPhotos); // Debug log
 
       // Add to our collection
       allPhotos = [...allPhotos, ...newPhotos];
@@ -1309,9 +2069,13 @@ document.addEventListener("DOMContentLoaded", () => {
           "<p>No photos found. Please try again later.</p>";
         masonryGrid.appendChild(noPhotosMessage);
       } else {
+        // FIXED: Check if each item is valid before appending
         newPhotos.forEach((photo) => {
           const item = createMasonryItem(photo);
-          masonryGrid.appendChild(item);
+          if (item) {
+            // Only append if item is not null
+            masonryGrid.appendChild(item);
+          }
         });
       }
 
@@ -1412,14 +2176,52 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Filter photos by category
+  // Reset the processed IDs when filtering or searching
+  function resetProcessedPhotoIds() {
+    processedPhotoIds.clear();
+  }
+
+  // FIXED: Improved filter photos function with better category handling
   function filterPhotos(category) {
+    console.log("Filtering photos by category:", category);
+
+    // Reset the processed IDs when filtering
+    resetProcessedPhotoIds();
+
     if (category === "all") {
-      filteredPhotos = allPhotos;
+      // Make sure we're working with valid photo objects only
+      filteredPhotos = shuffleArray(allPhotos.filter(isValidPhoto));
+      console.log("Showing all photos:", filteredPhotos.length);
     } else {
-      filteredPhotos = allPhotos.filter(
-        (photo) => photo.category === category || photo.tags.includes(category)
+      filteredPhotos = shuffleArray(
+        allPhotos.filter((photo) => {
+          // Check if photo is valid
+          if (!isValidPhoto(photo)) return false;
+
+          // Check if photo matches category
+          const matchesCategory = photo.category === category;
+
+          // Check if photo has matching tag
+          const matchesTag =
+            photo.tags &&
+            Array.isArray(photo.tags) &&
+            photo.tags.some((tag) => tag === category);
+
+          // Log matches for debugging
+          if (matchesCategory || matchesTag) {
+            console.log(
+              `Photo "${photo.title}" matches category ${category}:`,
+              {
+                category: photo.category,
+                tags: photo.tags,
+              }
+            );
+          }
+
+          return matchesCategory || matchesTag;
+        })
       );
+      console.log("Filtered photos count:", filteredPhotos.length);
     }
 
     // Clear grid and display filtered photos
@@ -1431,10 +2233,14 @@ document.addEventListener("DOMContentLoaded", () => {
       noCategoryMessage.className = "no-photos-message";
       noCategoryMessage.innerHTML = `<p>No photos found in the "${category}" category.</p>`;
       masonryGrid.appendChild(noCategoryMessage);
+      console.log("No photos found in category:", category);
     } else {
       filteredPhotos.forEach((photo) => {
         const item = createMasonryItem(photo);
-        masonryGrid.appendChild(item);
+        if (item) {
+          // Only append if not null (not a duplicate)
+          masonryGrid.appendChild(item);
+        }
       });
     }
 
@@ -1443,6 +2249,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Setup lazy loading for new items
     setupLazyLoading();
+
+    // Recalculate grid layout
+    setTimeout(recalculateGrid, 300);
+  }
+
+  // Add a function to validate photo objects to prevent data corruption
+  function isValidPhoto(photo) {
+    return (
+      photo &&
+      typeof photo === "object" &&
+      photo.id &&
+      (photo.title || photo.src)
+    );
   }
 
   // Search photos by title, location, or tags
@@ -1477,7 +2296,10 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       searchResults.forEach((photo) => {
         const item = createMasonryItem(photo);
-        masonryGrid.appendChild(item);
+        if (item) {
+          // Only append if item is not null
+          masonryGrid.appendChild(item);
+        }
       });
     }
 
@@ -1686,42 +2508,77 @@ document.addEventListener("DOMContentLoaded", () => {
         // Add rotating animation class
         this.classList.add("refreshing");
 
-        // Clear cache and reload photos
-        if (typeof clearCache === "function") {
-          clearCache();
+        // FIXED: Don't clear cache or reset photo arrays completely
+        // Instead, create a deep copy of the existing photos to preserve all metadata
+        if (window.allPhotos && window.allPhotos.length > 0) {
+          // Create deep copies of the photo objects to ensure all metadata is preserved
+          const photosCopy = window.allPhotos.map((photo) => ({ ...photo }));
+
+          // Shuffle the copied photos array
+          window.allPhotos = shuffleArray(photosCopy);
+
+          // Update filtered photos to match the current filter
+          const activeFilter = document.querySelector(".filter-button.active");
+          if (activeFilter && activeFilter.dataset.filter === "all") {
+            // For "All Photos" view, use the full shuffled array
+            window.filteredPhotos = [...window.allPhotos];
+          } else if (activeFilter) {
+            // For category views, filter the shuffled array
+            const category = activeFilter.dataset.filter;
+            window.filteredPhotos = window.allPhotos.filter(
+              (photo) =>
+                photo.category === category || photo.tags.includes(category)
+            );
+          } else {
+            // Fallback to all photos if no active filter
+            window.filteredPhotos = [...window.allPhotos];
+          }
+
+          // Clear the grid
+          const masonryGrid = document.getElementById("masonry-grid");
+          if (masonryGrid) {
+            masonryGrid.innerHTML = "";
+
+            // Reset the processed IDs when refreshing
+            resetProcessedPhotoIds();
+
+            // Re-render the photos from the filtered array
+            window.filteredPhotos.forEach((photo) => {
+              // Ensure all required properties exist before creating the item
+              if (photo && photo.id && photo.title && photo.src) {
+                const item = createMasonryItem(photo);
+                if (item) {
+                  // Only append if item is not null
+                  masonryGrid.appendChild(item);
+                }
+              } else {
+                console.warn("Skipping invalid photo object:", photo);
+              }
+            });
+
+            // Update gallery items and setup lazy loading
+            updateGalleryItems();
+            setupLazyLoading();
+
+            // Recalculate grid layout
+            setTimeout(recalculateGrid, 300);
+          }
+        } else {
+          // Only fetch new photos if we don't have any
+          if (typeof clearCache === "function") {
+            clearCache();
+          }
+
+          if (window.page !== undefined) {
+            window.page = 1;
+          }
+
+          if (typeof loadPhotos === "function") {
+            loadPhotos();
+          }
         }
 
-        // Reset page and photo arrays
-        if (window.page !== undefined) {
-          window.page = 1;
-        }
-
-        if (window.allPhotos !== undefined) {
-          window.allPhotos = [];
-        }
-
-        if (window.filteredPhotos !== undefined) {
-          window.filteredPhotos = [];
-        }
-
-        // Call existing load functions if available
-        if (typeof loadPhotos === "function") {
-          loadPhotos();
-        }
-
-        if (typeof updateCategoryFilters === "function") {
-          updateCategoryFilters();
-        }
-
-        // Reset active filter to "All Photos"
-        const allPhotosButton = document.querySelector(
-          '.filter-button[data-filter="all"]'
-        );
-        if (allPhotosButton) {
-          const filterButtons = document.querySelectorAll(".filter-button");
-          filterButtons.forEach((btn) => btn.classList.remove("active"));
-          allPhotosButton.classList.add("active");
-        }
+        // Don't reset the active filter - maintain the current view
 
         // Clear search input
         const searchInput = document.getElementById("photo-search");
@@ -1827,7 +2684,7 @@ document.addEventListener("DOMContentLoaded", () => {
           message = `No photos found in the "${activeFilter.textContent}" category`;
         }
 
-        const noPhotosMessage = createNoPhotosMessage(message, true);
+        const noPhotosMessage = window.createNoPhotosMessage(message, true);
         masonryGrid.appendChild(noPhotosMessage);
       }
     }, 300); // Small delay to ensure DOM is updated
@@ -1984,26 +2841,6 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         }
       });
-
-      // Add refresh button for clearing cache
-      const searchContainer = document.querySelector(".search-container");
-      if (searchContainer) {
-        const refreshButton = document.createElement("button");
-        refreshButton.className = "refresh-button";
-        refreshButton.innerHTML = "↻";
-        refreshButton.title = "Refresh photos";
-        refreshButton.addEventListener("click", () => {
-          clearCache();
-          page = 1;
-          allPhotos = [];
-          filteredPhotos = [];
-          loadPhotos();
-          updateCategoryFilters();
-        });
-
-        searchContainer.style.position = "relative";
-        searchContainer.appendChild(refreshButton);
-      }
     } catch (error) {
       console.error("Gallery initialization error:", error);
 
@@ -2027,21 +2864,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Add a function to dynamically update category filters from API
+  // FIXED: Improved updateCategoryFilters function with better event handling
   async function updateCategoryFilters() {
     try {
+      console.log("Starting category filter update...");
+
       // Fetch categories from API
       const categoriesData = await fetchCategories();
       console.log("Categories data:", categoriesData);
-
-      if (
-        !categoriesData ||
-        !categoriesData.data ||
-        !Array.isArray(categoriesData.data)
-      ) {
-        console.warn("Invalid categories data");
-        return;
-      }
 
       // Get the filter controls container
       const filterControls = document.querySelector(".filter-controls");
@@ -2050,283 +2880,278 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Keep the "All Photos" button
-      const allPhotosButton = filterControls.querySelector(
-        '[data-filter="all"]'
-      );
+      // Clear existing buttons
+      filterControls.innerHTML = "";
 
-      // Clear existing buttons except "All Photos"
-      Array.from(filterControls.children).forEach((child) => {
-        if (child !== allPhotosButton) {
-          child.remove();
+      // Add "All Photos" button
+      const allButton = document.createElement("button");
+      allButton.className = "filter-button active";
+      allButton.dataset.filter = "all";
+      allButton.textContent = "All Photos";
+      filterControls.appendChild(allButton);
+
+      // Extract categories from API data
+      const apiCategories = new Set();
+      if (
+        categoriesData &&
+        categoriesData.data &&
+        Array.isArray(categoriesData.data)
+      ) {
+        categoriesData.data.forEach((category) => {
+          let categoryName = "";
+          let categorySlug = "";
+
+          // Handle different data structures
+          if (category.attributes) {
+            categoryName = category.attributes.name;
+            categorySlug =
+              category.attributes.slug ||
+              category.attributes.name.toLowerCase();
+          } else {
+            categoryName = category.name;
+            categorySlug = category.slug || category.name.toLowerCase();
+          }
+
+          apiCategories.add(categorySlug);
+          console.log("Adding category from API:", categoryName, categorySlug);
+
+          // Create button
+          const button = document.createElement("button");
+          button.className = "filter-button";
+          button.dataset.filter = categorySlug;
+          button.textContent =
+            categoryName.charAt(0).toUpperCase() + categoryName.slice(1);
+          filterControls.appendChild(button);
+        });
+      }
+
+      // Extract categories directly from photos
+      const photoCategories = new Set();
+
+      // Get all photos
+      allPhotos.forEach((photo) => {
+        if (
+          photo.category &&
+          photo.category !== "uncategorized" &&
+          !apiCategories.has(photo.category)
+        ) {
+          photoCategories.add(photo.category);
+        }
+
+        // Also check tags
+        if (photo.tags && Array.isArray(photo.tags)) {
+          photo.tags.forEach((tag) => {
+            if (tag && !apiCategories.has(tag) && !photoCategories.has(tag)) {
+              photoCategories.add(tag);
+            }
+          });
         }
       });
 
-      // Add categories from API
-      categoriesData.data.forEach((category) => {
-        let categoryName = "";
-        let categorySlug = "";
+      console.log(
+        "Extracted categories from photos:",
+        Array.from(photoCategories)
+      );
 
-        // Handle different data structures
-        if (category.attributes) {
-          categoryName = category.attributes.name;
-          categorySlug =
-            category.attributes.slug || category.attributes.name.toLowerCase();
-        } else {
-          categoryName = category.name;
-          categorySlug = category.slug || category.name.toLowerCase();
-        }
+      // Add buttons for categories found in photos but not in API
+      photoCategories.forEach((category) => {
+        console.log("Adding category from photos:", category);
 
         // Create button
         const button = document.createElement("button");
         button.className = "filter-button";
-        button.dataset.filter = categorySlug;
-        button.textContent = categoryName;
+        button.dataset.filter = category;
+        button.textContent =
+          category.charAt(0).toUpperCase() + category.slice(1);
+        filterControls.appendChild(button);
+      });
 
-        // Add event listener
-        button.addEventListener("click", () => {
+      // Add event listeners to all buttons
+      document.querySelectorAll(".filter-button").forEach((button) => {
+        // Remove any existing listeners by cloning
+        const newButton = button.cloneNode(true);
+        button.parentNode.replaceChild(newButton, button);
+
+        // Add fresh event listener
+        newButton.addEventListener("click", function () {
+          console.log("Category button clicked:", this.dataset.filter);
+
           // Remove active class from all buttons
-          filterControls.querySelectorAll(".filter-button").forEach((btn) => {
+          document.querySelectorAll(".filter-button").forEach((btn) => {
             btn.classList.remove("active");
           });
 
           // Add active class to clicked button
-          button.classList.add("active");
+          this.classList.add("active");
 
-          // Filter items
-          filterPhotos(categorySlug);
+          // IMPORTANT: Use the exact text content of the button for filtering
+          // This ensures we match the exact category name in the Strapi data
+          const filterValue = this.dataset.filter;
+          console.log("Filtering by exact value:", filterValue);
+
+          // Filter photos using the button's data-filter attribute for exact matching
+          filterPhotos(filterValue);
         });
-
-        // Add to container
-        filterControls.appendChild(button);
       });
 
-      console.log("Category filters updated from API");
+      console.log("Category filters updated successfully");
     } catch (error) {
       console.error("Error updating category filters:", error);
     }
   }
 
-  // Start the gallery
+  // FIXED: Proper environment detection for Vercel analytics scripts
+  function conditionallyLoadVercelScripts() {
+    // Only load Vercel scripts in production environment (not on localhost)
+    if (
+      window.location.hostname !== "localhost" &&
+      !window.location.hostname.includes("127.0.0.1") &&
+      !window.location.hostname.includes(".local")
+    ) {
+      try {
+        // Create and append Vercel Analytics script
+        const insightsScript = document.createElement("script");
+        insightsScript.src = "/_vercel/insights/script.js";
+        insightsScript.async = true;
+        insightsScript.onerror = () =>
+          console.log(
+            "Vercel Insights script failed to load - this is expected in development"
+          );
+        document.head.appendChild(insightsScript);
+
+        // Create and append Vercel Speed Insights script
+        const speedInsightsScript = document.createElement("script");
+        speedInsightsScript.src = "/_vercel/speed-insights/script.js";
+        speedInsightsScript.async = true;
+        speedInsightsScript.onerror = () =>
+          console.log(
+            "Vercel Speed Insights script failed to load - this is expected in development"
+          );
+        document.head.appendChild(speedInsightsScript);
+
+        console.log(
+          "Vercel analytics scripts loaded in production environment"
+        );
+      } catch (error) {
+        console.log("Error loading Vercel analytics scripts:", error);
+      }
+    } else {
+      console.log(
+        "Vercel analytics scripts skipped in development environment"
+      );
+    }
+  }
+
+  // Apply the Vercel scripts fix
+  conditionallyLoadVercelScripts();
+
+  // Initialize the gallery
   initGallery();
+
+  // The duplicate photo fix will be applied when createMasonryItem is called
+  console.log("Photography gallery fixes applied");
 });
 
-/**
- * Photography UI Enhancements
- * Adds improved refresh button and no photos found message
- */
+// Add global handler for image loading errors
+window.handleImageLoadError = (img, fallbackImage) => {
+  console.error("Image failed to load:", img.src);
+  img.src = fallbackImage;
+  img.alt = "Error loading image";
+};
 
+// Your existing gallery code is above this line
+// ...
+
+// Add these enhancements at the END of your file
 document.addEventListener("DOMContentLoaded", () => {
-  // Initialize UI enhancements
-  initRefreshButton();
-  enhanceNoPhotosMessage();
-
-  // Check if we need to show the no photos message on load
-  checkAndShowNoPhotosMessage();
-});
-
-/**
- * Initialize the enhanced refresh button
- */
-function initRefreshButton() {
-  // Find the existing refresh button or create a new one
-  let refreshButton = document.querySelector(".refresh-button");
-  const searchContainer = document.querySelector(".search-container");
-
-  if (!refreshButton && searchContainer) {
-    // Create new refresh button with SVG icon
-    refreshButton = document.createElement("button");
-    refreshButton.className = "refresh-button";
-    refreshButton.setAttribute("aria-label", "Refresh photos");
-    refreshButton.setAttribute("title", "Refresh photos");
-
-    // Add SVG refresh icon
-    refreshButton.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 2v6h-6"></path>
-        <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
-        <path d="M3 22v-6h6"></path>
-        <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
-      </svg>
-    `;
-
-    searchContainer.appendChild(refreshButton);
-  }
-
-  // Add enhanced click handler
-  if (refreshButton) {
-    refreshButton.addEventListener("click", function () {
-      // Add rotating animation class
-      this.classList.add("refreshing");
-
-      // Clear cache and reload photos
-      if (typeof clearCache === "function") {
-        clearCache();
-      }
-
-      // Reset page and photo arrays
-      if (window.page !== undefined) {
-        window.page = 1;
-      }
-
-      if (window.allPhotos !== undefined) {
-        window.allPhotos = [];
-      }
-
-      if (window.filteredPhotos !== undefined) {
-        window.filteredPhotos = [];
-      }
-
-      // Call existing load functions if available
-      if (typeof loadPhotos === "function") {
-        loadPhotos();
-      }
-
-      if (typeof updateCategoryFilters === "function") {
-        updateCategoryFilters();
-      }
-
-      // Reset active filter to "All Photos"
-      const allPhotosButton = document.querySelector(
-        '.filter-button[data-filter="all"]'
-      );
-      if (allPhotosButton) {
-        const filterButtons = document.querySelectorAll(".filter-button");
-        filterButtons.forEach((btn) => btn.classList.remove("active"));
-        allPhotosButton.classList.add("active");
-      }
-
-      // Clear search input
-      const searchInput = document.getElementById("photo-search");
-      if (searchInput) {
-        searchInput.value = "";
-      }
-
-      // Remove animation class after rotation completes
-      setTimeout(() => {
-        this.classList.remove("refreshing");
-      }, 800);
-    });
-  }
-}
-
-/**
- * Enhance the "No photos found" message
- */
-function enhanceNoPhotosMessage() {
-  // Create a more visually appealing template for the no photos message
-  window.createNoPhotosMessage = (message, showResetButton = true) => {
-    const noPhotosMessage = document.createElement("div");
-    noPhotosMessage.className = "no-photos-message";
-
-    // Add icon
-    const iconHtml = `
-      <div class="no-photos-message-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-          <circle cx="12" cy="12" r="3"></circle>
-          <line x1="3" y1="3" x2="21" y2="21"></line>
-        </svg>
-      </div>
-    `;
-
-    // Add message and reset button
-    noPhotosMessage.innerHTML = `
-      ${iconHtml}
-      <p>${message || "No photos found"}</p>
-      ${
-        showResetButton
-          ? '<button class="reset-filters-button">Reset Filters</button>'
-          : ""
-      }
-    `;
-
-    // Add event listener to reset button
-    if (showResetButton) {
-      const resetButton = noPhotosMessage.querySelector(
-        ".reset-filters-button"
-      );
-      resetButton.addEventListener("click", resetAllFilters);
-    }
-
-    return noPhotosMessage;
-  };
-
-  // Override the existing search function to use our enhanced message
-  const originalSearchPhotos = window.searchPhotos;
-  if (typeof originalSearchPhotos === "function") {
-    window.searchPhotos = (searchTerm) => {
-      originalSearchPhotos(searchTerm);
-      checkAndShowNoPhotosMessage();
-    };
-  }
-
-  // Override the existing filter function to use our enhanced message
-  const originalFilterPhotos = window.filterPhotos;
-  if (typeof originalFilterPhotos === "function") {
-    window.filterPhotos = (category) => {
-      originalFilterPhotos(category);
-      checkAndShowNoPhotosMessage();
-    };
-  }
-}
-
-/**
- * Check if the gallery is empty and show the enhanced no photos message
- */
-function checkAndShowNoPhotosMessage() {
+  // Wait for your existing photo loading code to finish
   setTimeout(() => {
-    const masonryGrid = document.getElementById("masonry-grid");
-    const existingMessage = document.querySelector(".no-photos-message");
-    const hasPhotos = masonryGrid && masonryGrid.querySelector(".masonry-item");
+    // Basic virtual scrolling - only render what's visible
+    function setupBasicVirtualScrolling() {
+      const container = document.getElementById("masonry-grid");
+      const items = Array.from(container.querySelectorAll(".masonry-item"));
 
-    // Remove existing message if it exists
-    if (existingMessage) {
-      existingMessage.remove();
-    }
+      function updateVisibleItems() {
+        const viewportTop = window.scrollY;
+        const viewportBottom = viewportTop + window.innerHeight;
+        const buffer = 1000; // pixels above/below viewport
 
-    // If no photos are found, show our enhanced message
-    if (masonryGrid && !hasPhotos) {
-      // Get search term or active filter for contextual message
-      const searchInput = document.getElementById("photo-search");
-      const activeFilter = document.querySelector(".filter-button.active");
+        items.forEach((item) => {
+          const rect = item.getBoundingClientRect();
+          const itemTop = rect.top + viewportTop;
+          const itemBottom = rect.bottom + viewportTop;
 
-      let message = "No photos found";
+          // Is this item visible?
+          const isVisible =
+            itemBottom > viewportTop - buffer &&
+            itemTop < viewportBottom + buffer;
 
-      if (searchInput && searchInput.value) {
-        message = `No photos found matching "${searchInput.value}"`;
-      } else if (activeFilter && activeFilter.dataset.filter !== "all") {
-        message = `No photos found in the "${activeFilter.textContent}" category`;
+          // Show/hide based on visibility
+          item.style.display = isVisible ? "block" : "none";
+        });
       }
 
-      const noPhotosMessage = createNoPhotosMessage(message, true);
-      masonryGrid.appendChild(noPhotosMessage);
+      // Update on scroll (with throttling to improve performance)
+      let scrollTimeout;
+      window.addEventListener("scroll", () => {
+        if (!scrollTimeout) {
+          scrollTimeout = setTimeout(() => {
+            updateVisibleItems();
+            scrollTimeout = null;
+          }, 100);
+        }
+      });
+
+      // Initial update
+      updateVisibleItems();
     }
-  }, 300); // Small delay to ensure DOM is updated
-}
 
-/**
- * Reset all filters and search
- */
-function resetAllFilters() {
-  // Clear search input
-  const searchInput = document.getElementById("photo-search");
-  if (searchInput) {
-    searchInput.value = "";
-  }
+    // Progressive image loading
+    function setupProgressiveLoading() {
+      const images = document.querySelectorAll(".masonry-item img");
 
-  // Reset to "All Photos" filter
-  const allPhotosButton = document.querySelector(
-    '.filter-button[data-filter="all"]'
-  );
-  if (allPhotosButton) {
-    const filterButtons = document.querySelectorAll(".filter-button");
-    filterButtons.forEach((btn) => btn.classList.remove("active"));
-    allPhotosButton.classList.add("active");
+      // Use Intersection Observer if available
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const img = entry.target;
+                if (img.dataset.src && !img.dataset.loaded) {
+                  // Load high quality image
+                  img.src = img.dataset.src;
+                  img.classList.remove("loading");
+                  img.classList.add("loaded");
+                  img.dataset.loaded = "true";
 
-    // Trigger the filter
-    if (typeof filterPhotos === "function") {
-      filterPhotos("all");
+                  // Stop observing this image
+                  observer.unobserve(img);
+                }
+              }
+            });
+          },
+          {
+            rootMargin: "200px 0px",
+            threshold: 0.1,
+          }
+        );
+
+        // Observe all images
+        images.forEach((img) => observer.observe(img));
+      } else {
+        // Fallback for browsers without IntersectionObserver
+        images.forEach((img) => {
+          if (img.dataset.src) {
+            img.src = img.dataset.src;
+          }
+        });
+      }
     }
-  }
-}
+
+    // Run the enhancements
+    setupBasicVirtualScrolling();
+    setupProgressiveLoading();
+
+    console.log("Gallery enhancements applied");
+  }, 1000); // Wait 1 second for everything else to initialize
+});
