@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initSmoothScroll();
   initHoverEffects();
   initPortfolioItems();
-  initContactForm();
   initHamburgerMenu();
   initActiveNavHighlight();
   initViewportCleanup();
@@ -95,121 +94,6 @@ function initPortfolioItems() {
       }
     });
   });
-}
-
-// Contact form submission handling with validation
-function initContactForm() {
-  const contactForm = document.getElementById("contactForm");
-  if (contactForm) {
-    // Add input validation
-    const inputs = contactForm.querySelectorAll("input, textarea");
-    inputs.forEach((input) => {
-      input.addEventListener("blur", validateInput);
-      input.addEventListener("input", () => {
-        if (input.classList.contains("error")) {
-          validateInput.call(input);
-        }
-      });
-    });
-
-    contactForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      // Validate all inputs before submission
-      let isValid = true;
-      inputs.forEach((input) => {
-        if (!validateInput.call(input)) {
-          isValid = false;
-        }
-      });
-
-      if (!isValid) {
-        showFormMessage("Please fix the errors before submitting.", "error");
-        return;
-      }
-
-      const formData = new FormData(contactForm);
-      console.log("Form Submission:", Object.fromEntries(formData));
-
-      // Show success message with animation
-      showFormMessage(
-        "Thank you for your message! I will get back to you soon.",
-        "success"
-      );
-      contactForm.reset();
-    });
-  }
-
-  // Input validation function
-  function validateInput() {
-    const value = this.value.trim();
-    const errorElement = this.nextElementSibling?.classList.contains(
-      "error-message"
-    )
-      ? this.nextElementSibling
-      : null;
-
-    let errorMessage = "";
-
-    if (this.required && value === "") {
-      errorMessage = `${
-        this.name.charAt(0).toUpperCase() + this.name.slice(1)
-      } is required`;
-    } else if (
-      this.type === "email" &&
-      value !== "" &&
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-    ) {
-      errorMessage = "Please enter a valid email address";
-    }
-
-    if (errorMessage) {
-      this.classList.add("error");
-      if (errorElement) {
-        errorElement.textContent = errorMessage;
-      } else {
-        const error = document.createElement("div");
-        error.className = "error-message";
-        error.textContent = errorMessage;
-        this.insertAdjacentElement("afterend", error);
-      }
-      return false;
-    } else {
-      this.classList.remove("error");
-      if (errorElement) {
-        errorElement.textContent = "";
-      }
-      return true;
-    }
-  }
-
-  // Show form message
-  function showFormMessage(message, type) {
-    let messageElement = document.querySelector(".form-message");
-
-    if (!messageElement) {
-      messageElement = document.createElement("div");
-      messageElement.className = "form-message";
-      contactForm.insertAdjacentElement("afterend", messageElement);
-    }
-
-    messageElement.textContent = message;
-    messageElement.className = `form-message ${type}`;
-    messageElement.style.opacity = "0";
-
-    // Fade in
-    setTimeout(() => {
-      messageElement.style.opacity = "1";
-    }, 10);
-
-    // Fade out after 5 seconds
-    setTimeout(() => {
-      messageElement.style.opacity = "0";
-      setTimeout(() => {
-        messageElement.remove();
-      }, 300);
-    }, 5000);
-  }
 }
 
 // Hamburger menu toggle functionality
@@ -508,37 +392,6 @@ function addVercelInsights() {
 document.addEventListener("DOMContentLoaded", () => {
   const style = document.createElement("style");
   style.textContent = `
-    /* Form validation styles */
-    input.error, textarea.error {
-      border-color: #dc3545 !important;
-      background-color: rgba(220, 53, 69, 0.05);
-    }
-    
-    .error-message {
-      color: #dc3545;
-      font-size: 0.85rem;
-      margin-top: 0.25rem;
-    }
-    
-    .form-message {
-      padding: 0.75rem 1rem;
-      border-radius: 4px;
-      margin-top: 1rem;
-      transition: opacity 0.3s ease;
-    }
-    
-    .form-message.success {
-      background-color: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
-    }
-    
-    .form-message.error {
-      background-color: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
-    }
-    
     /* Animation classes */
     .pre-animation {
       opacity: 0;

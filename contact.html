@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contact Me - Shain's Portfolio</title>
     <link rel="stylesheet" href="style.css" />
+    <!-- Add the contact-specific CSS -->
+    <link rel="stylesheet" href="contact.css" />
+
+    <!-- EmailJS SDK - Only include once, in the head -->
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"
+    ></script>
+    <!-- Initialize EmailJS with your correct user ID -->
+    <script type="text/javascript">
+      (function () {
+        // Initialize with your correct user ID
+        emailjs.init("YIpUmlaEJ0jtMbtLl");
+        console.log("EmailJS initialized in head");
+      })();
+    </script>
   </head>
   <body>
     <header class="header slide-in">
@@ -33,23 +49,55 @@
       <section class="contact-form-section">
         <h1>Contact Me</h1>
         <form id="contactForm">
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" required />
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              aria-required="true"
+            />
+          </div>
 
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required />
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              aria-required="true"
+            />
+          </div>
 
-          <label for="message">Message</label>
-          <textarea id="message" name="message" rows="5" required></textarea>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea
+              id="message"
+              name="message"
+              rows="5"
+              required
+              aria-required="true"
+            ></textarea>
+            <div id="charCount" class="char-count">
+              500 characters remaining
+            </div>
+          </div>
 
           <button type="submit" class="cta-btn">Send Message</button>
         </form>
+
+        <!-- Add a container for form messages -->
+        <div id="formMessages"></div>
       </section>
+
       <section class="social-links">
         <h2>Find Me Online</h2>
         <a
-          href="https://www.linkedin.com/in/shainwaiyan?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+          href="https://www.linkedin.com/in/shainwaiyan"
           target="_blank"
+          rel="noopener noreferrer"
           class="social-icon linkedin"
         >
           <img src="images/linkedinicon.jpeg" alt="LinkedIn" />
@@ -57,6 +105,7 @@
         <a
           href="https://github.com/Shain-Wai-Yan"
           target="_blank"
+          rel="noopener noreferrer"
           class="social-icon github"
         >
           <img src="images/git.jpeg" alt="GitHub" />
@@ -68,6 +117,13 @@
       <p>&copy; 2025 Shain's Portfolio. All Rights Reserved.</p>
     </footer>
 
+    <!-- Your main script file - Make sure it doesn't have contact form functionality -->
     <script src="script.js"></script>
+
+    <!-- Contact-specific script - This should come after EmailJS is loaded -->
+    <script src="contact.js"></script>
+
+    <!-- Add notification container for dynamic notifications -->
+    <div id="notificationContainer"></div>
   </body>
 </html>
