@@ -5,54 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>About Me - Shain's Portfolio</title>
     <link rel="stylesheet" href="style.css" />
-    <style>
-      /* Additional inline styles for the about page layout */
-      .bio {
-        margin-top: 80px;
-        padding: 2rem;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
-        gap: 2rem;
-        max-width: 1000px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-      .profile-img {
-        flex: 0 0 200px;
-        text-align: center;
-      }
-      .profile-img img {
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid #191970; /* Midnight blue border */
-      }
-      .bio-text {
-        flex: 1;
-        min-width: 280px;
-        text-align: left;
-      }
-      .bio-text h1 {
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
-      }
-      .bio-text h2 {
-        font-size: 1.5rem;
-        margin-bottom: 0.5rem;
-        color: #191970;
-      }
-      .bio-text p.motto {
-        font-size: 1.2rem;
-        font-weight: bold;
-        color: #191970;
-        margin-bottom: 1.5rem;
-      }
-    </style>
+    <link rel="stylesheet" href="about.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
   </head>
   <body>
+    <a href="#main-content" class="skip-to-content">Skip to content</a>
+
     <header class="header slide-in">
       <div class="nav-container">
         <div class="logo">
@@ -75,51 +36,204 @@
       </div>
     </header>
 
-    <main class="about">
-      <section class="bio">
-        <!-- Profile Photo Placeholder -->
-        <div class="profile-img">
-          <img src="images/profile.jpeg" alt="Profile Photo" />
-        </div>
-
-        <!-- Biography Text -->
-        <div class="bio-text">
-          <h1><strong>Shain Wai Yan</strong></h1>
-          <h2>also known as Xolbine | 明元易</h2>
-          <p class="motto">
-            有志者是竟成 (Where there is a Will, there is a Way)
-          </p>
-          <p>
-            I’m on a mission to turn creativity into results. Armed with
-            certifications in Marketing/Digital Marketing, E-Commerce, and Brand
-            Management, I thrive at the intersection of data and storytelling.
-            Whether it’s crafting campaigns, decoding SEO, or brainstorming
-            viral ideas, I’m obsessed with how brands connect with people
-            globally.
-          </p>
-          <p>
-            What I bring to the table:
-            <br />✅ Trilingual fluency: Myanmar (Native), English, and Chinese
-            – bridging cultures through communication. <br />✅ Digital-first
-            skills: SEO, social strategy, analytics, and content creation.
-            <br />✅ Relentless curiosity: A fresh perspective and hunger to
-            learn from every project.
-          </p>
-          <p>
-            I'm 22 years old, a 4th-year English specialization student at
-            Taunggyi University, and currently pursuing a diploma in marketing
-            at Strategy First University, along with courses in digital
-            marketing and e-commerce.
+    <main id="main-content" class="about-page">
+      <!-- Hero Section -->
+      <section class="about-hero">
+        <div class="about-hero-content">
+          <h1 class="reveal-text">About <span class="highlight">Me</span></h1>
+          <p class="subtitle reveal-text-delay">
+            Marketing Specialist & Digital Storyteller
           </p>
         </div>
       </section>
-      <a href="certificate.html" class="link-bottom">View My Certificates</a>
+
+      <!-- Profile Section -->
+      <section class="profile-section">
+        <div class="container">
+          <div class="profile-card">
+            <div class="profile-image-container">
+              <div class="profile-image-wrapper">
+                <img
+                  src="images/profile.jpeg"
+                  alt="Shain Wai Yan"
+                  class="profile-image"
+                />
+                <div class="profile-image-border"></div>
+              </div>
+            </div>
+            <div class="profile-content">
+              <div class="profile-header">
+                <h2 class="profile-name">Shain Wai Yan</h2>
+                <p class="profile-alias">also known as Xolbine | 明元易</p>
+              </div>
+              <div class="motto-container">
+                <p class="motto">有志者是竟成</p>
+                <p class="motto-translation">
+                  "Where there is a Will, there is a Way"
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bio Section -->
+      <section class="bio-section">
+        <div class="container">
+          <div class="bio-grid">
+            <div class="bio-content">
+              <h3 class="section-title">My Story</h3>
+              <p class="bio-text animate-on-scroll">
+                I'm on a mission to turn creativity into results. Armed with
+                certifications in Marketing/Digital Marketing, E-Commerce, and
+                Brand Management, I thrive at the intersection of data and
+                storytelling. Whether it's crafting campaigns, decoding SEO, or
+                brainstorming viral ideas, I'm obsessed with how brands connect
+                with people globally.
+              </p>
+              <div class="divider animate-on-scroll"></div>
+              <h3 class="section-title animate-on-scroll">
+                What I Bring to the Table
+              </h3>
+              <ul class="skills-list">
+                <li class="skill-item animate-on-scroll">
+                  <span class="skill-icon"><i class="fas fa-globe"></i></span>
+                  <div class="skill-content">
+                    <h4>Trilingual Fluency</h4>
+                    <p>
+                      Myanmar (Native), English, and Chinese – bridging cultures
+                      through communication.
+                    </p>
+                  </div>
+                </li>
+                <li class="skill-item animate-on-scroll">
+                  <span class="skill-icon"
+                    ><i class="fas fa-laptop-code"></i
+                  ></span>
+                  <div class="skill-content">
+                    <h4>Digital-First Skills</h4>
+                    <p>
+                      SEO, social strategy, analytics, and content creation.
+                    </p>
+                  </div>
+                </li>
+                <li class="skill-item animate-on-scroll">
+                  <span class="skill-icon"
+                    ><i class="fas fa-lightbulb"></i
+                  ></span>
+                  <div class="skill-content">
+                    <h4>Relentless Curiosity</h4>
+                    <p>
+                      A fresh perspective and hunger to learn from every
+                      project.
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="bio-sidebar">
+              <div class="info-card animate-on-scroll">
+                <h3 class="card-title">Personal Info</h3>
+                <ul class="info-list">
+                  <li><span>Age:</span> 22 years</li>
+                  <li>
+                    <span>Education:</span> 4th-year English specialization,
+                    Taunggyi University
+                  </li>
+                  <li>
+                    <span>Currently Pursuing:</span> Diploma in Marketing at
+                    Strategy First University
+                  </li>
+                  <li>
+                    <span>Additional Studies:</span> Digital Marketing and
+                    E-commerce courses
+                  </li>
+                </ul>
+              </div>
+              <div class="quote-card animate-on-scroll">
+                <blockquote>
+                  "Marketing is no longer about the stuff that you make, but
+                  about the stories you tell."
+                  <cite>– Seth Godin</cite>
+                </blockquote>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Timeline Section -->
+      <section class="timeline-section">
+        <div class="container">
+          <h3 class="section-title text-center">My Journey</h3>
+          <div class="timeline">
+            <div class="timeline-item left animate-on-scroll">
+              <div class="timeline-content">
+                <h4 class="timeline-title">Started University</h4>
+                <p class="timeline-date">2019</p>
+                <p>
+                  Began my academic journey at Taunggyi University, specializing
+                  in English.
+                </p>
+              </div>
+            </div>
+            <div class="timeline-item right animate-on-scroll">
+              <div class="timeline-content">
+                <h4 class="timeline-title">Started Learning Chinese</h4>
+                <p class="timeline-date">2023</p>
+                <p>
+                  Expanded my language skills by beginning to learn Chinese,
+                  adding to my trilingual abilities.
+                </p>
+              </div>
+            </div>
+            <div class="timeline-item left animate-on-scroll">
+              <div class="timeline-content">
+                <h4 class="timeline-title">Business Studies</h4>
+                <p class="timeline-date">2024</p>
+                <p>
+                  Started learning about business at Strategy First University,
+                  focusing on marketing fundamentals.
+                </p>
+              </div>
+            </div>
+            <div class="timeline-item right animate-on-scroll">
+              <div class="timeline-content">
+                <h4 class="timeline-title">Digital Marketing Certificate</h4>
+                <p class="timeline-date">2025</p>
+                <p>
+                  Began the Google Professional Certificate in Digital Marketing
+                  through Coursera to enhance my digital skills.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="cta-section">
+        <div class="container">
+          <div class="cta-content">
+            <h3 class="cta-title">Interested in my qualifications?</h3>
+            <p class="cta-text">
+              Check out my certificates and professional achievements
+            </p>
+            <a href="certificate.html" class="cta-button"
+              >View My Certificates</a
+            >
+          </div>
+        </div>
+      </section>
     </main>
 
-    <footer class="footer slide-in-up">
-      <p>&copy; 2025 Shain's Portfolio. All Rights Reserved.</p>
+    <footer class="footer">
+      <div class="footer-copyright">
+        <p>&copy; 2025 Shain's Portfolio. All Rights Reserved.</p>
+      </div>
     </footer>
 
     <script src="script.js"></script>
+    <script src="about.js"></script>
   </body>
 </html>
