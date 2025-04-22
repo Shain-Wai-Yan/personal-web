@@ -957,9 +957,59 @@
     gap: var(--certificate-spacing-xs);
   }
 
+  /* Update the description container for mobile */
   .description-container {
     width: 100%;
-    max-height: 200px;
+    max-height: none; /* Remove fixed height constraint */
+    overflow: visible; /* Allow content to flow naturally */
+  }
+
+  /* Remove the fade effect on mobile */
+  .description-container::after {
+    display: none;
+  }
+
+  /* Ensure the toggle button is visible and works properly */
+  .toggle-description {
+    display: inline-flex;
+    margin-top: var(--certificate-spacing-md);
+    padding: var(--certificate-spacing-sm) var(--certificate-spacing-md);
+    background-color: var(--certificate-primary);
+    color: white;
+    border-radius: var(--certificate-radius-md);
+    font-weight: 500;
+    align-self: center;
+    width: auto;
+  }
+
+  .toggle-description:hover {
+    background-color: var(--certificate-primary-light);
+    color: white;
+  }
+
+  /* Adjust description text for better readability on mobile */
+  .description {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: var(--certificate-spacing-md);
+  }
+
+  /* Ensure proper display of short/full descriptions */
+  .description-short {
+    display: block;
+  }
+
+  .description-full {
+    display: none;
+  }
+
+  /* When expanded class is present */
+  .description-container.expanded .description-short {
+    display: none;
+  }
+
+  .description-container.expanded .description-full {
+    display: block;
   }
 
   /* Show swipe hint on mobile - KEEPING THIS AS REQUESTED */
