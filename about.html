@@ -3,13 +3,63 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>About Me - Shain's Portfolio</title>
+    <title>
+      About Shain Wai Yan - Marketing Specialist & Digital Storyteller
+    </title>
+    <meta
+      name="description"
+      content="Learn about Shain Wai Yan, a trilingual Marketing Specialist and Digital Storyteller with expertise in SEO, social strategy, and content creation."
+    />
+    <meta
+      name="keywords"
+      content="Shain Wai Yan, marketing specialist, digital storyteller, SEO, social media strategy, content creation, portfolio"
+    />
+    <meta name="author" content="Shain Wai Yan" />
+
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta
+      property="og:title"
+      content="About Shain Wai Yan - Marketing Specialist & Digital Storyteller"
+    />
+    <meta
+      property="og:description"
+      content="Learn about Shain Wai Yan, a trilingual Marketing Specialist and Digital Storyteller with expertise in SEO, social strategy, and content creation."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://yourwebsite.com/about.html" />
+    <meta
+      property="og:image"
+      content="https://yourwebsite.com/images/profile.jpeg"
+    />
+
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="About Shain Wai Yan - Marketing Specialist & Digital Storyteller"
+    />
+    <meta
+      name="twitter:description"
+      content="Learn about Shain Wai Yan, a trilingual Marketing Specialist and Digital Storyteller with expertise in SEO, social strategy, and content creation."
+    />
+    <meta
+      name="twitter:image"
+      content="https://yourwebsite.com/images/profile.jpeg"
+    />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://yourwebsite.com/about.html" />
+
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="about.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
   </head>
   <body>
     <a href="#main-content" class="skip-to-content">Skip to content</a>
@@ -17,17 +67,28 @@
     <header class="header slide-in">
       <div class="nav-container">
         <div class="logo">
-          <a href="index.html">Shain's Portfolio</a>
+          <a href="index.html" aria-label="Shain's Portfolio Home"
+            >Shain's Portfolio</a
+          >
         </div>
-        <button class="hamburger" aria-label="Toggle Menu">
+        <button
+          class="hamburger"
+          aria-label="Toggle Menu"
+          aria-expanded="false"
+          aria-controls="main-navigation"
+        >
           <span class="bar"></span>
           <span class="bar"></span>
           <span class="bar"></span>
         </button>
-        <nav class="nav">
+        <nav class="nav" id="main-navigation" aria-label="Main Navigation">
           <ul>
             <li><a href="index.html">Home</a></li>
-            <li><a href="about.html" class="active">About Me</a></li>
+            <li>
+              <a href="about.html" class="active" aria-current="page"
+                >About Me</a
+              >
+            </li>
             <li><a href="portfolio.html">Portfolio</a></li>
             <li><a href="certificate.html">Certificate</a></li>
             <li><a href="contact.html">Contact Me</a></li>
@@ -38,9 +99,11 @@
 
     <main id="main-content" class="about-page">
       <!-- Hero Section -->
-      <section class="about-hero">
+      <section class="about-hero" aria-labelledby="hero-heading">
         <div class="about-hero-content">
-          <h1 class="reveal-text">About <span class="highlight">Me</span></h1>
+          <h1 id="hero-heading" class="reveal-text">
+            About <span class="highlight">Me</span>
+          </h1>
           <p class="subtitle reveal-text-delay">
             Marketing Specialist & Digital Storyteller
           </p>
@@ -48,15 +111,19 @@
       </section>
 
       <!-- Profile Section -->
-      <section class="profile-section">
+      <section class="profile-section" aria-labelledby="profile-heading">
         <div class="container">
+          <h2 id="profile-heading" class="sr-only">Profile</h2>
           <div class="profile-card">
             <div class="profile-image-container">
               <div class="profile-image-wrapper">
                 <img
                   src="images/profile.jpeg"
-                  alt="Shain Wai Yan"
+                  alt="Shain Wai Yan - Marketing Specialist"
                   class="profile-image"
+                  width="300"
+                  height="300"
+                  loading="lazy"
                 />
                 <div class="profile-image-border"></div>
               </div>
@@ -67,7 +134,7 @@
                 <p class="profile-alias">also known as Xolbine | 明元易</p>
               </div>
               <div class="motto-container">
-                <p class="motto">有志者是竟成</p>
+                <p class="motto" lang="zh">有志者是竟成</p>
                 <p class="motto-translation">
                   "Where there is a Will, there is a Way"
                 </p>
@@ -78,11 +145,11 @@
       </section>
 
       <!-- Bio Section -->
-      <section class="bio-section">
+      <section class="bio-section" aria-labelledby="bio-heading">
         <div class="container">
           <div class="bio-grid">
             <div class="bio-content">
-              <h3 class="section-title">My Story</h3>
+              <h2 id="bio-heading" class="section-title">My Story</h2>
               <p class="bio-text animate-on-scroll">
                 I'm on a mission to turn creativity into results. Armed with
                 certifications in Marketing/Digital Marketing, E-Commerce, and
@@ -97,7 +164,9 @@
               </h3>
               <ul class="skills-list">
                 <li class="skill-item animate-on-scroll">
-                  <span class="skill-icon"><i class="fas fa-globe"></i></span>
+                  <span class="skill-icon" aria-hidden="true"
+                    ><i class="fas fa-globe"></i
+                  ></span>
                   <div class="skill-content">
                     <h4>Trilingual Fluency</h4>
                     <p>
@@ -107,7 +176,7 @@
                   </div>
                 </li>
                 <li class="skill-item animate-on-scroll">
-                  <span class="skill-icon"
+                  <span class="skill-icon" aria-hidden="true"
                     ><i class="fas fa-laptop-code"></i
                   ></span>
                   <div class="skill-content">
@@ -118,7 +187,7 @@
                   </div>
                 </li>
                 <li class="skill-item animate-on-scroll">
-                  <span class="skill-icon"
+                  <span class="skill-icon" aria-hidden="true"
                     ><i class="fas fa-lightbulb"></i
                   ></span>
                   <div class="skill-content">
@@ -163,13 +232,15 @@
       </section>
 
       <!-- Timeline Section -->
-      <section class="timeline-section">
+      <section class="timeline-section" aria-labelledby="timeline-heading">
         <div class="container">
-          <h3 class="section-title text-center">My Journey</h3>
+          <h2 id="timeline-heading" class="section-title text-center">
+            My Journey
+          </h2>
           <div class="timeline">
             <div class="timeline-item left animate-on-scroll">
               <div class="timeline-content">
-                <h4 class="timeline-title">Started University</h4>
+                <h3 class="timeline-title">Started University</h3>
                 <p class="timeline-date">2019</p>
                 <p>
                   Began my academic journey at Taunggyi University, specializing
@@ -179,7 +250,7 @@
             </div>
             <div class="timeline-item right animate-on-scroll">
               <div class="timeline-content">
-                <h4 class="timeline-title">Started Learning Chinese</h4>
+                <h3 class="timeline-title">Started Learning Chinese</h3>
                 <p class="timeline-date">2023</p>
                 <p>
                   Expanded my language skills by beginning to learn Chinese,
@@ -189,7 +260,7 @@
             </div>
             <div class="timeline-item left animate-on-scroll">
               <div class="timeline-content">
-                <h4 class="timeline-title">Business Studies</h4>
+                <h3 class="timeline-title">Business Studies</h3>
                 <p class="timeline-date">2024</p>
                 <p>
                   Started learning about business at Strategy First University,
@@ -199,7 +270,7 @@
             </div>
             <div class="timeline-item right animate-on-scroll">
               <div class="timeline-content">
-                <h4 class="timeline-title">Digital Marketing Certificate</h4>
+                <h3 class="timeline-title">Digital Marketing Certificate</h3>
                 <p class="timeline-date">2025</p>
                 <p>
                   Began the Google Professional Certificate in Digital Marketing
@@ -212,14 +283,19 @@
       </section>
 
       <!-- CTA Section -->
-      <section class="cta-section">
+      <section class="cta-section" aria-labelledby="cta-heading">
         <div class="container">
           <div class="cta-content">
-            <h3 class="cta-title">Interested in my qualifications?</h3>
+            <h2 id="cta-heading" class="cta-title">
+              Interested in my qualifications?
+            </h2>
             <p class="cta-text">
               Check out my certificates and professional achievements
             </p>
-            <a href="certificate.html" class="cta-button"
+            <a
+              href="certificate.html"
+              class="cta-button"
+              aria-label="View My Certificates and Professional Achievements"
               >View My Certificates</a
             >
           </div>
@@ -231,9 +307,39 @@
       <div class="footer-copyright">
         <p>&copy; 2025 Shain's Portfolio. All Rights Reserved.</p>
       </div>
+      <div class="footer-links">
+        <a href="sitemap.xml">Sitemap</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+      </div>
     </footer>
 
-    <script src="script.js"></script>
-    <script src="about.js"></script>
+    <!-- Structured Data for Person -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Shain Wai Yan",
+        "alternateName": ["Xolbine", "明元易"],
+        "description": "Marketing Specialist & Digital Storyteller with expertise in SEO, social strategy, and content creation",
+        "image": "https://yourwebsite.com/images/profile.jpeg",
+        "jobTitle": "Marketing Specialist",
+        "knowsLanguage": ["English", "Myanmar", "Chinese"],
+        "alumniOf": [
+          {
+            "@type": "CollegeOrUniversity",
+            "name": "Taunggyi University",
+            "sameAs": "https://www.taunggyi-university.edu.mm/"
+          },
+          {
+            "@type": "CollegeOrUniversity",
+            "name": "Strategy First University"
+          }
+        ],
+        "url": "https://yourwebsite.com/about.html"
+      }
+    </script>
+
+    <script src="script.js" defer></script>
+    <script src="about.js" defer></script>
   </body>
 </html>
