@@ -3,47 +3,123 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Certificates - Shain's Portfolio</title>
+    <title>Professional Certificates & Achievements | Shain's Portfolio</title>
+
+    <!-- SEO Meta Tags -->
+    <meta
+      name="description"
+      content="Explore Shain Wai Yan's professional certifications in Marketing, Digital Marketing, E-Commerce, and Brand Management. View achievements and qualifications."
+    />
+    <meta
+      name="keywords"
+      content="certificates, professional certifications, marketing certifications, digital marketing, Shain Wai Yan, portfolio"
+    />
+    <meta name="author" content="Shain Wai Yan" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://www.shainwaiyan.com/certificate.html" />
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="certificate-images.css" />
+
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta
+      property="og:title"
+      content="Professional Certificates & Achievements | Shain's Portfolio"
+    />
+    <meta
+      property="og:description"
+      content="Explore Shain Wai Yan's professional certifications in Marketing, Digital Marketing, E-Commerce, and Brand Management."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://www.shainwaiyan.com/certificate.html"
+    />
+    <meta
+      property="og:image"
+      content="https://www.shainwaiyan.com/images/certificates-preview.jpg"
+    />
+    <meta property="og:site_name" content="Shain's Portfolio" />
+
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Professional Certificates & Achievements | Shain's Portfolio"
+    />
+    <meta
+      name="twitter:description"
+      content="Explore Shain Wai Yan's professional certifications in Marketing, Digital Marketing, E-Commerce, and Brand Management."
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.shainwaiyan.com/images/certificates-preview.jpg"
+    />
   </head>
   <body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-to-content">Skip to content</a>
+
     <header class="header slide-in">
       <div class="nav-container">
         <div class="logo">
-          <a href="index.html">Shain's Portfolio</a>
+          <a href="index.html" aria-label="Shain's Portfolio Home"
+            >Shain's Portfolio</a
+          >
         </div>
-        <button class="hamburger" aria-label="Toggle Menu">
+        <button
+          class="hamburger"
+          aria-label="Toggle Menu"
+          aria-expanded="false"
+          aria-controls="main-navigation"
+        >
           <span class="bar"></span>
           <span class="bar"></span>
           <span class="bar"></span>
         </button>
-        <nav class="nav">
+        <nav class="nav" id="main-navigation" aria-label="Main Navigation">
           <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About Me</a></li>
             <li><a href="portfolio.html">Portfolio</a></li>
-            <li><a href="certificate.html" class="active">Certificate</a></li>
+            <li>
+              <a href="certificate.html" class="active" aria-current="page"
+                >Certificate</a
+              >
+            </li>
             <li><a href="contact.html">Contact Me</a></li>
           </ul>
         </nav>
       </div>
     </header>
 
-    <main class="certificate">
+    <main id="main-content" class="certificate">
       <h1 class="page-title">My Certificates</h1>
       <p class="page-description">
-        A collection of my professional certifications and achievements
+        A collection of my professional certifications and achievements in
+        Marketing, Digital Marketing, E-Commerce, and Brand Management.
       </p>
 
       <!-- New wrapper div to fix z-index issues -->
       <div class="certificate-content-wrapper">
-        <section class="carousel">
+        <section class="carousel" aria-labelledby="carousel-heading">
+          <h2 id="carousel-heading" class="sr-only">Certificate Carousel</h2>
           <div class="carousel-track-container">
-            <ul class="carousel-track" id="certificates-container">
+            <ul
+              class="carousel-track"
+              id="certificates-container"
+              aria-live="polite"
+            >
               <!-- Loading state shown initially -->
               <li class="loading-state">
-                <div class="loading-spinner"></div>
+                <div class="loading-spinner" aria-hidden="true"></div>
                 <p>Loading certificates...</p>
               </li>
             </ul>
@@ -51,11 +127,16 @@
           <!-- Carousel Controls -->
           <button
             class="carousel-arrow carousel-prev"
-            aria-label="Previous Slide"
+            aria-label="Previous Certificate"
+            title="View previous certificate"
           >
             &#10094;
           </button>
-          <button class="carousel-arrow carousel-next" aria-label="Next Slide">
+          <button
+            class="carousel-arrow carousel-next"
+            aria-label="Next Certificate"
+            title="View next certificate"
+          >
             &#10095;
           </button>
           <!-- Dot Navigation -->
@@ -70,8 +151,72 @@
       <p>&copy; 2025 Shain's Portfolio. All Rights Reserved.</p>
     </footer>
 
-    <script src="script.js"></script>
-    <script src="certificate.js"></script>
-    <script src="certificate-swipe-hint.js"></script>
+    <!-- Structured Data for Certificates -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item": {
+              "@type": "EducationalOccupationalCredential",
+              "name": "Digital Marketing Certificate",
+              "description": "Google Professional Certificate in Digital Marketing",
+              "educationalLevel": "Professional Certificate",
+              "credentialCategory": "Digital Marketing",
+              "recognizedBy": {
+                "@type": "Organization",
+                "name": "Google"
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item": {
+              "@type": "EducationalOccupationalCredential",
+              "name": "Marketing Diploma",
+              "description": "Diploma in Marketing",
+              "educationalLevel": "Diploma",
+              "credentialCategory": "Marketing",
+              "recognizedBy": {
+                "@type": "Organization",
+                "name": "Strategy First University"
+              }
+            }
+          }
+        ]
+      }
+    </script>
+
+    <!-- Structured Data for Person -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Shain Wai Yan",
+        "url": "https://www.shainwaiyan.com",
+        "jobTitle": "Marketing Specialist",
+        "hasCredential": [
+          {
+            "@type": "EducationalOccupationalCredential",
+            "name": "Digital Marketing Certificate",
+            "credentialCategory": "Digital Marketing"
+          },
+          {
+            "@type": "EducationalOccupationalCredential",
+            "name": "Marketing Diploma",
+            "credentialCategory": "Marketing"
+          }
+        ]
+      }
+    </script>
+
+    <!-- Scripts -->
+    <script src="script.js" defer></script>
+    <script src="certificate.js" defer></script>
+    <script src="certificate-swipe-hint.js" defer></script>
   </body>
 </html>
