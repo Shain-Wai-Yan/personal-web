@@ -3,7 +3,77 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Shain's Portfolio - Home</title>
+    <title>Shain Wai Yan - Digital Marketing & Brand Strategy Portfolio</title>
+    <meta
+      name="description"
+      content="Shain Wai Yan's professional portfolio showcasing expertise in digital marketing, brand development, and AI-powered marketing strategies."
+    />
+    <meta name="author" content="Shain Wai Yan" />
+    <meta
+      name="keywords"
+      content="Shain Wai Yan, marketing portfolio, digital marketing, brand strategy"
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.shainwaiyan.com/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.shainwaiyan.com/" />
+    <meta
+      property="og:title"
+      content="Shain Wai Yan - Digital Marketing Portfolio"
+    />
+    <meta
+      property="og:description"
+      content="Shain Wai Yan's professional portfolio showcasing expertise in digital marketing, brand development, and AI-powered marketing strategies."
+    />
+    <meta
+      property="og:image"
+      content="https://www.shainwaiyan.com/images/og-image.jpg"
+    />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://www.shainwaiyan.com/" />
+    <meta
+      property="twitter:title"
+      content="Shain Wai Yan - Digital Marketing Portfolio"
+    />
+    <meta
+      property="twitter:description"
+      content="Shain Wai Yan's professional portfolio showcasing expertise in digital marketing, brand development, and AI-powered marketing strategies."
+    />
+    <meta
+      property="twitter:image"
+      content="https://www.shainwaiyan.com/images/og-image.jpg"
+    />
+
+    <!-- Structured data for Person -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Shain Wai Yan",
+        "url": "https://www.shainwaiyan.com",
+        "sameAs": [
+          "https://www.linkedin.com/in/shainwaiyan",
+          "https://github.com/Shain-Wai-Yan"
+        ],
+        "jobTitle": "Digital Marketer & Brand Strategist"
+      }
+    </script>
+
+    <!-- Structured data for WebSite -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Shain Wai Yan Portfolio",
+        "url": "https://www.shainwaiyan.com",
+        "description": "Professional portfolio of Shain Wai Yan, showcasing marketing expertise and professional achievements."
+      }
+    </script>
+
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="home.css" />
     <!-- Font Awesome for icons -->
@@ -16,16 +86,20 @@
     <header class="header">
       <div class="nav-container">
         <div class="logo">
-          <a href="index.html">Shain's Portfolio</a>
+          <a href="index.html" aria-label="Shain Wai Yan's Portfolio Home"
+            >Shain's Portfolio</a
+          >
         </div>
         <button class="hamburger" aria-label="Toggle Menu">
           <span class="bar"></span>
           <span class="bar"></span>
           <span class="bar"></span>
         </button>
-        <nav class="nav">
+        <nav class="nav" aria-label="Main Navigation">
           <ul>
-            <li><a href="index.html" class="active">Home</a></li>
+            <li>
+              <a href="index.html" class="active" aria-current="page">Home</a>
+            </li>
             <li><a href="about.html">About Me</a></li>
             <li><a href="portfolio.html">Portfolio</a></li>
             <li><a href="certificate.html">Certificate</a></li>
@@ -49,7 +123,8 @@
         <div class="hero-content">
           <div class="hero-text-container">
             <h1 class="hero-title">
-              Welcome to <span class="text-gradient">Shain's Portfolio</span>
+              Welcome to
+              <span class="text-gradient">Shain Wai Yan's Portfolio</span>
             </h1>
             <p class="hero-tagline">Where creativity meets results.</p>
             <div class="hero-description">
@@ -91,7 +166,7 @@
             <div class="card-inner">
               <div class="card-front">
                 <div class="expertise-icon">
-                  <i class="fas fa-bullhorn"></i>
+                  <i class="fas fa-bullhorn" aria-hidden="true"></i>
                 </div>
                 <h3>Digital Marketing</h3>
               </div>
@@ -108,7 +183,7 @@
             <div class="card-inner">
               <div class="card-front">
                 <div class="expertise-icon">
-                  <i class="fas fa-chart-line"></i>
+                  <i class="fas fa-chart-line" aria-hidden="true"></i>
                 </div>
                 <h3>Market Analysis</h3>
               </div>
@@ -125,7 +200,7 @@
             <div class="card-inner">
               <div class="card-front">
                 <div class="expertise-icon">
-                  <i class="fas fa-users"></i>
+                  <i class="fas fa-users" aria-hidden="true"></i>
                 </div>
                 <h3>Brand Development</h3>
               </div>
@@ -142,7 +217,7 @@
             <div class="card-inner">
               <div class="card-front">
                 <div class="expertise-icon">
-                  <i class="fas fa-comments"></i>
+                  <i class="fas fa-comments" aria-hidden="true"></i>
                 </div>
                 <h3>Content Strategy</h3>
               </div>
@@ -195,19 +270,19 @@
             </p>
             <div class="ai-features">
               <div class="ai-feature">
-                <i class="fas fa-robot"></i>
+                <i class="fas fa-robot" aria-hidden="true"></i>
                 <span>AI-Powered Content Generation</span>
               </div>
               <div class="ai-feature">
-                <i class="fas fa-chart-network"></i>
+                <i class="fas fa-chart-network" aria-hidden="true"></i>
                 <span>Predictive Analytics</span>
               </div>
               <div class="ai-feature">
-                <i class="fas fa-bullseye"></i>
+                <i class="fas fa-bullseye" aria-hidden="true"></i>
                 <span>Targeted Audience Insights</span>
               </div>
               <div class="ai-feature">
-                <i class="fas fa-brain"></i>
+                <i class="fas fa-brain" aria-hidden="true"></i>
                 <span>Creative Prompt Engineering</span>
               </div>
             </div>
@@ -302,7 +377,7 @@
         <div class="certificates-container">
           <div class="certificate-card">
             <div class="certificate-icon">
-              <i class="fas fa-award"></i>
+              <i class="fas fa-award" aria-hidden="true"></i>
             </div>
             <h3>Digital Marketing</h3>
             <p>Certified Digital Marketing Professional</p>
@@ -312,7 +387,7 @@
           </div>
           <div class="certificate-card">
             <div class="certificate-icon">
-              <i class="fas fa-chart-pie"></i>
+              <i class="fas fa-chart-pie" aria-hidden="true"></i>
             </div>
             <h3>Analytics</h3>
             <p>Advanced Analytics Certification</p>
@@ -322,7 +397,7 @@
           </div>
           <div class="certificate-card">
             <div class="certificate-icon">
-              <i class="fas fa-users-cog"></i>
+              <i class="fas fa-users-cog" aria-hidden="true"></i>
             </div>
             <h3>Project Management</h3>
             <p>Professional Project Manager</p>
@@ -348,14 +423,16 @@
           </p>
           <a href="contact.html" class="cta-button">
             <span>Get In Touch</span>
-            <i class="fas fa-arrow-right"></i>
+            <i class="fas fa-arrow-right" aria-hidden="true"></i>
           </a>
         </div>
       </section>
     </main>
 
     <footer class="footer">
-      <p>&copy; 2025 Shain's Portfolio. All Rights Reserved.</p>
+      <div class="footer-copyright">
+        <p>&copy; 2025 Shain's Portfolio. All Rights Reserved.</p>
+      </div>
     </footer>
 
     <script src="script.js"></script>

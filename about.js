@@ -86,17 +86,54 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Mobile menu functionality (ensure it works with the existing script.js)
-  const hamburger = document.querySelector(".hamburger");
-  const nav = document.querySelector(".nav");
+  // Mobile menu functionality - FIXED VERSION
+  // This runs after the page is fully loaded, which should override any previous handlers
+  setTimeout(() => {
+    const hamburger = document.querySelector(".hamburger");
+    const nav = document.querySelector(".nav");
 
-  if (hamburger && nav) {
-    hamburger.addEventListener("click", function () {
-      this.classList.toggle("active");
-      nav.classList.toggle("active");
-      document.body.classList.toggle("menu-open");
-    });
-  }
+    if (hamburger && nav) {
+      console.log("About page: Fixing hamburger menu");
+
+      // Force the hamburger to be visible on mobile
+      if (window.innerWidth <= 768) {
+        hamburger.style.display = "flex";
+      }
+
+      // Remove existing click listeners by cloning and replacing
+      const newHamburger = hamburger.cloneNode(true);
+      hamburger.parentNode.replaceChild(newHamburger, hamburger);
+
+      // Add our click handler
+      newHamburger.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        console.log("About page: Hamburger clicked");
+        this.classList.toggle("active");
+        nav.classList.toggle("active");
+        document.body.classList.toggle("menu-open");
+
+        // Set aria-expanded for accessibility
+        const expanded = this.classList.contains("active");
+        this.setAttribute("aria-expanded", expanded.toString());
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener("click", (e) => {
+        if (
+          nav.classList.contains("active") &&
+          !nav.contains(e.target) &&
+          !newHamburger.contains(e.target)
+        ) {
+          newHamburger.classList.remove("active");
+          nav.classList.remove("active");
+          document.body.classList.remove("menu-open");
+          newHamburger.setAttribute("aria-expanded", "false");
+        }
+      });
+    }
+  }, 100); // Small delay to ensure this runs after any other initialization
 
   // Add a scroll event listener to change header style on scroll
   const header = document.querySelector(".header");
