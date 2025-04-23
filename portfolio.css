@@ -1,0 +1,408 @@
+/* ========== PORTFOLIO PAGE SPECIFIC STYLES ========== */
+:root {
+  /* Color Palette from main CSS */
+  --primary: #191970; /* Midnight Blue */
+  --primary-light: #2a2a9a;
+  --primary-dark: #0f0f45;
+  --accent: #ffd700; /* Gold */
+  --accent-light: #ffe347;
+  --accent-dark: #e6c200;
+  --text: #333333;
+  --text-light: #666666;
+  --text-dark: #111111;
+  --background: #ffffff;
+  --background-alt: #f8f9fa;
+}
+
+/* Portfolio Page Header */
+.portfolio-header {
+  text-align: center;
+  margin: 120px auto 40px;
+  max-width: 800px;
+  padding: 0 20px;
+}
+
+.portfolio-header h1 {
+  color: var(--primary);
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  position: relative;
+  display: inline-block;
+}
+
+.portfolio-header h1::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(to right, var(--primary), var(--accent));
+  border-radius: 2px;
+}
+
+.portfolio-header p {
+  color: var(--text-light);
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* Enhanced Portfolio Grid */
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+  padding: 20px;
+  max-width: 1400px;
+  margin: 80px auto 60px; /* Added top margin for header space */
+}
+
+.portfolio-item {
+  background-color: var(--background-alt);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  cursor: pointer;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  text-align: center;
+}
+
+.portfolio-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(25, 25, 112, 0.8),
+    rgba(25, 25, 112, 0.6)
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+}
+
+.portfolio-item:hover {
+  transform: translateY(-15px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+.portfolio-item:hover::before {
+  opacity: 1;
+}
+
+.portfolio-item h2 {
+  color: var(--primary);
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  position: relative;
+  z-index: 2;
+  transition: color 0.4s ease, transform 0.4s ease;
+}
+
+.portfolio-item p {
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1.6;
+  z-index: 2;
+  position: relative;
+  transition: color 0.4s ease, transform 0.4s ease;
+}
+
+/* CHANGED: Text color to gold instead of white on hover for better readability */
+.portfolio-item:hover h2,
+.portfolio-item:hover p {
+  color: var(--accent); /* Gold color instead of white */
+  transform: translateY(-5px);
+}
+
+/* Portfolio Item Icon */
+.portfolio-item::after {
+  content: "";
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23191970' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17l9.2-9.2M17 17V7H7'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  z-index: 2;
+}
+
+.portfolio-item:hover::after {
+  opacity: 1;
+  transform: translateY(0);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffd700' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17l9.2-9.2M17 17V7H7'/%3E%3C/svg%3E");
+}
+
+/* Portfolio Item Unique Styling */
+.portfolio-item:nth-child(1) {
+  background-color: #f8f9fa;
+  border-top: 4px solid var(--primary);
+}
+
+.portfolio-item:nth-child(2) {
+  background-color: #f1f3f5;
+  border-top: 4px solid var(--accent);
+}
+
+.portfolio-item:nth-child(3) {
+  background-color: #f8f9fa;
+  border-top: 4px solid var(--primary-light);
+}
+
+.portfolio-item:nth-child(4) {
+  background-color: #f1f3f5;
+  border-top: 4px solid var(--accent-light);
+}
+
+.portfolio-item:nth-child(5) {
+  background-color: #f8f9fa;
+  border-top: 4px solid var(--primary-dark);
+}
+
+/* Animated Background */
+.portfolio {
+  position: relative;
+  overflow: hidden;
+}
+
+.portfolio::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+      circle at 10% 10%,
+      rgba(25, 25, 112, 0.03) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 90% 90%,
+      rgba(255, 215, 0, 0.03) 0%,
+      transparent 60%
+    );
+  z-index: -1;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .portfolio-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 15px;
+  }
+
+  .portfolio-header h1 {
+    font-size: 2rem;
+  }
+
+  .portfolio-item {
+    min-height: 200px;
+    padding: 20px;
+  }
+
+  .portfolio-item h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .portfolio-header h1 {
+    font-size: 1.8rem;
+  }
+}
+
+/* Animation Classes */
+.fade-in {
+  animation: fadeIn 0.8s ease forwards;
+}
+
+.slide-up {
+  animation: slideUp 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Staggered Animation Delays */
+.delay-1 {
+  animation-delay: 0.1s;
+}
+
+.delay-2 {
+  animation-delay: 0.2s;
+}
+
+.delay-3 {
+  animation-delay: 0.3s;
+}
+
+.delay-4 {
+  animation-delay: 0.4s;
+}
+
+.delay-5 {
+  animation-delay: 0.5s;
+}
+/* ========== PORTFOLIO ITEM FIXES ========== */
+
+/* Make sure portfolio items are clearly interactive */
+.portfolio-item {
+  cursor: pointer !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease,
+    background-color 0.3s ease !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* Add a subtle indicator that items are clickable */
+.portfolio-item::after {
+  content: "";
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  width: 30px;
+  height: 30px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23191970' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17l9.2-9.2M17 17V7H7'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.7;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 2;
+}
+
+.portfolio-item:hover::after {
+  opacity: 1;
+  transform: translateY(-5px);
+}
+
+/* Ensure text remains readable on hover */
+.portfolio-item:hover h2,
+.portfolio-item:hover p {
+  color: #ffd700 !important; /* Force gold color for better visibility */
+}
+
+/* Add a subtle overlay on hover */
+.portfolio-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(25, 25, 112, 0.8),
+    rgba(25, 25, 112, 0.6)
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.portfolio-item:hover::before {
+  opacity: 1;
+}
+
+/* Make sure text is above the overlay */
+.portfolio-item h2,
+.portfolio-item p {
+  position: relative;
+  z-index: 2;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+/* Add a subtle lift effect on hover */
+.portfolio-item:hover {
+  transform: translateY(-15px) !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Ensure the portfolio grid has proper spacing */
+.portfolio-grid {
+  margin-top: 80px;
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  position: relative;
+}
+
+/* Ensure portfolio items have consistent height */
+.portfolio-item {
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  text-align: center;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+/* Active state for portfolio items */
+.portfolio-item.active {
+  border-color: #ffd700;
+  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .portfolio-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .portfolio-item {
+    min-height: 180px;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -100,8 +100,21 @@ function initPortfolioItems() {
 function initHamburgerMenu() {
   const hamburger = document.querySelector(".hamburger");
   const navMenu = document.querySelector(".nav");
+
   if (hamburger && navMenu) {
-    hamburger.addEventListener("click", () => {
+    // Log to debug
+    console.log("Hamburger menu initialized", { hamburger, navMenu });
+
+    // Force the hamburger to be visible on mobile
+    if (window.innerWidth <= 768) {
+      hamburger.style.display = "flex";
+    }
+
+    hamburger.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation(); // Prevent event bubbling
+
+      console.log("Hamburger clicked");
       hamburger.classList.toggle("active");
       navMenu.classList.toggle("active");
       document.body.classList.toggle("menu-open");
@@ -109,6 +122,13 @@ function initHamburgerMenu() {
       // Set aria-expanded for accessibility
       const expanded = hamburger.classList.contains("active");
       hamburger.setAttribute("aria-expanded", expanded.toString());
+
+      // Log the state after toggle
+      console.log("After toggle:", {
+        hamburgerActive: hamburger.classList.contains("active"),
+        navActive: navMenu.classList.contains("active"),
+        bodyMenuOpen: document.body.classList.contains("menu-open"),
+      });
     });
 
     // Close menu when clicking outside
@@ -118,12 +138,15 @@ function initHamburgerMenu() {
         !navMenu.contains(e.target) &&
         !hamburger.contains(e.target)
       ) {
+        console.log("Clicking outside, closing menu");
         hamburger.classList.remove("active");
         navMenu.classList.remove("active");
         document.body.classList.remove("menu-open");
         hamburger.setAttribute("aria-expanded", "false");
       }
     });
+  } else {
+    console.warn("Hamburger menu elements not found", { hamburger, navMenu });
   }
 }
 
