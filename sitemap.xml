@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://shainwaiyan.com/about.html</loc>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://shainwaiyan.com/images/profile.jpeg</image:loc>
+      <image:title>Shain Wai Yan - Marketing Specialist</image:title>
+      <image:caption>Shain Wai Yan - Marketing Specialist</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://shainwaiyan.com/amv-editing.html</loc>
@@ -19,6 +25,16 @@
   <url>
     <loc>https://shainwaiyan.com/contact.html</loc>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://shainwaiyan.com/images/linkedinicon.jpeg</image:loc>
+      <image:title>LinkedIn Profile</image:title>
+      <image:caption>LinkedIn Profile</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://shainwaiyan.com/images/git.jpeg</image:loc>
+      <image:title>GitHub Profile</image:title>
+      <image:caption>GitHub Profile</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://shainwaiyan.com</loc>
