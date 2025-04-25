@@ -1,10 +1,79 @@
 /* Document Viewer Page Styles */
+:root {
+  /* Light mode variables */
+  --doc-primary: #191970;
+  --doc-primary-hover: #13134d;
+  --doc-accent: #ffd700;
+  --doc-accent-hover: #e6c200;
+  --doc-text: #333333;
+  --doc-text-light: #666666;
+  --doc-background: #ffffff;
+  --doc-background-alt: #f9f9f9;
+  --doc-card-bg: #ffffff;
+  --doc-cover-bg: #191970;
+  --doc-cover-overlay: rgba(25, 25, 112, 0.85);
+  --doc-icon-bg: #ffffff;
+  --doc-icon-text: #191970;
+  --doc-icon-fold: #e6e6e6;
+  --doc-border: #e0e0e0;
+  --doc-shadow: rgba(0, 0, 0, 0.1);
+  --doc-shadow-hover: rgba(0, 0, 0, 0.15);
+  --doc-modal-bg: rgba(0, 0, 0, 0.8);
+  --doc-modal-content: #ffffff;
+  --doc-modal-header: #191970;
+  --doc-modal-container: #f0f0f0;
+  --doc-pdf-bg: #525659;
+  --doc-pdf-toolbar: #34495e;
+  --doc-pdf-button: #3498db;
+  --doc-pdf-button-hover: #2980b9;
+  --doc-loading-bg: #f3f3f3;
+  --doc-loading-spinner: #191970;
+  --doc-transition: 0.3s ease;
+}
+
+/* Dark mode variables */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --doc-primary: #ffd700;
+    --doc-primary-hover: #e6c200;
+    --doc-accent: #191970;
+    --doc-accent-hover: #13134d;
+    --doc-text: #e0e0e0;
+    --doc-text-light: #b0b0b0;
+    --doc-background: #121212;
+    --doc-background-alt: #1e1e1e;
+    --doc-card-bg: #2a2a2a;
+    --doc-cover-bg: #ffd700;
+    --doc-cover-overlay: rgba(255, 215, 0, 0.85);
+    --doc-icon-bg: #2a2a2a;
+    --doc-icon-text: #ffd700;
+    --doc-icon-fold: #444444;
+    --doc-border: #333333;
+    --doc-shadow: rgba(0, 0, 0, 0.3);
+    --doc-shadow-hover: rgba(0, 0, 0, 0.4);
+    --doc-modal-bg: rgba(0, 0, 0, 0.9);
+    --doc-modal-content: #1e1e1e;
+    --doc-modal-header: #ffd700;
+    --doc-modal-container: #2a2a2a;
+    --doc-pdf-bg: #333333;
+    --doc-pdf-toolbar: #16213e;
+    --doc-pdf-button: #0f3460;
+    --doc-pdf-button-hover: #e94560;
+    --doc-loading-bg: #333333;
+    --doc-loading-spinner: #ffd700;
+  }
+}
+
 .document-viewer-page {
   margin-top: 80px; /* space for fixed header */
   padding: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: var(--doc-background);
+  color: var(--doc-text);
+  transition: background-color var(--doc-transition),
+    color var(--doc-transition);
 }
 
 /* Document List */
@@ -20,23 +89,24 @@
 
 .document-item {
   display: flex;
-  background-color: #f9f9f9;
+  background-color: var(--doc-background-alt);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 12px var(--doc-shadow);
+  transition: transform var(--doc-transition), box-shadow var(--doc-transition),
+    background-color var(--doc-transition);
 }
 
 .document-item:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 20px var(--doc-shadow-hover);
 }
 
 /* Document Cover (Left Side) */
 .document-cover {
   width: 250px;
   min-width: 250px;
-  background-color: #191970;
+  background-color: var(--doc-cover-bg);
   color: white;
   padding: 2rem 1.5rem;
   display: flex;
@@ -45,6 +115,7 @@
   justify-content: center;
   text-align: center;
   position: relative;
+  transition: background-color var(--doc-transition);
 }
 
 .document-cover-overlay {
@@ -56,21 +127,24 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: rgba(25, 25, 112, 0.85);
+  background-color: var(--doc-cover-overlay);
   padding: 2rem 1.5rem;
+  transition: background-color var(--doc-transition);
 }
 
 .document-icon {
   width: 80px;
   height: 100px;
-  background-color: white;
+  background-color: var(--doc-icon-bg);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1.5rem;
   position: relative;
   border-radius: 4px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px var(--doc-shadow);
+  transition: background-color var(--doc-transition),
+    box-shadow var(--doc-transition);
 }
 
 .document-icon::before {
@@ -80,23 +154,27 @@
   right: 0;
   border-width: 0 20px 20px 0;
   border-style: solid;
-  border-color: #e6e6e6 #191970;
+  border-color: var(--doc-icon-fold) var(--doc-cover-bg);
+  transition: border-color var(--doc-transition);
 }
 
 .file-type {
   font-weight: bold;
-  color: #191970;
+  color: var(--doc-icon-text);
   font-size: 1.2rem;
+  transition: color var(--doc-transition);
 }
 
 .document-cover h3 {
   margin-bottom: 0.5rem;
   font-size: 1.3rem;
+  color: white;
 }
 
 .document-cover .document-date {
   font-size: 0.9rem;
   opacity: 0.8;
+  color: white;
 }
 
 /* Document Details (Right Side) */
@@ -105,12 +183,15 @@
   padding: 2rem;
   display: flex;
   flex-direction: column;
+  background-color: var(--doc-card-bg);
+  transition: background-color var(--doc-transition);
 }
 
 .document-details h2 {
-  color: #191970;
+  color: var(--doc-primary);
   margin-bottom: 0.5rem;
   font-size: 1.8rem;
+  transition: color var(--doc-transition);
 }
 
 .document-meta {
@@ -122,34 +203,38 @@
 
 .document-type {
   font-weight: 600;
-  color: #191970;
+  color: var(--doc-primary);
+  transition: color var(--doc-transition);
 }
 
 .document-date {
-  color: #666;
+  color: var(--doc-text-light);
+  transition: color var(--doc-transition);
 }
 
 .document-description {
   line-height: 1.6;
-  color: #444;
+  color: var(--doc-text);
   margin-bottom: 1.5rem;
+  transition: color var(--doc-transition);
 }
 
 .view-document-btn {
   align-self: flex-start;
-  background-color: #191970;
+  background-color: var(--doc-primary);
   color: white;
   border: none;
   padding: 0.8rem 1.5rem;
   border-radius: 4px;
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  transition: background-color var(--doc-transition),
+    transform var(--doc-transition), color var(--doc-transition);
 }
 
 .view-document-btn:hover {
-  background-color: #ffd700;
-  color: #191970;
+  background-color: var(--doc-accent);
+  color: var(--doc-primary);
   transform: scale(1.05);
 }
 
@@ -161,10 +246,11 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: var(--doc-modal-bg);
   z-index: 2000;
   align-items: center;
   justify-content: center;
+  transition: background-color var(--doc-transition);
 }
 
 .document-viewer-modal.active {
@@ -172,7 +258,7 @@
 }
 
 .modal-content {
-  background-color: white;
+  background-color: var(--doc-modal-content);
   width: 90%;
   max-width: 1000px;
   height: 90%;
@@ -180,6 +266,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  transition: background-color var(--doc-transition);
 }
 
 .modal-header {
@@ -187,8 +274,9 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
-  background-color: #191970;
+  background-color: var(--doc-primary);
   color: white;
+  transition: background-color var(--doc-transition);
 }
 
 .close-modal {
@@ -197,7 +285,7 @@
   color: white;
   font-size: 1.8rem;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: transform var(--doc-transition);
 }
 
 .close-modal:hover {
@@ -207,8 +295,9 @@
 .document-container {
   flex: 1;
   overflow: auto;
-  background-color: #f0f0f0;
+  background-color: var(--doc-modal-container);
   position: relative;
+  transition: background-color var(--doc-transition);
 }
 
 #pdf-viewer,
@@ -222,17 +311,19 @@
 
 /* Enhanced PDF Viewer Styles */
 #pdf-viewer {
-  background-color: #525659;
+  background-color: var(--doc-pdf-bg);
+  transition: background-color var(--doc-transition);
 }
 
 #pdf-viewer canvas {
   max-width: 100%;
   max-height: 100%;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 10px var(--doc-shadow);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   image-rendering: -webkit-optimize-contrast;
+  transition: box-shadow var(--doc-transition);
 }
 
 /* PDF Text Layer Enhancements */
@@ -280,6 +371,13 @@
 
 .textLayer ::selection {
   background: rgba(0, 0, 255, 0.3);
+}
+
+/* Dark mode text selection */
+@media (prefers-color-scheme: dark) {
+  .textLayer ::selection {
+    background: rgba(255, 215, 0, 0.3);
+  }
 }
 
 .textLayer .endOfContent {
@@ -342,6 +440,18 @@
   width: 100%;
 }
 
+/* Dark mode annotation adjustments */
+@media (prefers-color-scheme: dark) {
+  .annotationLayer .textWidgetAnnotation input,
+  .annotationLayer .textWidgetAnnotation textarea,
+  .annotationLayer .choiceWidgetAnnotation select,
+  .annotationLayer .buttonWidgetAnnotation.checkBox input,
+  .annotationLayer .buttonWidgetAnnotation.radioButton input {
+    background-color: rgba(255, 215, 0, 0.13);
+    color: var(--doc-text);
+  }
+}
+
 .annotationLayer .choiceWidgetAnnotation select option {
   padding: 0;
 }
@@ -371,7 +481,7 @@
 .annotationLayer .choiceWidgetAnnotation select:hover,
 .annotationLayer .buttonWidgetAnnotation.checkBox input:hover,
 .annotationLayer .buttonWidgetAnnotation.radioButton input:hover {
-  border: 1px solid #000;
+  border: 1px solid var(--doc-text);
 }
 
 .annotationLayer .textWidgetAnnotation input:focus,
@@ -384,7 +494,7 @@
 .annotationLayer .buttonWidgetAnnotation.checkBox input:checked:before,
 .annotationLayer .buttonWidgetAnnotation.checkBox input:checked:after,
 .annotationLayer .buttonWidgetAnnotation.radioButton input:checked:before {
-  background-color: #000;
+  background-color: var(--doc-text);
   content: "";
   display: block;
   position: absolute;
@@ -423,7 +533,7 @@
   z-index: 200;
   max-width: 20em;
   background-color: #ffff99;
-  box-shadow: 0px 2px 5px #888;
+  box-shadow: 0px 2px 5px var(--doc-shadow);
   border-radius: 2px;
   padding: 6px;
   margin-left: 5px;
@@ -431,6 +541,14 @@
   font: message-box;
   font-size: 9px;
   word-wrap: break-word;
+}
+
+/* Dark mode popup adjustment */
+@media (prefers-color-scheme: dark) {
+  .annotationLayer .popup {
+    background-color: #333333;
+    color: #ffff99;
+  }
 }
 
 .annotationLayer .popup > * {
@@ -447,7 +565,7 @@
 }
 
 .annotationLayer .popup p {
-  border-top: 1px solid #333;
+  border-top: 1px solid var(--doc-text);
   margin-top: 2px;
   padding-top: 2px;
 }
@@ -476,7 +594,8 @@
 .pptx-message {
   text-align: center;
   padding: 2rem;
-  color: #666;
+  color: var(--doc-text-light);
+  transition: color var(--doc-transition);
 }
 
 .modal-controls {
@@ -485,8 +604,10 @@
   justify-content: center;
   gap: 1rem;
   padding: 1rem;
-  background-color: #f9f9f9;
-  border-top: 1px solid #e0e0e0;
+  background-color: var(--doc-background-alt);
+  border-top: 1px solid var(--doc-border);
+  transition: background-color var(--doc-transition),
+    border-color var(--doc-transition);
 }
 
 /* Enhanced PDF Controls */
@@ -495,13 +616,14 @@
   justify-content: center;
   align-items: center;
   padding: 8px;
-  background-color: #34495e;
+  background-color: var(--doc-pdf-toolbar);
   gap: 10px;
   flex-wrap: wrap; /* Allow wrapping on small screens */
+  transition: background-color var(--doc-transition);
 }
 
 .pdf-viewer-button {
-  background-color: #3498db;
+  background-color: var(--doc-pdf-button);
   color: white;
   border: none;
   border-radius: 4px;
@@ -511,10 +633,11 @@
   align-items: center;
   justify-content: center;
   font-size: 14px;
+  transition: background-color var(--doc-transition);
 }
 
 .pdf-viewer-button:hover {
-  background-color: #2980b9;
+  background-color: var(--doc-pdf-button-hover);
 }
 
 .pdf-viewer-button svg {
@@ -545,6 +668,7 @@
     margin: 0;
     min-width: 36px;
     height: 36px;
+    display: flex !important; /* Force display of buttons */
   }
 
   .pdf-viewer-button svg {
@@ -557,12 +681,33 @@
     display: none;
   }
 
+  /* REMOVE this rule that was hiding buttons on mobile */
+  /* .pdf-viewer-button:not(.prev-button):not(.next-button):not(.rotate-button) {
+    display: none !important;
+  } */
+
+  /* Style buttons to match the screenshot */
+  .pdf-viewer-button {
+    background-color: #3498db !important;
+    color: white !important;
+    border-radius: 4px !important;
+    width: 50px !important;
+    height: 50px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 4px !important;
+  }
+
   .pdf-page-info {
     margin: 0;
     font-size: 14px;
     white-space: nowrap;
     flex: 0 1 auto;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   /* Handle rotated PDFs better */
@@ -579,45 +724,46 @@
 
 #prev-page,
 #next-page {
-  background-color: #191970;
+  background-color: var(--doc-primary);
   color: white;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color var(--doc-transition);
 }
 
 #prev-page:hover,
 #next-page:hover {
-  background-color: #ffd700;
-  color: #191970;
+  background-color: var(--doc-accent);
+  color: var(--doc-primary);
 }
 
 #prev-page:disabled,
 #next-page:disabled {
-  background-color: #ccc;
+  background-color: var(--doc-text-light);
   cursor: not-allowed;
 }
 
 #page-info {
   font-size: 0.9rem;
-  color: #666;
+  color: var(--doc-text-light);
+  transition: color var(--doc-transition);
 }
 
 .download-btn {
   margin-left: auto;
-  background-color: #191970;
+  background-color: var(--doc-primary);
   color: white;
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  transition: background-color 0.3s ease;
+  transition: background-color var(--doc-transition);
 }
 
 .download-btn:hover {
-  background-color: #ffd700;
-  color: #191970;
+  background-color: var(--doc-accent);
+  color: var(--doc-primary);
 }
 
 /* Loading and Error States */
@@ -631,16 +777,19 @@
   padding: 3rem;
   text-align: center;
   width: 100%;
+  color: var(--doc-text);
+  transition: color var(--doc-transition);
 }
 
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #191970;
+  border: 4px solid var(--doc-loading-bg);
+  border-top: 4px solid var(--doc-loading-spinner);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;
+  transition: border-color var(--doc-transition);
 }
 
 @keyframes spin {
@@ -654,12 +803,18 @@
 
 .retry-btn {
   margin-top: 1rem;
-  background-color: #191970;
+  background-color: var(--doc-primary);
   color: white;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color var(--doc-transition);
+}
+
+.retry-btn:hover {
+  background-color: var(--doc-accent);
+  color: var(--doc-primary);
 }
 
 /* Screen Rotation Button for Mobile */
@@ -678,7 +833,17 @@
   align-items: center;
   z-index: 10;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px var(--doc-shadow);
+  transition: background-color var(--doc-transition),
+    box-shadow var(--doc-transition);
+}
+
+/* Dark mode rotation button */
+@media (prefers-color-scheme: dark) {
+  .rotate-screen-btn {
+    background-color: rgba(255, 215, 0, 0.8);
+    color: var(--doc-accent);
+  }
 }
 
 .rotate-screen-btn svg {
@@ -715,6 +880,14 @@
   height: 40px;
   margin: 0 auto 15px;
   animation: spin 1s linear infinite;
+}
+
+/* Dark mode PDF loading spinner */
+@media (prefers-color-scheme: dark) {
+  .pdf-loading-spinner {
+    border: 4px solid rgba(255, 215, 0, 0.3);
+    border-top: 4px solid var(--doc-primary);
+  }
 }
 
 /* Responsive Styles */
@@ -855,6 +1028,83 @@
   }
 }
 
+/* Add specific styling for the mobile document viewer header */
+@media (max-width: 768px) {
+  .modal-header {
+    background-color: #34495e !important; /* Match the dark blue in the screenshot */
+    padding: 10px 15px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+
+  /* Create a container for the buttons to match the screenshot */
+  .pdf-controls-container {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 10px !important;
+    background-color: #34495e !important; /* Match the dark blue in the screenshot */
+    gap: 10px !important;
+  }
+
+  /* Style the buttons to match the screenshot */
+  .pdf-controls-container button {
+    background-color: #3498db !important;
+    color: white !important;
+    border: none !important;
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 4px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 18px !important;
+    cursor: pointer !important;
+  }
+
+  /* Style the page info to match the screenshot */
+  .pdf-controls-container .pdf-page-info {
+    color: white !important;
+    font-size: 16px !important;
+  }
+}
+
+/* Dark mode adjustments for the buttons */
+@media (prefers-color-scheme: dark) {
+  @media (max-width: 768px) {
+    .pdf-viewer-button {
+      background-color: var(--doc-primary) !important;
+      color: var(--doc-accent) !important;
+    }
+
+    .pdf-controls-container {
+      background-color: var(--doc-accent) !important;
+    }
+
+    .pdf-controls-container button {
+      background-color: var(--doc-primary) !important;
+      color: var(--doc-accent) !important;
+    }
+  }
+}
+
+/* For manually toggled dark mode */
+.dark-mode .pdf-viewer-button {
+  background-color: var(--doc-primary) !important;
+  color: var(--doc-accent) !important;
+}
+
+.dark-mode .pdf-controls-container {
+  background-color: var(--doc-accent) !important;
+}
+
+.dark-mode .pdf-controls-container button {
+  background-color: var(--doc-primary) !important;
+  color: var(--doc-accent) !important;
+}
+
+/* Fix the syntax error in the media query for max-width: 600px */
 @media (max-width: 600px) {
   .document-meta {
     flex-direction: column;
@@ -921,7 +1171,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: var(--doc-modal-bg);
   z-index: 3000;
   flex-direction: column;
   align-items: center;
@@ -929,6 +1179,7 @@
   color: white;
   text-align: center;
   padding: 2rem;
+  transition: background-color var(--doc-transition);
 }
 
 .orientation-prompt.active {
@@ -966,12 +1217,18 @@
 }
 
 .orientation-prompt button {
-  background-color: #191970;
+  background-color: var(--doc-primary);
   color: white;
   border: none;
   padding: 0.8rem 1.5rem;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color var(--doc-transition);
+}
+
+.orientation-prompt button:hover {
+  background-color: var(--doc-accent);
+  color: var(--doc-primary);
 }
 
 /* Cloudinary PDF message */
@@ -980,31 +1237,35 @@
   padding: 40px;
   max-width: 500px;
   margin: 0 auto;
+  color: var(--doc-text);
+  transition: color var(--doc-transition);
 }
 
 .cloudinary-pdf-message h3 {
-  color: #191970;
+  color: var(--doc-primary);
   margin-bottom: 15px;
+  transition: color var(--doc-transition);
 }
 
 .cloudinary-pdf-message p {
   margin-bottom: 20px;
-  color: #555;
+  color: var(--doc-text-light);
+  transition: color var(--doc-transition);
 }
 
 .cloudinary-pdf-message .download-btn {
   display: inline-block;
-  background-color: #191970;
+  background-color: var(--doc-primary);
   color: white;
   text-decoration: none;
   padding: 10px 20px;
   border-radius: 4px;
-  transition: background-color 0.3s ease;
+  transition: background-color var(--doc-transition);
 }
 
 .cloudinary-pdf-message .download-btn:hover {
-  background-color: #ffd700;
-  color: #191970;
+  background-color: var(--doc-accent);
+  color: var(--doc-primary);
 }
 
 /* Enhanced PDF Viewer Container */
@@ -1015,9 +1276,10 @@
   width: 100%;
   height: 100%;
   z-index: 9999;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: var(--doc-modal-bg);
   display: flex;
   flex-direction: column;
+  transition: background-color var(--doc-transition);
 }
 
 /* Header for the PDF viewer */
@@ -1026,8 +1288,9 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 15px;
-  background-color: #2c3e50;
+  background-color: var(--doc-pdf-toolbar);
   color: white;
+  transition: background-color var(--doc-transition);
 }
 
 .pdf-viewer-title {
@@ -1081,37 +1344,6 @@
   }
 }
 
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-  .pdf-viewer-container {
-    background-color: rgba(0, 0, 0, 0.95);
-  }
-
-  .pdf-viewer-header {
-    background-color: #1a1a2e;
-  }
-
-  .pdf-viewer-toolbar {
-    background-color: #16213e;
-  }
-
-  .pdf-viewer-button {
-    background-color: #0f3460;
-  }
-
-  .pdf-viewer-button:hover {
-    background-color: #e94560;
-  }
-
-  .document-container {
-    background-color: #2a2a2a;
-  }
-
-  #pdf-viewer {
-    background-color: #333333;
-  }
-}
-
 /* Print Optimizations */
 @media print {
   .pdf-viewer-header,
@@ -1137,4 +1369,200 @@
   .textLayer {
     display: none !important;
   }
+}
+
+/* Update the document description color in dark mode */
+.document-description {
+  line-height: 1.6;
+  color: var(--doc-text);
+  margin-bottom: 1.5rem;
+  transition: color var(--doc-transition);
+}
+
+/* Ensure document meta text is also properly visible in dark mode */
+.document-meta {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.document-type {
+  font-weight: 600;
+  color: var(--doc-primary);
+  transition: color var(--doc-transition);
+}
+
+.document-date {
+  color: var(--doc-text-light);
+  transition: color var(--doc-transition);
+}
+
+/* Improve PDF viewer text visibility in dark mode */
+@media (prefers-color-scheme: dark) {
+  /* Ensure document description text is clearly visible */
+  .document-description {
+    color: #ffffff !important; /* Force white text for better visibility in dark mode */
+  }
+
+  /* Make document meta information more visible */
+  .document-meta {
+    color: #e0e0e0;
+  }
+
+  .document-type {
+    color: var(--doc-primary);
+  }
+
+  .document-date {
+    color: #b0b0b0;
+  }
+
+  /* Improve visibility of PDF text layers in dark mode */
+  .textLayer {
+    color: #ffffff;
+  }
+
+  /* Improve visibility of PDF annotations in dark mode */
+  .annotationLayer .linkAnnotation > a,
+  .annotationLayer .buttonWidgetAnnotation.pushButton > a {
+    color: var(--doc-primary);
+  }
+
+  /* Improve visibility of PDF form fields in dark mode */
+  .annotationLayer .textWidgetAnnotation input,
+  .annotationLayer .textWidgetAnnotation textarea,
+  .annotationLayer .choiceWidgetAnnotation select {
+    color: #ffffff;
+    background-color: var(--doc-background-alt);
+  }
+
+  /* Improve visibility of PDF messages in dark mode */
+  .pptx-message,
+  .cloudinary-pdf-message p {
+    color: #ffffff;
+  }
+
+  /* Ensure page info text is visible */
+  #page-info {
+    color: #ffffff;
+  }
+}
+
+/* Update the document description color in dark mode */
+@media (prefers-color-scheme: dark) {
+  /* Ensure document description text is clearly visible */
+  .document-description {
+    color: #ffffff !important; /* Force white text for better visibility in dark mode */
+  }
+
+  /* Make document meta information more visible */
+  .document-meta {
+    color: #e0e0e0;
+  }
+
+  .document-type {
+    color: var(--doc-primary);
+  }
+
+  .document-date {
+    color: #b0b0b0;
+  }
+
+  /* Improve visibility of PDF text layers in dark mode */
+  .textLayer {
+    color: #ffffff;
+  }
+
+  /* Improve visibility of PDF annotations in dark mode */
+  .annotationLayer .linkAnnotation > a,
+  .annotationLayer .buttonWidgetAnnotation.pushButton > a {
+    color: var(--doc-primary);
+  }
+
+  /* Improve visibility of PDF form fields in dark mode */
+  .annotationLayer .textWidgetAnnotation input,
+  .annotationLayer .textWidgetAnnotation textarea,
+  .annotationLayer .choiceWidgetAnnotation select {
+    color: #ffffff;
+    background-color: var(--doc-background-alt);
+  }
+
+  /* Improve visibility of PDF messages in dark mode */
+  .pptx-message,
+  .cloudinary-pdf-message p {
+    color: #ffffff;
+  }
+
+  /* Ensure page info text is visible */
+  #page-info {
+    color: #ffffff;
+  }
+}
+
+/* Add theme toggle button */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: var(--doc-primary);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2000;
+  box-shadow: 0 2px 8px var(--doc-shadow);
+  transition: background-color var(--doc-transition),
+    transform var(--doc-transition);
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+  background-color: var(--doc-accent);
+}
+
+.theme-toggle svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Class for manually toggled dark mode */
+.dark-mode {
+  --doc-primary: #ffd700;
+  --doc-primary-hover: #e6c200;
+  --doc-accent: #191970;
+  --doc-accent-hover: #13134d;
+  --doc-text: #e0e0e0;
+  --doc-text-light: #b0b0b0;
+  --doc-background: #121212;
+  --doc-background-alt: #1e1e1e;
+  --doc-card-bg: #2a2a2a;
+  --doc-cover-bg: #ffd700;
+  --doc-cover-overlay: rgba(255, 215, 0, 0.85);
+  --doc-icon-bg: #2a2a2a;
+  --doc-icon-text: #ffd700;
+  --doc-icon-fold: #444444;
+  --doc-border: #333333;
+  --doc-shadow: rgba(0, 0, 0, 0.3);
+  --doc-shadow-hover: rgba(0, 0, 0, 0.4);
+  --doc-modal-bg: rgba(0, 0, 0, 0.9);
+  --doc-modal-content: #1e1e1e;
+  --doc-modal-header: #ffd700;
+  --doc-modal-container: #2a2a2a;
+  --doc-pdf-bg: #333333;
+  --doc-pdf-toolbar: #16213e;
+  --doc-pdf-button: #0f3460;
+  --doc-pdf-button-hover: #e94560;
+  --doc-loading-bg: #333333;
+  --doc-loading-spinner: #ffd700;
+}
+
+/* Ensure document description is always visible in dark mode */
+.dark-mode .document-description {
+  color: #ffffff !important;
 }

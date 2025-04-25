@@ -1196,12 +1196,26 @@ select:focus,
 /* ===== Dark Mode Support ===== */
 @media (prefers-color-scheme: dark) {
   :root {
+    --certificate-primary: #ffd700; /* Gold in dark mode */
+    --certificate-primary-light: #ffe347;
+    --certificate-primary-dark: #e6c200;
+    --certificate-accent: #191970; /* Midnight Blue in dark mode */
+    --certificate-accent-light: #2a2a9a;
+    --certificate-accent-dark: #0f0f45;
     --certificate-card-bg: #1e1e1e;
     --certificate-bg-light: #121212;
-    --certificate-text: #e0e0e0;
-    --certificate-text-light: #a0a0a0;
+    --certificate-bg-gradient: linear-gradient(
+      135deg,
+      #121212 0%,
+      #1a1a2e 100%
+    );
+    --certificate-text: #ffffff; /* White text in dark mode */
+    --certificate-text-light: #cccccc;
     --certificate-text-dark: #ffffff;
     --certificate-border: #333333;
+    --certificate-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+    --certificate-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.3);
+    --certificate-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.4);
   }
 
   .certificate-image {

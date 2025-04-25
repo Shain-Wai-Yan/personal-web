@@ -1,8 +1,77 @@
 /* Photography Gallery - Main Styles */
+:root {
+  /* Color variables for light mode */
+  --photo-primary: #191970;
+  --photo-primary-hover: #13134d;
+  --photo-accent: #ffd700;
+  --photo-text: #333333;
+  --photo-text-light: #666666;
+  --photo-background: #ffffff;
+  --photo-background-alt: #f8f9f9;
+  --photo-card-bg: #ffffff;
+  --photo-border: #e0e0e0;
+  --photo-tag-bg: #f0f0f0;
+  --photo-shadow: rgba(0, 0, 0, 0.1);
+  --photo-shadow-hover: rgba(0, 0, 0, 0.15);
+  --photo-loading-bg: #f0f0f0;
+  --photo-error-bg: #f8d7da;
+  --photo-error-border: #f5c6cb;
+  --photo-error-text: #721c24;
+  --photo-filter-bg: #f0f0f0;
+  --photo-filter-hover: #e0e0e0;
+  --photo-overlay-bg: rgba(0, 0, 0, 0.7);
+  --photo-lightbox-bg: rgba(0, 0, 0, 0.9);
+  --photo-lightbox-text: #ffffff;
+  --photo-lightbox-text-light: #cccccc;
+  --photo-lightbox-control-bg: rgba(0, 0, 0, 0.5);
+  --photo-lightbox-control-hover: rgba(0, 0, 0, 0.8);
+  --photo-related-strip-bg: rgba(0, 0, 0, 0.8);
+  --photo-scrollbar-track: #333333;
+  --photo-scrollbar-thumb: #666666;
+  --photo-transition-normal: 0.3s ease;
+}
+
+/* Dark mode variables */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --photo-primary: #ffd700; /* Swap primary and accent colors */
+    --photo-primary-hover: #e6c200;
+    --photo-accent: #191970;
+    --photo-text: #e0e0e0;
+    --photo-text-light: #b0b0b0;
+    --photo-background: #121212;
+    --photo-background-alt: #1e1e1e;
+    --photo-card-bg: #2a2a2a;
+    --photo-border: #333333;
+    --photo-tag-bg: #333333;
+    --photo-shadow: rgba(0, 0, 0, 0.3);
+    --photo-shadow-hover: rgba(0, 0, 0, 0.4);
+    --photo-loading-bg: #2a2a2a;
+    --photo-error-bg: rgba(220, 53, 69, 0.2);
+    --photo-error-border: #dc3545;
+    --photo-error-text: #f87171;
+    --photo-filter-bg: #333333;
+    --photo-filter-hover: #444444;
+    --photo-overlay-bg: rgba(0, 0, 0, 0.8);
+    --photo-lightbox-bg: rgba(0, 0, 0, 0.95);
+    --photo-lightbox-text: #ffffff;
+    --photo-lightbox-text-light: #cccccc;
+    --photo-lightbox-control-bg: rgba(0, 0, 0, 0.6);
+    --photo-lightbox-control-hover: rgba(0, 0, 0, 0.9);
+    --photo-related-strip-bg: rgba(0, 0, 0, 0.9);
+    --photo-scrollbar-track: #222222;
+    --photo-scrollbar-thumb: #444444;
+  }
+}
+
 .landscape-container {
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem 1rem;
+  background-color: var(--photo-background);
+  color: var(--photo-text);
+  transition: background-color var(--photo-transition-normal),
+    color var(--photo-transition-normal);
 }
 
 .landscape-header {
@@ -12,14 +81,16 @@
 
 .landscape-header h1 {
   font-size: 2.5rem;
-  color: #191970;
+  color: var(--photo-primary);
   margin-bottom: 0.5rem;
+  transition: color var(--photo-transition-normal);
 }
 
 .landscape-header p {
   font-size: 1.2rem;
-  color: #666;
+  color: var(--photo-text-light);
   margin-bottom: 2rem;
+  transition: color var(--photo-transition-normal);
 }
 
 /* Back to Portfolio Button */
@@ -33,16 +104,17 @@
   display: inline-flex;
   align-items: center;
   padding: 0.5rem 1rem;
-  background-color: #191970;
+  background-color: var(--photo-primary);
   color: white;
   border-radius: 4px;
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all var(--photo-transition-normal);
   margin-bottom: 1rem;
 }
+
 .back-to-portfolio:hover {
-  background-color: #ffd700;
-  color: #191970;
+  background-color: var(--photo-accent);
+  color: var(--photo-primary);
   transform: translateX(-5px);
 }
 
@@ -86,22 +158,23 @@
   margin-bottom: 16px;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 10px var(--photo-shadow);
+  transition: transform var(--photo-transition-normal),
+    box-shadow var(--photo-transition-normal);
   cursor: pointer;
-  background-color: #fff;
+  background-color: var(--photo-card-bg);
   display: inline-block;
   width: 100%;
 }
 
 .masonry-item:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 20px var(--photo-shadow-hover);
 }
 
 .masonry-item.active {
   transform: scale(1.05);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 12px 24px var(--photo-shadow-hover);
   z-index: 10;
 }
 
@@ -128,22 +201,25 @@
 /* FIXED: Compact info section */
 .masonry-info {
   padding: 10px;
-  background-color: #fff;
+  background-color: var(--photo-card-bg);
   flex-shrink: 0;
+  transition: background-color var(--photo-transition-normal);
 }
 
 .masonry-title {
   margin: 0 0 3px 0;
   font-size: 1rem;
-  color: #333;
+  color: var(--photo-text);
   font-weight: 600;
   line-height: 1.2;
+  transition: color var(--photo-transition-normal);
 }
 
 .masonry-location {
   margin: 0;
   font-size: 0.85rem;
-  color: #666;
+  color: var(--photo-text-light);
+  transition: color var(--photo-transition-normal);
 }
 
 /* Image info and metadata */
@@ -157,9 +233,11 @@
 .masonry-tag {
   font-size: 0.7rem;
   padding: 2px 6px;
-  background-color: #f0f0f0;
+  background-color: var(--photo-tag-bg);
   border-radius: 3px;
-  color: #666;
+  color: var(--photo-text-light);
+  transition: background-color var(--photo-transition-normal),
+    color var(--photo-transition-normal);
 }
 
 /* Related Photos Feature */
@@ -169,11 +247,11 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: var(--photo-overlay-bg);
   z-index: 100;
   display: none;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--photo-transition-normal);
 }
 
 .related-photos-overlay.active {
@@ -202,10 +280,12 @@
   height: 180px;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  background-color: #fff;
+  box-shadow: 0 4px 15px var(--photo-shadow);
+  background-color: var(--photo-card-bg);
   transform: translate(var(--pos-x, 0), var(--pos-y, 0)) scale(0);
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    background-color var(--photo-transition-normal),
+    box-shadow var(--photo-transition-normal);
   cursor: pointer;
   pointer-events: auto;
 }
@@ -228,6 +308,8 @@
 .related-photo-info {
   padding: 8px;
   height: 25%;
+  background-color: var(--photo-card-bg);
+  transition: background-color var(--photo-transition-normal);
 }
 
 .related-photo-title {
@@ -237,15 +319,18 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--photo-text);
+  transition: color var(--photo-transition-normal);
 }
 
 .related-photo-location {
   margin: 2px 0 0 0;
   font-size: 0.7rem;
-  color: #666;
+  color: var(--photo-text-light);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: color var(--photo-transition-normal);
 }
 
 .related-photos-close {
@@ -262,8 +347,18 @@
   font-size: 1.5rem;
   cursor: pointer;
   z-index: 102;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 10px var(--photo-shadow);
   display: none;
+  transition: background-color var(--photo-transition-normal),
+    box-shadow var(--photo-transition-normal);
+}
+
+/* Dark mode adjustment for close button */
+@media (prefers-color-scheme: dark) {
+  .related-photos-close {
+    background-color: rgba(42, 42, 42, 0.9);
+    color: var(--photo-text);
+  }
 }
 
 .related-photos-close.active {
@@ -280,7 +375,7 @@
   z-index: 2000;
   display: none;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--photo-transition-normal);
 }
 
 .photo-lightbox.active {
@@ -294,7 +389,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: var(--photo-lightbox-bg);
 }
 
 /* Lightbox Layout - Optimized for Cloudinary Images */
@@ -311,7 +406,7 @@
   position: absolute;
   top: 15px;
   right: 15px;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--photo-lightbox-control-bg);
   color: white;
   border: none;
   width: 40px;
@@ -323,11 +418,11 @@
   justify-content: center;
   cursor: pointer;
   z-index: 2002;
-  transition: background 0.3s ease;
+  transition: background var(--photo-transition-normal);
 }
 
 .lightbox-close:hover {
-  background: rgba(0, 0, 0, 0.8);
+  background: var(--photo-lightbox-control-hover);
 }
 
 .lightbox-main {
@@ -436,14 +531,14 @@
   width: 100%;
   padding: 10px 15px;
   text-align: center;
-  color: white;
+  color: var(--photo-lightbox-text);
   background: linear-gradient(
     to top,
     rgba(0, 0, 0, 0.7) 0%,
     rgba(0, 0, 0, 0) 100%
   );
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--photo-transition-normal);
 }
 
 .lightbox-main:hover .lightbox-info {
@@ -454,12 +549,13 @@
   margin: 0 0 3px 0;
   font-size: 1.1rem;
   font-weight: 500;
+  color: var(--photo-lightbox-text);
 }
 
 .lightbox-info p {
   margin: 0;
   font-size: 0.85rem;
-  color: #ccc;
+  color: var(--photo-lightbox-text-light);
 }
 
 .lightbox-navigation {
@@ -475,7 +571,7 @@
 
 .lightbox-prev,
 .lightbox-next {
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--photo-lightbox-control-bg);
   color: white;
   border: none;
   width: 50px;
@@ -486,12 +582,13 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.3s ease;
+  transition: background var(--photo-transition-normal),
+    transform var(--photo-transition-normal);
 }
 
 .lightbox-prev:hover,
 .lightbox-next:hover {
-  background: rgba(0, 0, 0, 0.8);
+  background: var(--photo-lightbox-control-hover);
   transform: scale(1.1);
 }
 
@@ -501,12 +598,13 @@
   overflow-x: auto;
   padding: 10px;
   gap: 15px;
-  background: rgba(0, 0, 0, 0.8);
+  background: var(--photo-related-strip-bg);
   scrollbar-width: thin;
-  scrollbar-color: #666 #333;
+  scrollbar-color: var(--photo-scrollbar-thumb) var(--photo-scrollbar-track);
   align-items: center;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  transition: background var(--photo-transition-normal);
 }
 
 .related-strip::-webkit-scrollbar {
@@ -514,11 +612,11 @@
 }
 
 .related-strip::-webkit-scrollbar-track {
-  background: #333;
+  background: var(--photo-scrollbar-track);
 }
 
 .related-strip::-webkit-scrollbar-thumb {
-  background-color: #666;
+  background-color: var(--photo-scrollbar-thumb);
   border-radius: 4px;
 }
 
@@ -531,7 +629,8 @@
   overflow: hidden;
   cursor: pointer;
   opacity: 0.6;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity var(--photo-transition-normal),
+    transform var(--photo-transition-normal);
   border: 2px solid transparent;
   scroll-snap-align: center;
   will-change: transform, opacity;
@@ -568,9 +667,18 @@
   height: 30px;
   border: 3px solid rgba(25, 25, 112, 0.3);
   border-radius: 50%;
-  border-top-color: #191970;
+  border-top-color: var(--photo-primary);
   animation: spin 1s ease-in-out infinite;
   display: none;
+  transition: border-color var(--photo-transition-normal);
+}
+
+/* Dark mode spinner adjustment */
+@media (prefers-color-scheme: dark) {
+  .scroll-trigger-spinner {
+    border: 3px solid rgba(255, 215, 0, 0.3);
+    border-top-color: var(--photo-primary);
+  }
 }
 
 .scroll-trigger.loading .scroll-trigger-spinner {
@@ -586,17 +694,17 @@
 
 .load-more-btn {
   padding: 0.75rem 2rem;
-  background-color: #191970;
+  background-color: var(--photo-primary);
   color: white;
   border: none;
   border-radius: 4px;
   font-size: 1rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--photo-transition-normal);
 }
 
 .load-more-btn:hover {
-  background-color: #13134d;
+  background-color: var(--photo-primary-hover);
   transform: translateY(-2px);
 }
 
@@ -631,20 +739,21 @@
 
 .filter-button {
   padding: 8px 16px;
-  background-color: #f0f0f0;
+  background-color: var(--photo-filter-bg);
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--photo-transition-normal);
   font-size: 0.9rem;
+  color: var(--photo-text);
 }
 
 .filter-button:hover {
-  background-color: #e0e0e0;
+  background-color: var(--photo-filter-hover);
 }
 
 .filter-button.active {
-  background-color: #191970;
+  background-color: var(--photo-primary);
   color: white;
 }
 
@@ -662,7 +771,7 @@
   padding: 30px 15px 15px;
   color: white;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--photo-transition-normal);
 }
 
 .masonry-item:hover .photo-info-overlay {
@@ -672,12 +781,14 @@
 .photo-info-overlay h3 {
   margin: 0 0 5px 0;
   font-size: 1rem;
+  color: white;
 }
 
 .photo-info-overlay p {
   margin: 0;
   font-size: 0.85rem;
   opacity: 0.9;
+  color: white;
 }
 
 /* FIXED: Loading State - Prevent splitting in masonry grid */
@@ -690,16 +801,20 @@
   max-width: 600px !important;
   text-align: center !important;
   z-index: 5 !important;
-  background-color: rgba(255, 255, 255, 0.85) !important;
+  background-color: var(--photo-background) !important;
   border-radius: 8px !important;
   padding: 2rem !important;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05) !important;
-  color: #191970 !important;
+  box-shadow: 0 2px 15px var(--photo-shadow) !important;
+  color: var(--photo-primary) !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
-  border: 1px solid rgba(25, 25, 112, 0.15) !important;
+  border: 1px solid var(--photo-border) !important;
+  transition: background-color var(--photo-transition-normal),
+    color var(--photo-transition-normal),
+    box-shadow var(--photo-transition-normal),
+    border-color var(--photo-transition-normal) !important;
 }
 
 .loading-spinner-container {
@@ -714,14 +829,24 @@
   height: 40px;
   border: 3px solid rgba(25, 25, 112, 0.2);
   border-radius: 50%;
-  border-top-color: #191970;
+  border-top-color: var(--photo-primary);
   animation: spin 1s ease-in-out infinite;
+  transition: border-color var(--photo-transition-normal);
+}
+
+/* Dark mode spinner adjustment */
+@media (prefers-color-scheme: dark) {
+  .loading-spinner {
+    border: 3px solid rgba(255, 215, 0, 0.2);
+    border-top-color: var(--photo-primary);
+  }
 }
 
 .loading-text {
   font-size: 1rem;
-  color: #191970;
+  color: var(--photo-primary);
   margin-top: 0.5rem;
+  transition: color var(--photo-transition-normal);
 }
 
 @keyframes spin {
@@ -738,11 +863,12 @@
   width: 100%;
   height: 100%;
   min-height: 150px;
-  background-color: #f0f0f0;
+  background-color: var(--photo-loading-bg);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1;
+  transition: background-color var(--photo-transition-normal);
 }
 
 /* Error States */
@@ -750,22 +876,25 @@
   width: 100%;
   padding: 2rem;
   text-align: center;
-  background-color: #f8f9f9;
+  background-color: var(--photo-error-bg);
   border-radius: 8px;
   margin: 2rem 0;
-  color: #721c24;
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
+  color: var(--photo-error-text);
+  border: 1px solid var(--photo-error-border);
+  transition: background-color var(--photo-transition-normal),
+    color var(--photo-transition-normal),
+    border-color var(--photo-transition-normal);
 }
 
 .retry-button {
   margin-top: 1rem;
   padding: 0.5rem 1rem;
-  background-color: #191970;
+  background-color: var(--photo-primary);
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color var(--photo-transition-normal);
 }
 
 /* FIXED: No Photos Found Message - Prevent splitting in masonry grid */
@@ -779,55 +908,62 @@
   min-height: 120px !important;
   padding: 2rem !important;
   text-align: center !important;
-  background-color: rgba(255, 255, 255, 0.85) !important;
-  border: 1px solid rgba(25, 25, 112, 0.15) !important;
+  background-color: var(--photo-background) !important;
+  border: 1px solid var(--photo-border) !important;
   border-radius: 8px !important;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 2px 15px var(--photo-shadow) !important;
   z-index: 5 !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
-  color: #191970 !important;
+  color: var(--photo-primary) !important;
+  transition: background-color var(--photo-transition-normal),
+    color var(--photo-transition-normal),
+    box-shadow var(--photo-transition-normal),
+    border-color var(--photo-transition-normal) !important;
 }
 
 .photo-warning-icon {
   margin-bottom: 1rem;
-  color: #191970;
+  color: var(--photo-primary);
   opacity: 0.7;
+  transition: color var(--photo-transition-normal);
 }
 
 .no-photos-message h3 {
   font-size: 1.1rem;
-  color: #191970;
+  color: var(--photo-primary);
   margin: 0.5rem 0;
   font-weight: 600;
+  transition: color var(--photo-transition-normal);
 }
 
 .no-photos-message p {
   font-size: 0.9rem;
-  color: #191970;
+  color: var(--photo-primary);
   opacity: 0.8;
   margin-bottom: 1rem;
+  transition: color var(--photo-transition-normal);
 }
 
 .reset-filters-btn {
   padding: 0.6rem 1.2rem;
-  background-color: #191970;
+  background-color: var(--photo-primary);
   color: white;
   border: none;
   border-radius: 4px;
   font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--photo-transition-normal);
   margin-top: 0.5rem;
 }
 
 .reset-filters-btn:hover {
-  background-color: #ffd700;
-  color: #191970;
+  background-color: var(--photo-accent);
+  color: var(--photo-primary);
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px var(--photo-shadow);
 }
 
 /* Search Functionality */
@@ -843,17 +979,19 @@
 .search-container input {
   width: 100%;
   padding: 12px 45px 12px 15px; /* Right padding for button space */
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--photo-border);
   border-radius: 4px;
   font-size: 1rem;
-  transition: all 0.3s ease;
+  transition: all var(--photo-transition-normal);
   height: 48px; /* Fixed height for consistent alignment */
+  background-color: var(--photo-background);
+  color: var(--photo-text);
 }
 
 .search-container input:focus {
   outline: none;
-  border-color: #191970;
-  box-shadow: 0 0 0 2px rgba(25, 25, 112, 0.2);
+  border-color: var(--photo-primary);
+  box-shadow: 0 0 0 2px rgba(var(--photo-primary), 0.2);
 }
 
 .refresh-button {
@@ -863,20 +1001,20 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background-color: #191970;
-  color: #191970;
+  background-color: var(--photo-primary);
+  color: white;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all var(--photo-transition-normal);
+  box-shadow: 0 2px 4px var(--photo-shadow);
 }
 
 .refresh-button:hover {
-  background-color: #ffd700;
-  color: #191970;
+  background-color: var(--photo-accent);
+  color: var(--photo-primary);
 }
 
 .refresh-button:active {
@@ -886,7 +1024,7 @@
 .refresh-button svg {
   width: 18px;
   height: 18px;
-  transition: transform 0.3s ease;
+  transition: transform var(--photo-transition-normal);
 }
 
 .refresh-button.refreshing svg {
@@ -912,7 +1050,7 @@
   border-radius: 20px;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--photo-transition-normal);
   z-index: 2003;
 }
 
@@ -951,12 +1089,14 @@
 /* FIXED: Added fallback styles for images that fail to load */
 .masonry-item img.error {
   min-height: 150px;
-  background-color: #f0f0f0;
+  background-color: var(--photo-loading-bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #666;
+  color: var(--photo-text-light);
   font-size: 0.9rem;
+  transition: background-color var(--photo-transition-normal),
+    color var(--photo-transition-normal);
 }
 
 /* Responsive Adjustments */
