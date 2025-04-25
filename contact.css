@@ -237,7 +237,7 @@
   transform: translateY(-50%);
   width: 16px;
   height: 16px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23dc3545' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'%3E%3C/circle%3E%3Cline x1='12' y1='8' x2='12' y2='12'%3E%3C/line%3E%3Cline x1='12' y1='16' x2='12.01' y2='16'%3E%3C/line%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23dc3545' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle  stroke='%23dc3545' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'%3E%3C/circle%3E%3Cline x1='12' y1='8' x2='12' y2='12'%3E%3C/line%3E%3Cline x1='12' y1='16' x2='12.01' y2='16'%3E%3C/line%3E%3C/svg%3E");
   background-size: contain;
   background-repeat: no-repeat;
 }
@@ -682,7 +682,7 @@
   content: none; /* Remove the asterisk completely */
 }
 
-/* ===== Dark Mode Support ===== */
+/* ===== Dark Mode Support with Enhanced Gold ===== */
 @media (prefers-color-scheme: dark) {
   /* Main container background */
   .contact {
@@ -704,13 +704,31 @@
       );
   }
 
-  /* Page title */
+  /* Page title with enhanced gold styling */
   .contact h1 {
-    color: #ffd700;
+    color: #a67c00;
+    background: linear-gradient(
+      135deg,
+      #704700 0%,
+      #a67c00 20%,
+      #d4af37 40%,
+      #f9df85 50%,
+      #d4af37 60%,
+      #a67c00 80%,
+      #704700 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: goldShimmer 8s linear infinite;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   }
 
   .contact h1::after {
-    background: linear-gradient(to right, #ffd700, #191970);
+    background: linear-gradient(to right, #a67c00, #191970);
+    animation: goldShimmer 8s linear infinite;
+    background-size: 200% auto;
   }
 
   /* Form container */
@@ -720,12 +738,12 @@
   }
 
   .contact-form-section:hover {
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 0 0 20px rgba(166, 124, 0, 0.1);
   }
 
   /* Corner accents */
   .contact-form-section::before {
-    background-color: #ffd700;
+    background-color: #a67c00;
   }
 
   .contact-form-section::after {
@@ -734,11 +752,11 @@
 
   /* Form labels */
   #contactForm label {
-    color: #ffd700;
+    color: #d4af37;
   }
 
   #contactForm label::before {
-    background-color: #ffd700;
+    background-color: #d4af37;
   }
 
   /* Form inputs */
@@ -756,8 +774,8 @@
 
   #contactForm input:focus,
   #contactForm textarea:focus {
-    border-color: #ffd700;
-    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+    border-color: #d4af37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
     background-color: #2a2a2a;
   }
 
@@ -766,17 +784,29 @@
     color: #aaaaaa;
   }
 
-  /* Submit button */
+  /* Submit button with gold gradient */
   #contactForm .cta-btn {
-    background-color: #ffd700;
+    background: linear-gradient(
+      135deg,
+      #704700 0%,
+      #a67c00 20%,
+      #d4af37 40%,
+      #f9df85 50%,
+      #d4af37 60%,
+      #a67c00 80%,
+      #704700 100%
+    );
+    background-size: 200% 200%;
+    animation: goldWave 12s ease infinite;
     color: #191970;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   }
 
   #contactForm .cta-btn:hover {
-    background-color: #191970;
+    background: #191970;
     color: #ffffff;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), 0 0 15px rgba(166, 124, 0, 0.2);
+    animation: none;
   }
 
   #contactForm .cta-btn::before {
@@ -791,11 +821,12 @@
   #contactForm .cta-btn:disabled {
     background-color: #444444;
     color: #888888;
+    animation: none;
   }
 
   /* Loading indicator */
   .loading-indicator {
-    background-color: #ffd700;
+    background-color: #a67c00;
     color: #191970;
   }
 
@@ -819,17 +850,32 @@
 
   /* Validation tooltip */
   .validation-tooltip {
-    background-color: #ffd700;
+    background-color: #a67c00;
     color: #191970;
   }
 
   .validation-tooltip::before {
-    border-bottom: 6px solid #ffd700;
+    border-bottom: 6px solid #a67c00;
   }
 
   /* Social links */
   .social-links h2 {
-    color: #ffd700;
+    color: #d4af37;
+    background: linear-gradient(
+      135deg,
+      #704700 0%,
+      #a67c00 20%,
+      #d4af37 40%,
+      #f9df85 50%,
+      #d4af37 60%,
+      #a67c00 80%,
+      #704700 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: goldShimmer 8s linear infinite;
   }
 
   .social-links h2::before {
@@ -850,26 +896,26 @@
 
   .social-icon:hover img {
     border-color: #191970;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4), 0 0 15px rgba(166, 124, 0, 0.2);
   }
 
   /* Focus states */
   #contactForm input:focus-visible,
   #contactForm textarea:focus-visible,
   #contactForm .cta-btn:focus-visible {
-    outline: 2px solid #ffd700;
+    outline: 2px solid #d4af37;
   }
 
   /* Animation adjustments */
   @keyframes pulse {
     0% {
-      box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4);
+      box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4);
     }
     70% {
-      box-shadow: 0 0 0 5px rgba(255, 215, 0, 0);
+      box-shadow: 0 0 0 5px rgba(212, 175, 55, 0);
     }
     100% {
-      box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+      box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
     }
   }
 
@@ -884,5 +930,30 @@
   #contactForm.attempted textarea:invalid {
     border-color: #dc3545;
     background-color: rgba(220, 53, 69, 0.1);
+  }
+
+  /* Gold effect animations */
+  @keyframes goldShimmer {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @keyframes goldWave {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
   }
 }

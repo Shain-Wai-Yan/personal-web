@@ -20,12 +20,15 @@
   --transition-normal: 0.3s ease;
 }
 
-/* Dark Mode Variables */
+/* Dark Mode Variables with Enhanced Deep Gold */
 @media (prefers-color-scheme: dark) {
   :root {
-    --primary: #ffd700; /* Gold in dark mode (swapped with accent) */
-    --primary-light: #ffe347;
-    --primary-dark: #e6c200;
+    /* Deep, luxurious gold palette */
+    --primary: #a67c00; /* Deeper, richer gold base color */
+    --primary-light: #d4af37; /* Rich gold */
+    --primary-dark: #704700; /* Dark amber gold */
+    --primary-highlight: #f9df85; /* Light gold for accents */
+
     --accent: #191970; /* Navy blue in dark mode (swapped with primary) */
     --text: #e0e0e0;
     --text-light: #b0b0b0;
@@ -35,9 +38,29 @@
     --border-color: #333333;
     --shadow-color: rgba(0, 0, 0, 0.3);
     --shadow-color-hover: rgba(0, 0, 0, 0.4);
-    --dots-color: rgba(255, 215, 0, 0.1);
-    --grid-color: rgba(255, 215, 0, 0.05);
+    --dots-color: rgba(166, 124, 0, 0.1); /* Deeper gold dots */
+    --grid-color: rgba(166, 124, 0, 0.05); /* Deeper gold grid */
     --particles-color: rgba(25, 25, 112, 0.1);
+
+    /* Gold gradients for dark mode */
+    --gold-gradient: linear-gradient(
+      135deg,
+      #704700 0%,
+      #a67c00 20%,
+      #d4af37 40%,
+      #f9df85 50%,
+      #d4af37 60%,
+      #a67c00 80%,
+      #704700 100%
+    );
+
+    --gold-gradient-simple: linear-gradient(
+      135deg,
+      #704700,
+      #a67c00,
+      #d4af37,
+      #f9df85
+    );
   }
 }
 
@@ -166,6 +189,59 @@
   transition: background var(--transition-normal);
 }
 
+/* Enhanced gold gradient text in dark mode */
+@media (prefers-color-scheme: dark) {
+  .text-gradient {
+    background: var(--gold-gradient);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: goldShimmer 8s linear infinite;
+  }
+
+  /* Add subtle glitter effect to important headings */
+  .hero-title,
+  .section-header h2 {
+    position: relative;
+  }
+
+  .hero-title::before,
+  .section-header h2::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(
+        circle at 20% 30%,
+        rgba(249, 223, 133, 0.7) 0.1%,
+        transparent 0.5%
+      ),
+      radial-gradient(
+        circle at 50% 70%,
+        rgba(249, 223, 133, 0.5) 0.1%,
+        transparent 0.5%
+      ),
+      radial-gradient(
+        circle at 80% 10%,
+        rgba(249, 223, 133, 0.7) 0.1%,
+        transparent 0.5%
+      ),
+      radial-gradient(
+        circle at 10% 90%,
+        rgba(249, 223, 133, 0.5) 0.1%,
+        transparent 0.5%
+      );
+    background-size: 150% 150%;
+    mix-blend-mode: overlay;
+    animation: glitterEffect 6s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: -1;
+  }
+}
+
 .text-white {
   color: white !important;
 }
@@ -210,6 +286,53 @@
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+}
+
+/* Enhanced gold gradient buttons in dark mode */
+@media (prefers-color-scheme: dark) {
+  .cta-btn,
+  .ai-btn,
+  .certificate-link,
+  .view-all-btn,
+  .submit-btn {
+    background: var(--gold-gradient);
+    background-size: 200% 200%;
+    animation: goldWave 12s ease infinite;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-btn::after,
+  .ai-btn::after,
+  .certificate-link::after,
+  .view-all-btn::after,
+  .submit-btn::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.05) 25%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.05) 75%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    animation: waveEffect 8s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .cta-btn:hover,
+  .ai-btn:hover,
+  .certificate-link:hover,
+  .view-all-btn:hover,
+  .submit-btn:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 15px rgba(166, 124, 0, 0.2);
+  }
 }
 
 .cta-btn::before {
@@ -280,6 +403,17 @@
   opacity: 0.9;
   transition: background-color var(--transition-normal),
     border-color var(--transition-normal);
+}
+
+/* Enhanced gold cube faces in dark mode */
+@media (prefers-color-scheme: dark) {
+  .cube-face {
+    background: var(--gold-gradient);
+    background-size: 200% 200%;
+    animation: goldWave 12s ease infinite;
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 20px rgba(166, 124, 0, 0.2);
+  }
 }
 
 .front {
@@ -388,6 +522,16 @@ section {
   transition: background var(--transition-normal);
 }
 
+/* Enhanced gold gradient underlines in dark mode */
+@media (prefers-color-scheme: dark) {
+  .section-header h2::after,
+  .skill-category h3::after {
+    background: var(--gold-gradient-simple);
+    background-size: 200% 200%;
+    animation: goldShimmer 8s linear infinite;
+  }
+}
+
 .section-header p {
   color: var(--text-light);
   font-size: 1.2rem;
@@ -456,6 +600,19 @@ section {
   color: white;
   transform: rotateY(180deg);
   text-align: center;
+}
+
+/* Enhanced gold card backs in dark mode */
+@media (prefers-color-scheme: dark) {
+  .card-back {
+    background: var(--gold-gradient);
+    background-size: 200% 200%;
+    animation: goldWave 12s ease infinite;
+  }
+
+  .expertise-card:hover {
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 15px rgba(166, 124, 0, 0.2);
+  }
 }
 
 .expertise-icon {
@@ -593,6 +750,16 @@ section {
     box-shadow var(--transition-normal);
 }
 
+/* Enhanced gold brain in dark mode */
+@media (prefers-color-scheme: dark) {
+  .brain-center {
+    background: var(--gold-gradient);
+    background-size: 200% 200%;
+    animation: pulse 3s infinite alternate, goldWave 12s ease infinite;
+    box-shadow: 0 0 30px rgba(166, 124, 0, 0.3);
+  }
+}
+
 .brain-connections {
   position: absolute;
   width: 100%;
@@ -609,6 +776,13 @@ section {
   opacity: 0.7;
   animation: connectionPulse 3s infinite alternate;
   transition: background-color var(--transition-normal);
+}
+
+/* Enhanced gold connections in dark mode */
+@media (prefers-color-scheme: dark) {
+  .connection {
+    background: linear-gradient(to right, #704700, #d4af37);
+  }
 }
 
 .c1 {
@@ -668,6 +842,13 @@ section {
   opacity: 0;
   animation: brainPulse 3s infinite;
   transition: border-color var(--transition-normal);
+}
+
+/* Enhanced gold pulse in dark mode */
+@media (prefers-color-scheme: dark) {
+  .brain-pulse {
+    border: 2px solid #d4af37;
+  }
 }
 
 @keyframes pulse {
@@ -833,6 +1014,15 @@ section {
   transition: width 1.5s ease-out, background var(--transition-normal);
 }
 
+/* Enhanced gold skill bars in dark mode */
+@media (prefers-color-scheme: dark) {
+  .skill-progress {
+    background: var(--gold-gradient-simple);
+    background-size: 200% 200%;
+    animation: goldShimmer 8s linear infinite;
+  }
+}
+
 /* Certificate Preview with Parallax */
 .certificate-preview {
   position: relative;
@@ -855,7 +1045,7 @@ section {
 /* Dark mode pattern adjustment */
 @media (prefers-color-scheme: dark) {
   .parallax-background {
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffd700' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23a67c00' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
 }
 
@@ -884,6 +1074,30 @@ section {
 .certificate-card:hover {
   transform: translateY(-10px);
   box-shadow: 0 15px 30px var(--shadow-color-hover);
+}
+
+/* Enhanced gold hover effect in dark mode */
+@media (prefers-color-scheme: dark) {
+  .certificate-card:hover {
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 15px rgba(166, 124, 0, 0.2);
+  }
+
+  .certificate-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--gold-gradient-simple);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+
+  .certificate-card:hover::before {
+    transform: scaleX(1);
+  }
 }
 
 .certificate-icon {
@@ -954,6 +1168,15 @@ section {
   position: relative;
   overflow: hidden;
   transition: background var(--transition-normal);
+}
+
+/* Enhanced gold gradient CTA in dark mode */
+@media (prefers-color-scheme: dark) {
+  .cta-section {
+    background: var(--gold-gradient);
+    background-size: 200% 200%;
+    animation: goldWave 12s ease infinite;
+  }
 }
 
 .cta-content h2,
@@ -1042,6 +1265,58 @@ section {
 
 .cta-button:hover i {
   transform: translateX(5px);
+}
+
+/* Gold effect animations */
+@keyframes goldShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes goldWave {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes waveEffect {
+  0% {
+    transform: rotate(0deg) translate(-50%, -50%);
+  }
+  100% {
+    transform: rotate(360deg) translate(-50%, -50%);
+  }
+}
+
+@keyframes glitterEffect {
+  0% {
+    background-position: 0% 0%;
+  }
+  25% {
+    background-position: 100% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
 }
 
 /* Animations */

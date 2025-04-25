@@ -26,12 +26,15 @@
   --transition-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Dark mode variables */
+/* Dark mode variables with enhanced deep gold */
 @media (prefers-color-scheme: dark) {
   :root {
-    --primary: #ffd700; /* Gold in dark mode (swapped with accent) */
-    --primary-light: #ffe347;
-    --primary-dark: #e6c200;
+    /* Deep, luxurious gold palette */
+    --primary: #a67c00; /* Deeper, richer gold base color */
+    --primary-light: #d4af37; /* Rich gold */
+    --primary-dark: #704700; /* Dark amber gold */
+    --primary-highlight: #f9df85; /* Light gold for accents */
+
     --accent: #191970; /* Midnight Blue in dark mode (swapped with primary) */
     --accent-light: #2a2a9a;
     --accent-dark: #0f0f45;
@@ -43,13 +46,37 @@
     --border-color: #333333;
     --shadow-color: rgba(0, 0, 0, 0.3);
     --shadow-color-hover: rgba(0, 0, 0, 0.4);
+
+    /* Enhanced gold overlay gradient */
     --overlay-gradient: linear-gradient(
       135deg,
-      rgba(255, 215, 0, 0.8),
-      rgba(255, 215, 0, 0.6)
+      rgba(166, 124, 0, 0.8),
+      rgba(212, 175, 55, 0.6)
     );
-    --arrow-icon-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffd700' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17l9.2-9.2M17 17V7H7'/%3E%3C/svg%3E");
+
+    /* Arrow icons for dark mode */
+    --arrow-icon-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a67c00' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17l9.2-9.2M17 17V7H7'/%3E%3C/svg%3E");
     --arrow-icon-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23191970' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17l9.2-9.2M17 17V7H7'/%3E%3C/svg%3E");
+
+    /* Gold gradients for effects */
+    --gold-gradient: linear-gradient(
+      135deg,
+      #704700 0%,
+      #a67c00 20%,
+      #d4af37 40%,
+      #f9df85 50%,
+      #d4af37 60%,
+      #a67c00 80%,
+      #704700 100%
+    );
+
+    --gold-gradient-simple: linear-gradient(
+      135deg,
+      #704700,
+      #a67c00,
+      #d4af37,
+      #f9df85
+    );
   }
 }
 
@@ -251,7 +278,7 @@
   .portfolio::before {
     background: radial-gradient(
         circle at 10% 10%,
-        rgba(255, 215, 0, 0.03) 0%,
+        rgba(166, 124, 0, 0.05) 0%,
         transparent 60%
       ),
       radial-gradient(
@@ -259,6 +286,77 @@
         rgba(25, 25, 112, 0.03) 0%,
         transparent 60%
       );
+  }
+
+  /* Enhanced gold styling for portfolio header */
+  .portfolio-header h1 {
+    background: var(--gold-gradient-simple);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent !important;
+    animation: portfolioGoldShimmer 8s linear infinite;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+  }
+
+  /* Add subtle glitter effect to header */
+  .portfolio-header h1::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(
+        circle at 20% 30%,
+        rgba(249, 223, 133, 0.7) 0.1%,
+        transparent 0.5%
+      ),
+      radial-gradient(
+        circle at 50% 70%,
+        rgba(249, 223, 133, 0.5) 0.1%,
+        transparent 0.5%
+      ),
+      radial-gradient(
+        circle at 80% 10%,
+        rgba(249, 223, 133, 0.7) 0.1%,
+        transparent 0.5%
+      ),
+      radial-gradient(
+        circle at 10% 90%,
+        rgba(249, 223, 133, 0.5) 0.1%,
+        transparent 0.5%
+      );
+    background-size: 150% 150%;
+    mix-blend-mode: overlay;
+    animation: portfolioGlitterEffect 6s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* Enhanced gold gradient for header underline */
+  .portfolio-header h1::after {
+    background: var(--gold-gradient-simple);
+    background-size: 200% 200%;
+    animation: portfolioGoldShimmer 8s linear infinite;
+  }
+
+  /* Add gold glow to portfolio items on hover */
+  .portfolio-item:hover {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 0 0 20px rgba(166, 124, 0, 0.15);
+  }
+
+  /* Enhance portfolio item borders with gold */
+  .portfolio-item:nth-child(1),
+  .portfolio-item:nth-child(3),
+  .portfolio-item:nth-child(5) {
+    border-top: 4px solid var(--primary);
+  }
+
+  .portfolio-item:nth-child(2),
+  .portfolio-item:nth-child(4) {
+    border-top: 4px solid var(--accent);
   }
 }
 
@@ -320,6 +418,37 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Gold effect animations */
+@keyframes portfolioGoldShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes portfolioGlitterEffect {
+  0% {
+    background-position: 0% 0%;
+  }
+  25% {
+    background-position: 100% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
   }
 }
 
@@ -486,7 +615,7 @@
 .dark-mode .portfolio::before {
   background: radial-gradient(
       circle at 10% 10%,
-      rgba(255, 215, 0, 0.03) 0%,
+      rgba(166, 124, 0, 0.05) 0%,
       transparent 60%
     ),
     radial-gradient(
@@ -503,7 +632,8 @@
 }
 
 .dark-mode .portfolio-item:hover {
-  box-shadow: 0 15px 35px var(--shadow-color-hover);
+  box-shadow: 0 15px 35px var(--shadow-color-hover),
+    0 0 20px rgba(166, 124, 0, 0.15);
 }
 
 .dark-mode .portfolio-item h2 {
@@ -537,7 +667,7 @@
     color: var(--primary) !important; /* Gold color in dark mode */
   }
 
-  /* Make paragraph text white on hover for better visibility */
+  /* Make paragraph text white on hover for better readability */
   .portfolio-item:hover p {
     color: #ffffff !important; /* White color for better readability */
   }

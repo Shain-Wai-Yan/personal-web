@@ -31,36 +31,220 @@
   --doc-transition: 0.3s ease;
 }
 
-/* Dark mode variables */
+/* Dark mode variables - ENHANCED GOLD PALETTE */
 @media (prefers-color-scheme: dark) {
   :root {
-    --doc-primary: #ffd700;
-    --doc-primary-hover: #e6c200;
-    --doc-accent: #191970;
+    /* Deep, luxurious gold palette */
+    --doc-primary: #a67c00; /* Deeper, richer gold base color */
+    --doc-primary-hover: #d4af37; /* Rich gold */
+    --doc-accent: #191970; /* Midnight Blue as accent */
     --doc-accent-hover: #13134d;
+
+    /* Text colors */
     --doc-text: #e0e0e0;
     --doc-text-light: #b0b0b0;
+
+    /* Background colors */
     --doc-background: #121212;
     --doc-background-alt: #1e1e1e;
     --doc-card-bg: #2a2a2a;
-    --doc-cover-bg: #ffd700;
-    --doc-cover-overlay: rgba(255, 215, 0, 0.85);
+
+    /* Cover colors */
+    --doc-cover-bg: #a67c00; /* Match primary gold */
+    --doc-cover-overlay: rgba(166, 124, 0, 0.85); /* Match primary gold */
+
+    /* Icon colors */
     --doc-icon-bg: #2a2a2a;
-    --doc-icon-text: #ffd700;
+    --doc-icon-text: #d4af37; /* Rich gold */
     --doc-icon-fold: #444444;
+
+    /* Border and shadow */
     --doc-border: #333333;
     --doc-shadow: rgba(0, 0, 0, 0.3);
     --doc-shadow-hover: rgba(0, 0, 0, 0.4);
+
+    /* Modal colors */
     --doc-modal-bg: rgba(0, 0, 0, 0.9);
     --doc-modal-content: #1e1e1e;
-    --doc-modal-header: #ffd700;
+    --doc-modal-header: #a67c00; /* Match primary gold */
     --doc-modal-container: #2a2a2a;
+
+    /* PDF viewer colors */
     --doc-pdf-bg: #333333;
     --doc-pdf-toolbar: #16213e;
-    --doc-pdf-button: #0f3460;
-    --doc-pdf-button-hover: #e94560;
+    --doc-pdf-button: #a67c00; /* Match primary gold */
+    --doc-pdf-button-hover: #d4af37; /* Rich gold */
+
+    /* Loading colors */
     --doc-loading-bg: #333333;
-    --doc-loading-spinner: #ffd700;
+    --doc-loading-spinner: #d4af37; /* Rich gold */
+
+    /* Gold gradients for enhanced effects */
+    --doc-gold-gradient: linear-gradient(
+      135deg,
+      #704700 0%,
+      #a67c00 20%,
+      #d4af37 40%,
+      #f9df85 50%,
+      #d4af37 60%,
+      #a67c00 80%,
+      #704700 100%
+    );
+
+    --doc-gold-gradient-simple: linear-gradient(
+      135deg,
+      #704700,
+      #a67c00,
+      #d4af37,
+      #f9df85,
+      #d4af37,
+      #a67c00,
+      #704700
+    );
+  }
+
+  /* Enhanced gold styling for document items */
+  .document-details h2,
+  .document-type,
+  .cloudinary-pdf-message h3,
+  .modal-header h2 {
+    background: var(--doc-gold-gradient-simple);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent !important;
+    animation: goldShimmer 8s linear infinite;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Gold gradient for buttons and interactive elements */
+  .view-document-btn,
+  .retry-btn,
+  .download-btn,
+  #prev-page,
+  #next-page,
+  .orientation-prompt button,
+  .theme-toggle {
+    background: var(--doc-gold-gradient);
+    background-size: 200% 200%;
+    animation: goldWave 12s ease infinite;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Add wave effect to gold elements */
+  .view-document-btn::after,
+  .retry-btn::after,
+  .download-btn::after,
+  #prev-page::after,
+  #next-page::after,
+  .orientation-prompt button::after,
+  .theme-toggle::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.05) 25%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.05) 75%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    animation: waveEffect 8s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Gold glow for hover states */
+  .document-item:hover,
+  .view-document-btn:hover,
+  .retry-btn:hover,
+  .download-btn:hover,
+  #prev-page:hover,
+  #next-page:hover,
+  .orientation-prompt button:hover,
+  .theme-toggle:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 15px rgba(166, 124, 0, 0.2) !important;
+  }
+
+  /* Enhanced loading spinner with gold colors */
+  .loading-spinner {
+    border: 4px solid rgba(166, 124, 0, 0.2);
+    border-top: 4px solid #d4af37;
+  }
+
+  /* PDF viewer toolbar with gold gradient */
+  .modal-header,
+  .pdf-viewer-header {
+    background: var(--doc-gold-gradient);
+    background-size: 200% 200%;
+    animation: goldWave 12s ease infinite;
+  }
+
+  /* PDF viewer buttons with gold styling */
+  .pdf-viewer-button {
+    background-color: var(--doc-primary);
+    color: var(--doc-background);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pdf-viewer-button:hover {
+    background-color: var(--doc-primary-hover);
+    box-shadow: 0 0 15px rgba(166, 124, 0, 0.3);
+  }
+
+  /* Document cover with gold gradient */
+  .document-cover {
+    background: var(--doc-gold-gradient);
+    background-size: 200% 200%;
+    animation: goldWave 12s ease infinite;
+  }
+
+  /* Rotate screen button with gold styling */
+  .rotate-screen-btn {
+    background: var(--doc-gold-gradient);
+    background-size: 200% 200%;
+    animation: goldWave 12s ease infinite;
+    color: var(--doc-background);
+  }
+}
+
+/* Gold effect animations */
+@keyframes goldShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes goldWave {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes waveEffect {
+  0% {
+    transform: rotate(0deg) translate(-50%, -50%);
+  }
+  100% {
+    transform: rotate(360deg) translate(-50%, -50%);
   }
 }
 
@@ -376,7 +560,7 @@
 /* Dark mode text selection */
 @media (prefers-color-scheme: dark) {
   .textLayer ::selection {
-    background: rgba(255, 215, 0, 0.3);
+    background: rgba(212, 175, 55, 0.3);
   }
 }
 
@@ -447,7 +631,7 @@
   .annotationLayer .choiceWidgetAnnotation select,
   .annotationLayer .buttonWidgetAnnotation.checkBox input,
   .annotationLayer .buttonWidgetAnnotation.radioButton input {
-    background-color: rgba(255, 215, 0, 0.13);
+    background-color: rgba(212, 175, 55, 0.13);
     color: var(--doc-text);
   }
 }
@@ -547,7 +731,7 @@
 @media (prefers-color-scheme: dark) {
   .annotationLayer .popup {
     background-color: #333333;
-    color: #ffff99;
+    color: #d4af37;
   }
 }
 
@@ -841,8 +1025,8 @@
 /* Dark mode rotation button */
 @media (prefers-color-scheme: dark) {
   .rotate-screen-btn {
-    background-color: rgba(255, 215, 0, 0.8);
-    color: var(--doc-accent);
+    background-color: rgba(166, 124, 0, 0.8);
+    color: var(--doc-background);
   }
 }
 
@@ -885,8 +1069,8 @@
 /* Dark mode PDF loading spinner */
 @media (prefers-color-scheme: dark) {
   .pdf-loading-spinner {
-    border: 4px solid rgba(255, 215, 0, 0.3);
-    border-top: 4px solid var(--doc-primary);
+    border: 4px solid rgba(166, 124, 0, 0.3);
+    border-top: 4px solid #d4af37;
   }
 }
 
@@ -1073,9 +1257,15 @@
 /* Dark mode adjustments for the buttons */
 @media (prefers-color-scheme: dark) {
   @media (max-width: 768px) {
+    .modal-header {
+      background: var(--doc-gold-gradient) !important;
+      background-size: 200% 200% !important;
+      animation: goldWave 12s ease infinite !important;
+    }
+
     .pdf-viewer-button {
       background-color: var(--doc-primary) !important;
-      color: var(--doc-accent) !important;
+      color: var(--doc-background) !important;
     }
 
     .pdf-controls-container {
@@ -1084,7 +1274,7 @@
 
     .pdf-controls-container button {
       background-color: var(--doc-primary) !important;
-      color: var(--doc-accent) !important;
+      color: var(--doc-background) !important;
     }
   }
 }
@@ -1092,7 +1282,7 @@
 /* For manually toggled dark mode */
 .dark-mode .pdf-viewer-button {
   background-color: var(--doc-primary) !important;
-  color: var(--doc-accent) !important;
+  color: var(--doc-background) !important;
 }
 
 .dark-mode .pdf-controls-container {
@@ -1101,7 +1291,7 @@
 
 .dark-mode .pdf-controls-container button {
   background-color: var(--doc-primary) !important;
-  color: var(--doc-accent) !important;
+  color: var(--doc-background) !important;
 }
 
 /* Fix the syntax error in the media query for max-width: 600px */
@@ -1449,57 +1639,6 @@
   }
 }
 
-/* Update the document description color in dark mode */
-@media (prefers-color-scheme: dark) {
-  /* Ensure document description text is clearly visible */
-  .document-description {
-    color: #ffffff !important; /* Force white text for better visibility in dark mode */
-  }
-
-  /* Make document meta information more visible */
-  .document-meta {
-    color: #e0e0e0;
-  }
-
-  .document-type {
-    color: var(--doc-primary);
-  }
-
-  .document-date {
-    color: #b0b0b0;
-  }
-
-  /* Improve visibility of PDF text layers in dark mode */
-  .textLayer {
-    color: #ffffff;
-  }
-
-  /* Improve visibility of PDF annotations in dark mode */
-  .annotationLayer .linkAnnotation > a,
-  .annotationLayer .buttonWidgetAnnotation.pushButton > a {
-    color: var(--doc-primary);
-  }
-
-  /* Improve visibility of PDF form fields in dark mode */
-  .annotationLayer .textWidgetAnnotation input,
-  .annotationLayer .textWidgetAnnotation textarea,
-  .annotationLayer .choiceWidgetAnnotation select {
-    color: #ffffff;
-    background-color: var(--doc-background-alt);
-  }
-
-  /* Improve visibility of PDF messages in dark mode */
-  .pptx-message,
-  .cloudinary-pdf-message p {
-    color: #ffffff;
-  }
-
-  /* Ensure page info text is visible */
-  #page-info {
-    color: #ffffff;
-  }
-}
-
 /* Add theme toggle button */
 .theme-toggle {
   position: fixed;
@@ -1533,8 +1672,8 @@
 
 /* Class for manually toggled dark mode */
 .dark-mode {
-  --doc-primary: #ffd700;
-  --doc-primary-hover: #e6c200;
+  --doc-primary: #a67c00;
+  --doc-primary-hover: #d4af37;
   --doc-accent: #191970;
   --doc-accent-hover: #13134d;
   --doc-text: #e0e0e0;
@@ -1542,24 +1681,47 @@
   --doc-background: #121212;
   --doc-background-alt: #1e1e1e;
   --doc-card-bg: #2a2a2a;
-  --doc-cover-bg: #ffd700;
-  --doc-cover-overlay: rgba(255, 215, 0, 0.85);
+  --doc-cover-bg: #a67c00;
+  --doc-cover-overlay: rgba(166, 124, 0, 0.85);
   --doc-icon-bg: #2a2a2a;
-  --doc-icon-text: #ffd700;
+  --doc-icon-text: #d4af37;
   --doc-icon-fold: #444444;
   --doc-border: #333333;
   --doc-shadow: rgba(0, 0, 0, 0.3);
   --doc-shadow-hover: rgba(0, 0, 0, 0.4);
   --doc-modal-bg: rgba(0, 0, 0, 0.9);
   --doc-modal-content: #1e1e1e;
-  --doc-modal-header: #ffd700;
+  --doc-modal-header: #a67c00;
   --doc-modal-container: #2a2a2a;
   --doc-pdf-bg: #333333;
   --doc-pdf-toolbar: #16213e;
-  --doc-pdf-button: #0f3460;
-  --doc-pdf-button-hover: #e94560;
+  --doc-pdf-button: #a67c00;
+  --doc-pdf-button-hover: #d4af37;
   --doc-loading-bg: #333333;
-  --doc-loading-spinner: #ffd700;
+  --doc-loading-spinner: #d4af37;
+
+  /* Gold gradients for enhanced effects */
+  --doc-gold-gradient: linear-gradient(
+    135deg,
+    #704700 0%,
+    #a67c00 20%,
+    #d4af37 40%,
+    #f9df85 50%,
+    #d4af37 60%,
+    #a67c00 80%,
+    #704700 100%
+  );
+
+  --doc-gold-gradient-simple: linear-gradient(
+    135deg,
+    #704700,
+    #a67c00,
+    #d4af37,
+    #f9df85,
+    #d4af37,
+    #a67c00,
+    #704700
+  );
 }
 
 /* Ensure document description is always visible in dark mode */

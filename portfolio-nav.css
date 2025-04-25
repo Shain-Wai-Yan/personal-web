@@ -17,12 +17,13 @@
   --nav-transition: 0.3s ease;
 }
 
-/* Dark mode variables */
+/* Dark mode variables with enhanced deep gold */
 @media (prefers-color-scheme: dark) {
   :root {
-    --nav-primary: #ffd700;
-    --nav-primary-hover: #e6c200;
-    --nav-accent: #191970;
+    /* Deep, luxurious gold palette */
+    --nav-primary: #a67c00; /* Deeper, richer gold base color */
+    --nav-primary-hover: #d4af37; /* Rich gold */
+    --nav-accent: #191970; /* Midnight Blue as accent */
     --nav-accent-hover: #13134d;
     --nav-text: #e0e0e0;
     --nav-text-light: #b0b0b0;
@@ -33,6 +34,18 @@
     --nav-dropdown-bg: #2a2a2a;
     --nav-dropdown-hover: #333333;
     --nav-dropdown-border: rgba(255, 255, 255, 0.05);
+
+    /* Gold gradient for effects */
+    --nav-gold-gradient: linear-gradient(
+      135deg,
+      #704700 0%,
+      #a67c00 20%,
+      #d4af37 40%,
+      #f9df85 50%,
+      #d4af37 60%,
+      #a67c00 80%,
+      #704700 100%
+    );
   }
 }
 
@@ -204,7 +217,7 @@
   @media (prefers-color-scheme: dark) {
     .nav .nav-dropdown-content {
       background-color: rgba(0, 0, 0, 0.2);
-      border-left: 2px solid rgba(255, 215, 0, 0.2);
+      border-left: 2px solid rgba(166, 124, 0, 0.3); /* Enhanced gold border */
     }
   }
 
@@ -227,6 +240,39 @@
 
   .nav .nav-dropdown.active > a::after {
     content: "▲";
+  }
+}
+
+/* Enhanced dark mode styles */
+@media (prefers-color-scheme: dark) {
+  /* Add shimmer effect to active elements */
+  .portfolio-category.active {
+    background: var(--nav-gold-gradient);
+    background-size: 200% auto;
+    animation: navGoldShimmer 8s linear infinite;
+  }
+
+  /* Add gold glow to interactive elements */
+  .back-to-portfolio {
+    background: var(--nav-gold-gradient);
+    background-size: 200% auto;
+    animation: navGoldShimmer 8s linear infinite;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .back-to-portfolio:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 15px rgba(166, 124, 0, 0.2);
+  }
+
+  /* Add subtle gold border to categories */
+  .portfolio-category {
+    border-color: rgba(166, 124, 0, 0.3);
+  }
+
+  /* Add gold pulse effect on hover */
+  .portfolio-breadcrumb a:hover {
+    animation: navGoldPulse 2s ease infinite alternate;
   }
 }
 
@@ -308,5 +354,27 @@
 
 .dark-mode .nav .nav-dropdown-content {
   background-color: rgba(0, 0, 0, 0.2);
-  border-left-color: rgba(255, 215, 0, 0.2);
+  border-left-color: rgba(166, 124, 0, 0.3); /* Enhanced gold border */
+}
+
+/* Gold effect animations */
+@keyframes navGoldShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes navGoldPulse {
+  0% {
+    text-shadow: 0 0 5px rgba(249, 223, 133, 0.1);
+  }
+  100% {
+    text-shadow: 0 0 15px rgba(249, 223, 133, 0.4);
+  }
 }

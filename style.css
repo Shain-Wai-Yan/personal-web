@@ -45,19 +45,24 @@
   --radius-full: 9999px;
 }
 
-/* Dark mode variables with enhanced color scheme */
+/* Dark mode variables with enhanced deep gold color scheme */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Inverted and enhanced color scheme for dark mode */
-    --primary: #ffd700; /* Midnight blue replaced with gold in dark mode */
-    --primary-light: #ffe347;
-    --primary-dark: #e6c200;
-    --accent: #191970; /* Swap accent with primary for contrast */
+    /* Deep, luxurious gold palette for dark mode */
+    --primary: #a67c00; /* Deeper, richer gold base color */
+    --primary-light: #d4af37; /* Rich gold */
+    --primary-dark: #704700; /* Dark amber gold */
+    --primary-highlight: #f9df85; /* Light gold for accents */
+
+    --accent: #191970; /* Keep midnight blue as accent */
     --accent-light: #2a2a9a;
     --accent-dark: #0f0f45;
-    --text: #e0e0e0; /* Lighter text for dark backgrounds */
+
+    /* Keep text colors as they were */
+    --text: #e0e0e0;
     --text-light: #b0b0b0;
     --text-dark: #ffffff;
+
     --background: #121212; /* Dark background */
     --background-alt: #1e1e1e;
     --error: #ff6b6b; /* Brighter error for visibility */
@@ -69,7 +74,199 @@
     --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
     --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.4);
+
+    /* Gold gradients for dark mode */
+    --gold-gradient: linear-gradient(
+      135deg,
+      #704700 0%,
+      #a67c00 20%,
+      #d4af37 40%,
+      #f9df85 50%,
+      #d4af37 60%,
+      #a67c00 80%,
+      #704700 100%
+    );
+
+    --gold-gradient-simple: linear-gradient(
+      135deg,
+      #704700,
+      #a67c00,
+      #d4af37,
+      #f9df85,
+      #d4af37,
+      #a67c00,
+      #704700
+    );
   }
+
+  /* Add glittery text effect to headings in dark mode */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    position: relative;
+  }
+
+  /* Gold shimmer effect for important elements */
+  .text-gradient,
+  .page-title,
+  .hero h1,
+  .bio-text h1,
+  .contact-form-section h1,
+  .portfolio-header h2,
+  .social-links h2 {
+    background: var(--gold-gradient-simple);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent !important;
+    animation: goldShimmer 8s linear infinite;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Add subtle glitter effect to important headings */
+  .page-title::before,
+  .hero h1::before,
+  .bio-text h1::before,
+  .contact-form-section h1::before,
+  .portfolio-header h2::before,
+  .social-links h2::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(
+        circle at 20% 30%,
+        rgba(249, 223, 133, 0.7) 0.1%,
+        transparent 0.5%
+      ),
+      radial-gradient(
+        circle at 50% 70%,
+        rgba(249, 223, 133, 0.5) 0.1%,
+        transparent 0.5%
+      ),
+      radial-gradient(
+        circle at 80% 10%,
+        rgba(249, 223, 133, 0.7) 0.1%,
+        transparent 0.5%
+      ),
+      radial-gradient(
+        circle at 10% 90%,
+        rgba(249, 223, 133, 0.5) 0.1%,
+        transparent 0.5%
+      );
+    background-size: 150% 150%;
+    mix-blend-mode: overlay;
+    animation: glitterEffect 6s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+
+  /* Enhanced gold gradients for UI elements */
+  .header,
+  .header.scrolled,
+  .cta-btn,
+  .submit-btn,
+  .footer {
+    background: var(--gold-gradient);
+    background-size: 200% 200%;
+    animation: goldWave 12s ease infinite;
+  }
+
+  /* Add wave effect to gold elements */
+  .header::after,
+  .cta-btn::after,
+  .submit-btn::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.05) 25%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.05) 75%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    animation: waveEffect 8s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Enhance gold accents */
+  .nav li a::after,
+  .bio-text h1::after,
+  .contact-form-section h1::after,
+  .social-links h2::after,
+  .footer::before {
+    background: var(--gold-gradient-simple) !important;
+    background-size: 200% 200%;
+    animation: goldShimmer 8s linear infinite;
+  }
+
+  /* Add gold glow to interactive elements */
+  .cta-btn:hover,
+  .submit-btn:hover,
+  .portfolio-item:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 15px rgba(166, 124, 0, 0.2) !important;
+  }
+
+  /* Gold pulse effect on hover */
+  .nav li a:hover,
+  .footer-links a:hover,
+  .social-icon:hover {
+    animation: goldPulse 2s ease infinite alternate;
+  }
+}
+
+/* For manually toggled dark mode - same enhancements */
+.dark-mode {
+  /* Deep, luxurious gold palette */
+  --primary: #a67c00; /* Deeper, richer gold base color */
+  --primary-light: #d4af37; /* Rich gold */
+  --primary-dark: #704700; /* Dark amber gold */
+  --primary-highlight: #f9df85; /* Light gold for accents */
+
+  --accent: #191970; /* Keep midnight blue as accent */
+  --accent-light: #2a2a9a;
+  --accent-dark: #0f0f45;
+
+  /* Keep text colors as they were */
+  --text: #e0e0e0;
+  --text-light: #b0b0b0;
+  --text-dark: #ffffff;
+
+  --background: #121212; /* Dark background */
+  --background-alt: #1e1e1e;
+
+  /* Gold gradients */
+  --gold-gradient: linear-gradient(
+    135deg,
+    #704700 0%,
+    #a67c00 20%,
+    #d4af37 40%,
+    #f9df85 50%,
+    #d4af37 60%,
+    #a67c00 80%,
+    #704700 100%
+  );
+
+  --gold-gradient-simple: linear-gradient(
+    135deg,
+    #704700,
+    #a67c00,
+    #d4af37,
+    #f9df85,
+    #d4af37,
+    #a67c00,
+    #704700
+  );
 }
 
 /* Modern CSS Reset */
@@ -624,7 +821,7 @@ body.menu-open::before {
 /* Dark mode pattern adjustment */
 @media (prefers-color-scheme: dark) {
   .about .bio::before {
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffd700' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23a67c00' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
 }
 
@@ -714,6 +911,9 @@ body.menu-open::before {
 @media (prefers-color-scheme: dark) {
   .motto {
     background-color: rgba(30, 30, 30, 0.8);
+    border-left: 4px solid var(--accent);
+    color: var(--primary-highlight);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2), 0 0 10px rgba(166, 124, 0, 0.1);
   }
 }
 
@@ -1246,7 +1446,7 @@ body.menu-open::before {
 /* Dark mode pattern adjustment */
 @media (prefers-color-scheme: dark) {
   .contact::before {
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffd700' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23a67c00' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
 }
 
@@ -1464,6 +1664,67 @@ textarea.error {
   100% {
     opacity: 0;
     transform: translate(-50%, -50%) scale(1.5);
+  }
+}
+
+/* Gold effect animations */
+@keyframes goldShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes goldWave {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes waveEffect {
+  0% {
+    transform: rotate(0deg) translate(-50%, -50%);
+  }
+  100% {
+    transform: rotate(360deg) translate(-50%, -50%);
+  }
+}
+
+@keyframes glitterEffect {
+  0% {
+    background-position: 0% 0%;
+  }
+  25% {
+    background-position: 100% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+@keyframes goldPulse {
+  0% {
+    text-shadow: 0 0 5px rgba(249, 223, 133, 0.1);
+  }
+  100% {
+    text-shadow: 0 0 15px rgba(249, 223, 133, 0.4);
   }
 }
 
