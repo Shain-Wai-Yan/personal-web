@@ -7,19 +7,36 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes"
     />
     <title>
-      Photography Portfolio by Shain Wai Yan | Nature & Scenic Photography
+      Photography Portfolio by Shain Wai Yan (xolbine) | Nature & Scenic
+      Photography
     </title>
     <meta
       name="description"
-      content="Explore Shain Wai Yan's photography portfolio featuring stunning natural scenery, mountains, lakes, sunsets and more captured with artistic vision."
+      content="Explore Shain Wai Yan's (also known as xolbine, 明元易) photography portfolio featuring stunning natural scenery, mountains, lakes, sunsets and more captured with artistic vision."
     />
     <meta
       name="keywords"
-      content="Shain Wai Yan, photography, nature photography, scenic photos, portfolio, mountains, lakes, sunset photography"
+      content="Shain Wai Yan, xolbine, 明元易, photography, nature photography, scenic photos, portfolio, mountains, lakes, sunset photography"
     />
     <meta name="author" content="Shain Wai Yan" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <link rel="canonical" href="https://www.shainwaiyan.com/photography.html" />
+
+    <!-- Alternative Names Meta Tags -->
+    <meta name="alternate-name" content="xolbine" />
+    <meta name="alternate-name" content="明元易" />
+
+    <!-- Language Alternatives -->
+    <link
+      rel="alternate"
+      hreflang="zh"
+      href="https://www.shainwaiyan.com/zh/photography.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://www.shainwaiyan.com/photography.html"
+    />
 
     <!-- Structured data for ImageGallery -->
     <script type="application/ld+json">
@@ -30,8 +47,66 @@
         "description": "A collection of nature and scenic photography by Shain Wai Yan featuring mountains, lakes, sunsets and more.",
         "creator": {
           "@type": "Person",
-          "name": "Shain Wai Yan"
+          "name": "Shain Wai Yan",
+          "alternateName": ["xolbine", "明元易"],
+          "sameAs": [
+            "https://www.linkedin.com/in/shainwaiyan",
+            "https://github.com/Shain-Wai-Yan"
+          ]
         }
+      }
+    </script>
+
+    <!-- Structured data for BreadcrumbList -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.shainwaiyan.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Portfolio",
+            "item": "https://www.shainwaiyan.com/portfolio.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Photography",
+            "item": "https://www.shainwaiyan.com/photography.html"
+          }
+        ]
+      }
+    </script>
+
+    <!-- Structured data for CreativeWork -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "CreativeWork",
+        "name": "Photography Collection",
+        "creator": {
+          "@type": "Person",
+          "name": "Shain Wai Yan",
+          "alternateName": ["xolbine", "明元易"],
+          "sameAs": [
+            "https://www.linkedin.com/in/shainwaiyan",
+            "https://github.com/Shain-Wai-Yan"
+          ]
+        },
+        "description": "A collection of nature and scenic photography by Shain Wai Yan (xolbine, 明元易) featuring mountains, lakes, sunsets and more.",
+        "keywords": "photography, nature photography, scenic photos, mountains, lakes, sunset photography",
+        "genre": [
+          "Nature Photography",
+          "Landscape Photography",
+          "Scenic Photography"
+        ]
       }
     </script>
 
@@ -46,7 +121,7 @@
     />
     <meta
       property="og:description"
-      content="Explore Shain Wai Yan's photography portfolio featuring stunning natural scenery, mountains, lakes, sunsets and more captured with artistic vision."
+      content="Explore Shain Wai Yan's (xolbine, 明元易) photography portfolio featuring stunning natural scenery, mountains, lakes, sunsets and more captured with artistic vision."
     />
     <meta property="og:type" content="website" />
     <meta
@@ -54,6 +129,8 @@
       content="https://www.shainwaiyan.com/photography.html"
     />
     <meta property="og:site_name" content="Shain Wai Yan Portfolio" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="zh_CN" />
 
     <!-- Twitter Card tags -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -63,7 +140,7 @@
     />
     <meta
       name="twitter:description"
-      content="Explore Shain Wai Yan's photography portfolio featuring stunning natural scenery, mountains, lakes, sunsets and more."
+      content="Explore Shain Wai Yan's (xolbine, 明元易) photography portfolio featuring stunning natural scenery, mountains, lakes, sunsets and more."
     />
 
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -222,6 +299,26 @@
     <footer class="footer slide-in-up">
       <p>&copy; 2025 Shain's Portfolio. All Rights Reserved.</p>
     </footer>
+
+    <!-- Hidden content for search engines -->
+    <div
+      style="
+        display: none;
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+      "
+    >
+      This photography portfolio was created by Shain Wai Yan, who is also known
+      as xolbine and 明元易 (Ming Yuan Yi). The collection features nature and
+      landscape photography including mountains, lakes, scenic views, sunsets,
+      buildings, cafes, and cloud formations. Connect with me on LinkedIn at
+      https://www.linkedin.com/in/shainwaiyan or check out my projects on GitHub
+      at https://github.com/Shain-Wai-Yan.
+    </div>
 
     <script src="script.js"></script>
     <script src="portfolio-nav.js"></script>

@@ -4,17 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
-      About Shain Wai Yan - Marketing Specialist & Digital Storyteller
+      About Shain Wai Yan (xolbine, 明元易) - Marketing Specialist & Digital
+      Storyteller
     </title>
     <meta
       name="description"
-      content="Learn about Shain Wai Yan, a trilingual Marketing Specialist and Digital Storyteller with expertise in SEO, social strategy, and content creation."
+      content="Learn about Shain Wai Yan (also known as xolbine, 明元易, xolbin, ming yuan yi), a trilingual Marketing Specialist and Digital Storyteller with expertise in SEO, social strategy, and content creation."
     />
     <meta
       name="keywords"
-      content="Shain Wai Yan, marketing specialist, digital storyteller, SEO, social media strategy, content creation, portfolio"
+      content="Shain Wai Yan, xolbine, 明元易, xolbin, ming yuan yi, marketing specialist, digital storyteller, SEO, social media strategy, content creation, portfolio, Myanmar marketer"
     />
     <meta name="author" content="Shain Wai Yan" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+
+    <!-- Alternative Names Meta Tags -->
+    <meta name="alternate-name" content="xolbine" />
+    <meta name="alternate-name" content="明元易" />
+    <meta name="alternate-name" content="xolbin" />
+    <meta name="alternate-name" content="ming yuan yi" />
 
     <!-- Open Graph / Social Media Meta Tags -->
     <meta
@@ -23,7 +31,7 @@
     />
     <meta
       property="og:description"
-      content="Learn about Shain Wai Yan, a trilingual Marketing Specialist and Digital Storyteller with expertise in SEO, social strategy, and content creation."
+      content="Learn about Shain Wai Yan (xolbine, 明元易), a trilingual Marketing Specialist and Digital Storyteller with expertise in SEO, social strategy, and content creation."
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.shainwaiyan.com/about.html" />
@@ -31,6 +39,9 @@
       property="og:image"
       content="https://www.shainwaiyan.com/images/profile.jpeg"
     />
+    <meta property="og:site_name" content="Shain Wai Yan Portfolio" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="zh_CN" />
 
     <!-- Twitter Card data -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -40,11 +51,24 @@
     />
     <meta
       name="twitter:description"
-      content="Learn about Shain Wai Yan, a trilingual Marketing Specialist and Digital Storyteller with expertise in SEO, social strategy, and content creation."
+      content="Learn about Shain Wai Yan (xolbine, 明元易), a trilingual Marketing Specialist and Digital Storyteller with expertise in SEO, social strategy, and content creation."
     />
     <meta
       name="twitter:image"
       content="https://www.shainwaiyan.com/images/profile.jpeg"
+    />
+    <meta name="twitter:creator" content="@shainwaiyan" />
+
+    <!-- Language Alternatives -->
+    <link
+      rel="alternate"
+      hreflang="zh"
+      href="https://www.shainwaiyan.com/zh/about.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://www.shainwaiyan.com/about.html"
     />
 
     <!-- Canonical URL -->
@@ -60,6 +84,7 @@
     <!-- Favicon -->
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   </head>
   <body>
     <a href="#main-content" class="skip-to-content">Skip to content</a>
@@ -204,16 +229,20 @@
               <div class="info-card animate-on-scroll">
                 <h3 class="card-title">Personal Info</h3>
                 <ul class="info-list">
-                  <li><span>Age:</span> 22 years</li>
-                  <li>
+                  <!-- Age is easily editable -->
+                  <li id="personal-age"><span>Age:</span> 22 years</li>
+                  <!-- Education is easily editable -->
+                  <li id="personal-education">
                     <span>Education:</span> 4th-year English specialization,
                     Taunggyi University
                   </li>
-                  <li>
+                  <!-- Current studies is easily editable -->
+                  <li id="personal-current-studies">
                     <span>Currently Pursuing:</span> Diploma in Marketing at
                     Strategy First University
                   </li>
-                  <li>
+                  <!-- Additional studies is easily editable -->
+                  <li id="personal-additional-studies">
                     <span>Additional Studies:</span> Digital Marketing and
                     E-commerce courses
                   </li>
@@ -238,7 +267,11 @@
             My Journey
           </h2>
           <div class="timeline">
-            <div class="timeline-item left animate-on-scroll">
+            <!-- Timeline items are easily editable with IDs -->
+            <div
+              class="timeline-item left animate-on-scroll"
+              id="timeline-item-1"
+            >
               <div class="timeline-content">
                 <h3 class="timeline-title">Started University</h3>
                 <p class="timeline-date">2019</p>
@@ -248,7 +281,10 @@
                 </p>
               </div>
             </div>
-            <div class="timeline-item right animate-on-scroll">
+            <div
+              class="timeline-item right animate-on-scroll"
+              id="timeline-item-2"
+            >
               <div class="timeline-content">
                 <h3 class="timeline-title">Started Learning Chinese</h3>
                 <p class="timeline-date">2023</p>
@@ -258,7 +294,10 @@
                 </p>
               </div>
             </div>
-            <div class="timeline-item left animate-on-scroll">
+            <div
+              class="timeline-item left animate-on-scroll"
+              id="timeline-item-3"
+            >
               <div class="timeline-content">
                 <h3 class="timeline-title">Business Studies</h3>
                 <p class="timeline-date">2024</p>
@@ -268,7 +307,10 @@
                 </p>
               </div>
             </div>
-            <div class="timeline-item right animate-on-scroll">
+            <div
+              class="timeline-item right animate-on-scroll"
+              id="timeline-item-4"
+            >
               <div class="timeline-content">
                 <h3 class="timeline-title">Digital Marketing Certificate</h3>
                 <p class="timeline-date">2025</p>
@@ -305,7 +347,10 @@
 
     <footer class="footer">
       <div class="footer-copyright">
-        <p>&copy; 2025 Shain's Portfolio. All Rights Reserved.</p>
+        <p>
+          &copy; <span id="current-year">2025</span> Shain's Portfolio. All
+          Rights Reserved.
+        </p>
       </div>
     </footer>
 
@@ -315,7 +360,7 @@
         "@context": "https://schema.org",
         "@type": "Person",
         "name": "Shain Wai Yan",
-        "alternateName": ["Xolbine", "明元易"],
+        "alternateName": ["Xolbine", "明元易", "xolbin", "ming yuan yi"],
         "description": "Marketing Specialist & Digital Storyteller with expertise in SEO, social strategy, and content creation",
         "image": "https://www.shainwaiyan.com/images/profile.jpeg",
         "jobTitle": "Marketing Specialist",
@@ -331,11 +376,140 @@
             "name": "Strategy First University"
           }
         ],
-        "url": "https://www.shainwaiyan.com/about.html"
+        "url": "https://www.shainwaiyan.com/about.html",
+        "sameAs": [
+          "https://www.linkedin.com/in/shainwaiyan",
+          "https://github.com/Shain-Wai-Yan"
+        ],
+        "birthDate": "2002",
+        "nationality": "Myanmar",
+        "knowsAbout": [
+          "Digital Marketing",
+          "SEO",
+          "Content Strategy",
+          "Social Media Marketing",
+          "Brand Development",
+          "E-Commerce"
+        ],
+        "skills": [
+          "Trilingual Communication",
+          "Digital Marketing",
+          "SEO Optimization",
+          "Content Creation",
+          "Social Media Strategy",
+          "Analytics"
+        ]
       }
     </script>
 
+    <!-- Structured Data for WebPage -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "AboutPage",
+        "name": "About Shain Wai Yan",
+        "description": "Learn about Shain Wai Yan (xolbine, 明元易), a trilingual Marketing Specialist and Digital Storyteller with expertise in SEO, social strategy, and content creation.",
+        "url": "https://www.shainwaiyan.com/about.html",
+        "mainEntity": {
+          "@type": "Person",
+          "name": "Shain Wai Yan",
+          "alternateName": ["Xolbine", "明元易", "xolbin", "ming yuan yi"],
+          "sameAs": [
+            "https://www.linkedin.com/in/shainwaiyan",
+            "https://github.com/Shain-Wai-Yan"
+          ]
+        },
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://www.shainwaiyan.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "About Me",
+              "item": "https://www.shainwaiyan.com/about.html"
+            }
+          ]
+        }
+      }
+    </script>
+
+    <!-- Structured Data for FAQPage -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Who is Shain Wai Yan?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Shain Wai Yan (also known as xolbine or 明元易) is a trilingual Marketing Specialist and Digital Storyteller with expertise in SEO, social strategy, and content creation. He specializes in turning creativity into results through data-driven marketing approaches."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What languages does Shain Wai Yan speak?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Shain Wai Yan is trilingual, speaking Myanmar (native), English, and Chinese, which allows him to bridge cultures through communication."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What are Shain Wai Yan's areas of expertise?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Shain Wai Yan specializes in Digital Marketing, SEO, Content Strategy, Social Media Marketing, Brand Development, and E-Commerce. His digital-first skills include SEO, social strategy, analytics, and content creation."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is Shain Wai Yan's educational background?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Shain Wai Yan is pursuing a 4th-year English specialization at Taunggyi University and a Diploma in Marketing at Strategy First University. He has also taken additional courses in Digital Marketing and E-commerce."
+            }
+          }
+        ]
+      }
+    </script>
+
+    <!-- Hidden content for search engines with common misspellings -->
+    <div
+      style="
+        display: none;
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+      "
+    >
+      This is the about page for Shain Wai Yan, who is also known as xolbine,
+      xolbin, 明元易, ming yuan yi, and Ming Yuan Yi. Some people may search for
+      Shain Waiyan, Shain Wai-Yan, Shane Wai Yan, Xolbine, Xolbin, or other
+      variations. I am a 22-year-old Marketing Specialist and Digital
+      Storyteller from Myanmar with expertise in SEO, social media strategy, and
+      content creation. Connect with me on LinkedIn at
+      https://www.linkedin.com/in/shainwaiyan or check out my projects on GitHub
+      at https://github.com/Shain-Wai-Yan.
+    </div>
+
     <script src="script.js" defer></script>
     <script src="about.js" defer></script>
+
+    <!-- Script to automatically update year in footer -->
+    <script>
+      document.getElementById("current-year").textContent =
+        new Date().getFullYear();
+    </script>
   </body>
 </html>

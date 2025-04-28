@@ -4,19 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
-      Contact Me - Shain's Portfolio | Digital Marketer & Brand Strategist
+      Contact Me - Shain Wai Yan (xolbine) | Digital Marketer & Brand Strategist
     </title>
     <meta
       name="description"
-      content="Contact Shain Wai Yan, professional digital marketer and brand strategist. Get in touch for marketing consultations, brand strategy services, and digital marketing solutions."
+      content="Contact Shain Wai Yan (also known as xolbine or 明元易), professional digital marketer and brand strategist. Get in touch for marketing consultations, brand strategy services, and digital marketing solutions."
     />
     <meta
       name="keywords"
-      content="contact Shain Wai Yan, digital marketer, brand strategist, marketing consultant, digital marketing professional, marketing portfolio"
+      content="contact Shain Wai Yan, xolbine, 明元易, digital marketer, brand strategist, marketing consultant"
     />
     <meta name="author" content="Shain Wai Yan" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://www.shainwaiyan.com/contact.html" />
+
+    <!-- Alternative Names Meta Tags -->
+    <meta name="alternate-name" content="xolbine" />
+    <meta name="alternate-name" content="明元易" />
 
     <!-- Favicon -->
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
@@ -34,7 +38,7 @@
     />
     <meta
       property="og:description"
-      content="Contact Shain Wai Yan, professional digital marketer and brand strategist. Get in touch for marketing consultations, brand strategy services, and digital marketing solutions."
+      content="Contact Shain Wai Yan (xolbine, 明元易), professional digital marketer and brand strategist. Get in touch for marketing consultations and digital marketing solutions."
     />
     <meta
       property="og:image"
@@ -54,11 +58,23 @@
     />
     <meta
       property="twitter:description"
-      content="Contact Shain Wai Yan, professional digital marketer and brand strategist. Get in touch for marketing consultations, brand strategy services, and digital marketing solutions."
+      content="Contact Shain Wai Yan (xolbine, 明元易), professional digital marketer and brand strategist. Get in touch for marketing consultations."
     />
     <meta
       property="twitter:image"
       content="https://www.shainwaiyan.com/images/og-image.jpg"
+    />
+
+    <!-- Language Alternatives -->
+    <link
+      rel="alternate"
+      hreflang="zh"
+      href="https://www.shainwaiyan.com/zh/contact.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://www.shainwaiyan.com/contact.html"
     />
 
     <!-- Structured data for Person -->
@@ -67,6 +83,7 @@
         "@context": "https://schema.org",
         "@type": "Person",
         "name": "Shain Wai Yan",
+        "alternateName": ["xolbine", "明元易"],
         "url": "https://www.shainwaiyan.com",
         "sameAs": [
           "https://www.linkedin.com/in/shainwaiyan",
@@ -82,8 +99,14 @@
         "@context": "https://schema.org",
         "@type": "ContactPage",
         "name": "Contact Shain Wai Yan",
-        "description": "Contact page for Shain Wai Yan, a professional digital marketer and brand strategist.",
-        "url": "https://www.shainwaiyan.com/contact.html"
+        "description": "Contact page for Shain Wai Yan (xolbine, 明元易), a professional digital marketer and brand strategist.",
+        "url": "https://www.shainwaiyan.com/contact.html",
+        "mainEntity": {
+          "@type": "Person",
+          "name": "Shain Wai Yan",
+          "alternateName": ["xolbine", "明元易"],
+          "jobTitle": "Marketer & Brand Strategist"
+        }
       }
     </script>
 
@@ -226,5 +249,21 @@
 
     <!-- Add notification container for dynamic notifications -->
     <div id="notificationContainer" aria-live="assertive"></div>
+
+    <!-- Hidden content for search engines -->
+    <div
+      style="
+        display: none;
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+      "
+    >
+      This is the contact page for Shain Wai Yan, who is also known as xolbine
+      and 明元易 (Ming Yuan Yi).
+    </div>
   </body>
 </html>
