@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Coding Projects - GitHub Profile Viewer | Shain Wai Yan (xolbine)
+    </title>
+    <meta
+      name="description"
+      content="Explore coding projects by Shain Wai Yan (also known as xolbine, 明元易) including a GitHub profile viewer and other hobby programming projects. View interactive web applications built with modern design principles."
+    />
+    <meta
+      name="keywords"
+      content="coding projects, GitHub profile viewer, web development, programming, Shain Wai Yan, xolbine, 明元易"
+    />
+
+    <!-- Alternative Names Meta Tags -->
+    <meta name="alternate-name" content="xolbine" />
+    <meta name="alternate-name" content="明元易" />
+
+    <!-- Canonical URL to prevent duplicate content -->
+    <link
+      rel="canonical"
+      href="https://www.shainwaiyan.com/coding-project.html"
+    />
+
+    <!-- Language Alternatives -->
+    <link
+      rel="alternate"
+      hreflang="zh"
+      href="https://www.shainwaiyan.com/zh/coding-project.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://www.shainwaiyan.com/coding-project.html"
+    />
+
+    <!-- CSS Stylesheets -->
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="portfolio-nav.css" />
+    <link rel="stylesheet" href="coding-project.css" />
+
+    <!-- Add highlight.js for code syntax highlighting -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css"
+    />
+
+    <!-- Add marked.js for Markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+    <!-- Open Graph tags for social sharing -->
+    <meta
+      property="og:title"
+      content="Coding Projects - GitHub Profile Viewer | Shain Wai Yan"
+    />
+    <meta
+      property="og:description"
+      content="Explore coding projects by Shain Wai Yan (xolbine, 明元易) including a GitHub profile viewer and other hobby programming projects."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://www.shainwaiyan.com/coding-project.html"
+    />
+    <meta property="og:site_name" content="Shain's Portfolio" />
+
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Coding Projects - GitHub Profile Viewer | Shain Wai Yan"
+    />
+    <meta
+      name="twitter:description"
+      content="Explore coding projects by Shain Wai Yan (xolbine, 明元易) including a GitHub profile viewer and other hobby programming projects."
+    />
+
+    <!-- Additional SEO meta tags -->
+    <meta name="author" content="Shain Wai Yan" />
+    <meta name="robots" content="index, follow" />
+  </head>
+  <body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-to-content">Skip to content</a>
+
+    <!-- Header Navigation -->
+    <header class="header slide-in">
+      <div class="nav-container">
+        <div class="logo">
+          <a href="index.html" aria-label="Shain's Portfolio Home"
+            >Shain's Portfolio</a
+          >
+        </div>
+        <button
+          class="hamburger"
+          aria-label="Toggle Menu"
+          aria-expanded="false"
+          aria-controls="main-navigation"
+        >
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+        <nav class="nav" id="main-navigation" aria-label="Main Navigation">
+          <ul>
+            <li>
+              <a href="index.html">Home</a>
+            </li>
+            <li>
+              <a href="about.html">About Me</a>
+            </li>
+            <li class="nav-dropdown">
+              <a
+                href="portfolio.html"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >Portfolio</a
+              >
+              <div class="nav-dropdown-content" role="menu">
+                <a href="business-plan.html" role="menuitem">Business Plans</a>
+                <a href="marketing-plan.html" role="menuitem"
+                  >Marketing Plans</a
+                >
+                <a
+                  href="coding-project.html"
+                  class="active"
+                  aria-current="page"
+                  role="menuitem"
+                  >Coding Projects</a
+                >
+                <a href="photography.html" role="menuitem">Photography</a>
+                <a href="amv-editing.html" role="menuitem">AMV Editing</a>
+              </div>
+            </li>
+            <li>
+              <a href="certificate.html">Certificate</a>
+            </li>
+            <li>
+              <a href="contact.html">Contact Me</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Portfolio Navigation -->
+    <div class="portfolio-navigation">
+      <div class="portfolio-navigation-container">
+        <div class="breadcrumb-navigation" aria-label="Breadcrumb">
+          <a href="index.html">Home</a>
+          <span class="separator" aria-hidden="true">›</span>
+          <a href="portfolio.html">Portfolio</a>
+          <span class="separator" aria-hidden="true">›</span>
+          <span class="current" aria-current="page">Coding Projects</span>
+        </div>
+        <div class="portfolio-categories">
+          <a href="business-plan.html" class="portfolio-category"
+            >Business Plans</a
+          >
+          <a href="marketing-plan.html" class="portfolio-category"
+            >Marketing Plans</a
+          >
+          <a
+            href="coding-project.html"
+            class="portfolio-category active"
+            aria-current="page"
+            >Coding Projects</a
+          >
+          <a href="photography.html" class="portfolio-category">Photography</a>
+          <a href="amv-editing.html" class="portfolio-category">AMV Editing</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="main-content">
+      <!-- Back to Portfolio button moved above the title -->
+      <div class="back-to-portfolio-container">
+        <a href="portfolio.html" class="back-to-portfolio">Back to Portfolio</a>
+      </div>
+
+      <h1 class="page-title">Coding Projects</h1>
+      <p class="page-description">
+        As a digital marketer and brand strategist with a passion for
+        technology, I've developed coding skills to enhance my marketing
+        capabilities and create interactive tools. While I'm not a professional
+        programmer or Cs major graduate by trade, coding has become an
+        invaluable complement to my business and marketing expertise, allowing
+        me to build custom solutions that bridge strategy and implementation.
+      </p>
+
+      <section class="github-profile-section">
+        <h2>My GitGallery</h2>
+
+        <div class="github-container">
+          <!-- Repository Viewer Modal -->
+          <div id="repo-viewer-modal" class="repo-viewer-modal">
+            <div class="repo-viewer-content">
+              <div class="repo-viewer-header">
+                <h2 id="repo-viewer-title">Repository Viewer</h2>
+                <button id="repo-viewer-close" class="repo-viewer-close">
+                  &times;
+                </button>
+              </div>
+              <div class="repo-viewer-body">
+                <div class="repo-viewer-sidebar">
+                  <div
+                    class="repo-viewer-breadcrumb"
+                    id="repo-viewer-breadcrumb"
+                  >
+                    <span class="breadcrumb-item">Repository</span>
+                  </div>
+                  <div class="repo-viewer-files" id="repo-viewer-files">
+                    <!-- Files will be listed here -->
+                    <div class="loading">Loading files...</div>
+                  </div>
+                </div>
+                <div class="repo-viewer-main">
+                  <div
+                    class="repo-viewer-file-header"
+                    id="repo-viewer-file-header"
+                  >
+                    <!-- File info will be shown here -->
+                  </div>
+                  <div
+                    class="repo-viewer-file-content"
+                    id="repo-viewer-file-content"
+                  >
+                    <!-- File content will be shown here -->
+                    <div class="repo-viewer-placeholder">
+                      <div class="repo-viewer-placeholder-icon">📁</div>
+                      <p>Select a file to view its contents</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-header">
+            <div class="profile-info">
+              <img
+                id="profile-avatar"
+                src="https://github.com/identicons/Shain-Wai-Yan.png"
+                alt="GitHub Avatar"
+              />
+              <div>
+                <h1 id="profile-name">Loading...</h1>
+                <p id="profile-username">@username</p>
+                <p id="profile-bio"></p>
+              </div>
+            </div>
+            <div class="profile-stats">
+              <div class="stat">
+                <span id="repos-count">-</span>
+                <span>Repositories</span>
+              </div>
+              <div class="stat">
+                <span id="followers-count">-</span>
+                <span>Followers</span>
+              </div>
+              <div class="stat">
+                <span id="following-count">-</span>
+                <span>Following</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add this section after the profile-header div and before the contribution-section div -->
+          <div id="pinned-repos-container" class="pinned-repos-container">
+            <div class="loading">Loading pinned repositories...</div>
+          </div>
+
+          <div class="contribution-section">
+            <h2>Contributions</h2>
+            <div class="contribution-summary">
+              <span id="total-contributions">0</span> contributions in the last
+              year
+            </div>
+            <div class="contribution-graph" id="contribution-graph">
+              <!-- Contribution cells will be generated here -->
+            </div>
+            <div class="contribution-legend">
+              <span>Less</span>
+              <div class="legend-cells">
+                <div class="legend-cell level-0"></div>
+                <div class="legend-cell level-1"></div>
+                <div class="legend-cell level-2"></div>
+                <div class="legend-cell level-3"></div>
+                <div class="legend-cell level-4"></div>
+              </div>
+              <span>More</span>
+            </div>
+          </div>
+
+          <div class="languages-section">
+            <h2>Languages</h2>
+            <div id="languages-container" class="languages-container">
+              <!-- Language statistics will be loaded here -->
+              <div class="loading">Loading language statistics...</div>
+            </div>
+          </div>
+
+          <div class="repositories-section">
+            <h2>Repositories</h2>
+            <div id="repositories-list" class="repositories-list">
+              <!-- Repositories will be listed here -->
+              <div class="loading">Loading repositories...</div>
+            </div>
+          </div>
+
+          <div class="activity-section">
+            <h2>Recent Activity</h2>
+            <div id="activity-list" class="activity-list">
+              <!-- Activity items will be listed here -->
+              <div class="loading">Loading activity...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-copyright">
+        <p>&copy; 2025 Shain's Portfolio. All Rights Reserved.</p>
+      </div>
+    </footer>
+
+    <!-- Structured Data for Portfolio -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Coding Projects - GitHub Profile Viewer",
+        "description": "A collection of coding projects including a GitHub profile viewer built as a hobby to practice programming skills.",
+        "author": {
+          "@type": "Person",
+          "name": "Shain Wai Yan",
+          "alternateName": ["xolbine", "明元易"],
+          "sameAs": [
+            "https://www.linkedin.com/in/shainwaiyan",
+            "https://github.com/Shain-Wai-Yan"
+          ]
+        },
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "Shain's Portfolio",
+          "url": "https://www.shainwaiyan.com"
+        },
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://www.shainwaiyan.com/index.html"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Portfolio",
+              "item": "https://www.shainwaiyan.com/portfolio.html"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Coding Projects",
+              "item": "https://www.shainwaiyan.com/coding-project.html"
+            }
+          ]
+        }
+      }
+    </script>
+
+    <!-- Additional Structured Data for SoftwareSourceCode -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        "name": "GitHub Profile Viewer",
+        "author": {
+          "@type": "Person",
+          "name": "Shain Wai Yan",
+          "alternateName": ["xolbine", "明元易"]
+        },
+        "programmingLanguage": ["JavaScript", "HTML", "CSS"],
+        "description": "A web application that displays GitHub profile information, repositories, and activity in a clean, responsive interface.",
+        "codeRepository": "https://github.com/Shain-Wai-Yan"
+      }
+    </script>
+
+    <!-- Hidden content for search engines -->
+    <div
+      style="
+        display: none;
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+      "
+    >
+      This coding project was created by Shain Wai Yan, who is also known as
+      xolbine and 明元易 (Ming Yuan Yi). I enjoy coding as a hobby and created
+      this GitHub profile viewer to practice my skills. Connect with me on
+      LinkedIn at https://www.linkedin.com/in/shainwaiyan or check out my
+      projects on GitHub at https://github.com/Shain-Wai-Yan.
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script src="portfolio-nav.js"></script>
+    <script src="coding-project.js"></script>
+  </body>
+</html>
