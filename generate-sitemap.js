@@ -1,11 +1,7 @@
-// -------------------------------
-// MODULE IMPORTS
-// -------------------------------
 const fs = require("fs").promises;
 const path = require("path");
 const { XMLValidator } = require("fast-xml-parser");
 const cheerio = require("cheerio");
-const imageSize = require("image-size");
 
 // -------------------------------
 // CONFIGURATION CONSTANTS
@@ -23,14 +19,7 @@ const CONFIG = {
   SEO: {
     PRIORITY_WEIGHTS: {
       CONTENT_LENGTH: 0.0002,
-      IMAGE_QUALITY: 0.15,
       HEADING_STRUCTURE: 0.05,
-    },
-    IMAGE: {
-      MIN_DIMENSIONS: { width: 300, height: 150 },
-      MAX_SIZE: 5 * 1024 * 1024, // 5MB
-      ALLOWED_EXT: [".jpg", ".jpeg", ".webp", ".png"],
-      EXCLUDE_CLASSES: ["logo", "icon", "avatar", "thumbnail"],
     },
     CONTENT: {
       MIN_WORDS: 300,
@@ -152,7 +141,6 @@ class SitemapGenerator {
       lastmod: await this.getLastModified(filePath),
       metadata: this.extractMetadata($),
       content: this.analyzeContent($),
-      images: await this.processImages($, filePath),
       alternates: this.createAlternateUrls(filename),
       filename: filename, // Store the filename for later use
     };
@@ -197,90 +185,6 @@ class SitemapGenerator {
   }
 
   // -------------------------------
-  // PHASE 4: IMAGE PROCESSING
-  // -------------------------------
-  async processImages($, filePath) {
-    const imagePromises = [];
-
-    $("img").each((i, el) => {
-      const $img = $(el);
-      imagePromises.push(this.validateImage($img, path.dirname(filePath)));
-    });
-
-    return (await Promise.all(imagePromises)).filter(Boolean);
-  }
-
-  async validateImage($img, basePath) {
-    try {
-      const src = $img.attr("src");
-      const classes = ($img.attr("class") || "").split(" ");
-
-      // Skip if src is missing
-      if (!src) {
-        throw new Error("Missing src attribute");
-      }
-
-      // Exclusion checks
-      if (CONFIG.SEO.IMAGE.EXCLUDE_CLASSES.some((c) => classes.includes(c))) {
-        throw new Error("Excluded class");
-      }
-
-      // For external images, just return basic info
-      if (src.startsWith("http")) {
-        return {
-          loc: src,
-          title: this.sanitizeText($img.attr("alt"), 100),
-          caption: this.sanitizeText($img.attr("alt"), 420),
-          width: 800, // Default width for external images
-          height: 600, // Default height for external images
-          type: path.extname(src).toLowerCase() || ".jpg",
-        };
-      }
-
-      const imagePath = path.resolve(basePath, src);
-
-      try {
-        const stats = await fs.stat(imagePath);
-        const dimensions = imageSize(imagePath);
-
-        // Size validation
-        if (stats.size > CONFIG.SEO.IMAGE.MAX_SIZE) {
-          throw new Error("Oversized image");
-        }
-
-        // Dimension validation
-        if (
-          dimensions.width < CONFIG.SEO.IMAGE.MIN_DIMENSIONS.width ||
-          dimensions.height < CONFIG.SEO.IMAGE.MIN_DIMENSIONS.height
-        ) {
-          throw new Error("Insufficient dimensions");
-        }
-
-        return {
-          loc: this.createImageUrl(src),
-          title: this.sanitizeText($img.attr("alt"), 100),
-          caption: this.sanitizeText($img.attr("alt"), 420),
-          width: dimensions.width,
-          height: dimensions.height,
-          type: path.extname(src).toLowerCase(),
-        };
-      } catch (error) {
-        // If we can't access the image, still include it with default dimensions
-        return {
-          loc: this.createImageUrl(src),
-          title: this.sanitizeText($img.attr("alt"), 100),
-          caption: this.sanitizeText($img.attr("alt"), 420),
-          width: 800, // Default width
-          height: 600, // Default height
-          type: path.extname(src).toLowerCase() || ".jpg",
-        };
-      }
-    } catch (error) {
-      return null;
-    }
-  }
-
-  // -------------------------------
   // PHASE 5: XML GENERATION
   // -------------------------------
   async generateSitemap() {
@@ -292,7 +196,6 @@ class SitemapGenerator {
 
     const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${urlEntries.join("\n")}
 </urlset>`;
@@ -311,7 +214,6 @@ ${urlEntries.join("\n")}
   <changefreq>${this.getChangeFrequency(data)}</changefreq>
   <priority>${this.calculatePriority(data)}</priority>
   ${this.generateAlternateLinks(data)}
-  ${this.generateImageEntries(data.images)}
 </url>`;
   }
 
@@ -338,26 +240,6 @@ ${urlEntries.join("\n")}
     return links.join("");
   }
 
-  // Generate image entries
-  generateImageEntries(images) {
-    if (!images || images.length === 0) {
-      return "";
-    }
-
-    return images
-      .map(
-        (i) => `
-  <image:image>
-    <image:loc>${i.loc}</image:loc>
-    <image:title>${i.title || "Image"}</image:title>
-    <image:caption>${i.caption || ""}</image:caption>
-    <image:width>${i.width}</image:width>
-    <image:height>${i.height}</image:height>
-  </image:image>`
-      )
-      .join("");
-  }
-
   // -------------------------------
   // SUPPORT FUNCTIONS
   // -------------------------------
@@ -365,10 +247,6 @@ ${urlEntries.join("\n")}
     return filename === "index.html"
       ? this.baseUrl
       : `${this.baseUrl}/${filename}`;
-  }
-
-  createImageUrl(src) {
-    return src.startsWith("http") ? src : `${this.baseUrl}/${src}`;
   }
 
   async getLastModified(filePath) {
@@ -483,3 +361,6 @@ Sitemap: ${this.baseUrl}/sitemap.xml`;
 // EXECUTION
 // -------------------------------
 new SitemapGenerator().generate();
+
+// Test the script
+console.log("Starting sitemap generation...");
