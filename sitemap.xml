@@ -1,59 +1,352 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-  <url>
-    <loc>https://shainwaiyan.com/about.html</loc>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://shainwaiyan.com/images/profile.jpeg</image:loc>
-      <image:title>Shain Wai Yan - Marketing Specialist</image:title>
-      <image:caption>Shain Wai Yan - Marketing Specialist</image:caption>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://shainwaiyan.com/amv-editing.html</loc>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://shainwaiyan.com/business-plan.html</loc>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://shainwaiyan.com/certificate.html</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://shainwaiyan.com/coding-project.html</loc>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://shainwaiyan.com/contact.html</loc>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://shainwaiyan.com/images/linkedinicon.jpeg</image:loc>
-      <image:title>LinkedIn Profile</image:title>
-      <image:caption>LinkedIn Profile</image:caption>
-    </image:image>
-    <image:image>
-      <image:loc>https://shainwaiyan.com/images/git.jpeg</image:loc>
-      <image:title>GitHub Profile</image:title>
-      <image:caption>GitHub Profile</image:caption>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://shainwaiyan.com</loc>
-    <priority>1</priority>
-  </url>
-  <url>
-    <loc>https://shainwaiyan.com/marketing-plan.html</loc>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://shainwaiyan.com/photography.html</loc>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://shainwaiyan.com/portfolio.html</loc>
-    <priority>0.8</priority>
-  </url>
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<url>
+  <loc>https://www.shainwaiyan.com/about.html</loc>
+  <lastmod>2025-04-28</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+  
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="x-default" 
+    href="https://www.shainwaiyan.com/about.html" />
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="zh" 
+    href="https://www.shainwaiyan.com/zh/about.html" />
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="my" 
+    href="https://www.shainwaiyan.com/my/about.html" />
+  
+  <image:image>
+    <image:loc>https://www.shainwaiyan.com/images/profile.jpeg</image:loc>
+    <image:title>Shain Wai Yan - Marketing Specialist</image:title>
+    <image:caption>Shain Wai Yan - Marketing Specialist</image:caption>
+    <image:width>800</image:width>
+    <image:height>600</image:height>
+  </image:image>
+</url>
+<url>
+  <loc>https://www.shainwaiyan.com/amv-editing.html</loc>
+  <lastmod>2025-04-29</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+  
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="x-default" 
+    href="https://www.shainwaiyan.com/amv-editing.html" />
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="zh" 
+    href="https://www.shainwaiyan.com/zh/amv-editing.html" />
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="my" 
+    href="https://www.shainwaiyan.com/my/amv-editing.html" />
+  
+  <image:image>
+    <image:loc>https://via.placeholder.com/1280x720?text=Featured+AMV</image:loc>
+    <image:title>Featured AMV thumbnail</image:title>
+    <image:caption>Featured AMV thumbnail</image:caption>
+    <image:width>800</image:width>
+    <image:height>600</image:height>
+  </image:image>
+  <image:image>
+    <image:loc>https://via.placeholder.com/640x360?text=Action+AMV</image:loc>
+    <image:title>Action anime music video thumbnail</image:title>
+    <image:caption>Action anime music video thumbnail</image:caption>
+    <image:width>800</image:width>
+    <image:height>600</image:height>
+  </image:image>
+  <image:image>
+    <image:loc>https://via.placeholder.com/40x40</image:loc>
+    <image:title>Channel avatar</image:title>
+    <image:caption>Channel avatar</image:caption>
+    <image:width>800</image:width>
+    <image:height>600</image:height>
+  </image:image>
+  <image:image>
+    <image:loc>https://via.placeholder.com/640x360?text=Drama+AMV</image:loc>
+    <image:title>Drama anime music video thumbnail</image:title>
+    <image:caption>Drama anime music video thumbnail</image:caption>
+    <image:width>800</image:width>
+    <image:height>600</image:height>
+  </image:image>
+  <image:image>
+    <image:loc>https://via.placeholder.com/40x40</image:loc>
+    <image:title>Channel avatar</image:title>
+    <image:caption>Channel avatar</image:caption>
+    <image:width>800</image:width>
+    <image:height>600</image:height>
+  </image:image>
+  <image:image>
+    <image:loc>https://via.placeholder.com/360x640?text=Comedy+AMV</image:loc>
+    <image:title>Comedy anime music video thumbnail</image:title>
+    <image:caption>Comedy anime music video thumbnail</image:caption>
+    <image:width>800</image:width>
+    <image:height>600</image:height>
+  </image:image>
+  <image:image>
+    <image:loc>https://via.placeholder.com/40x40</image:loc>
+    <image:title>Channel avatar</image:title>
+    <image:caption>Channel avatar</image:caption>
+    <image:width>800</image:width>
+    <image:height>600</image:height>
+  </image:image>
+  <image:image>
+    <image:loc>https://via.placeholder.com/640x360?text=Romance+AMV</image:loc>
+    <image:title>Romance anime music video thumbnail</image:title>
+    <image:caption>Romance anime music video thumbnail</image:caption>
+    <image:width>800</image:width>
+    <image:height>600</image:height>
+  </image:image>
+  <image:image>
+    <image:loc>https://via.placeholder.com/40x40</image:loc>
+    <image:title>Channel avatar</image:title>
+    <image:caption>Channel avatar</image:caption>
+    <image:width>800</image:width>
+    <image:height>600</image:height>
+  </image:image>
+  <image:image>
+    <image:loc>https://via.placeholder.com/640x360?text=Action+AMV+2</image:loc>
+    <image:title>Action anime music video thumbnail</image:title>
+    <image:caption>Action anime music video thumbnail</image:caption>
+    <image:width>800</image:width>
+    <image:height>600</image:height>
+  </image:image>
+  <image:image>
+    <image:loc>https://via.placeholder.com/40x40</image:loc>
+    <image:title>Channel avatar</image:title>
+    <image:caption>Channel avatar</image:caption>
+    <image:width>800</image:width>
+    <image:height>600</image:height>
+  </image:image>
+  <image:image>
+    <image:loc>https://via.placeholder.com/360x640?text=Drama+AMV+2</image:loc>
+    <image:title>Drama anime music video thumbnail</image:title>
+    <image:caption>Drama anime music video thumbnail</image:caption>
+    <image:width>800</image:width>
+    <image:height>600</image:height>
+  </image:image>
+  <image:image>
+    <image:loc>https://via.placeholder.com/40x40</image:loc>
+    <image:title>Channel avatar</image:title>
+    <image:caption>Channel avatar</image:caption>
+    <image:width>800</image:width>
+    <image:height>600</image:height>
+  </image:image>
+  <image:image>
+    <image:loc>https://via.placeholder.com/640x360?text=Comedy+AMV+2</image:loc>
+    <image:title>Comedy anime music video thumbnail</image:title>
+    <image:caption>Comedy anime music video thumbnail</image:caption>
+    <image:width>800</image:width>
+    <image:height>600</image:height>
+  </image:image>
+  <image:image>
+    <image:loc>https://via.placeholder.com/40x40</image:loc>
+    <image:title>Channel avatar</image:title>
+    <image:caption>Channel avatar</image:caption>
+    <image:width>800</image:width>
+    <image:height>600</image:height>
+  </image:image>
+  <image:image>
+    <image:loc>https://via.placeholder.com/360x640?text=Romance+AMV+2</image:loc>
+    <image:title>Romance anime music video thumbnail</image:title>
+    <image:caption>Romance anime music video thumbnail</image:caption>
+    <image:width>800</image:width>
+    <image:height>600</image:height>
+  </image:image>
+  <image:image>
+    <image:loc>https://via.placeholder.com/40x40</image:loc>
+    <image:title>Channel avatar</image:title>
+    <image:caption>Channel avatar</image:caption>
+    <image:width>800</image:width>
+    <image:height>600</image:height>
+  </image:image>
+</url>
+<url>
+  <loc>https://www.shainwaiyan.com/business-plan.html</loc>
+  <lastmod>2025-04-29</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+  
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="x-default" 
+    href="https://www.shainwaiyan.com/business-plan.html" />
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="zh" 
+    href="https://www.shainwaiyan.com/zh/business-plan.html" />
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="my" 
+    href="https://www.shainwaiyan.com/my/business-plan.html" />
+  
+</url>
+<url>
+  <loc>https://www.shainwaiyan.com/certificate.html</loc>
+  <lastmod>2025-04-28</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+  
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="x-default" 
+    href="https://www.shainwaiyan.com/certificate.html" />
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="zh" 
+    href="https://www.shainwaiyan.com/zh/certificate.html" />
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="my" 
+    href="https://www.shainwaiyan.com/my/certificate.html" />
+  
+</url>
+<url>
+  <loc>https://www.shainwaiyan.com/coding-project.html</loc>
+  <lastmod>2025-04-29</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+  
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="x-default" 
+    href="https://www.shainwaiyan.com/coding-project.html" />
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="zh" 
+    href="https://www.shainwaiyan.com/zh/coding-project.html" />
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="my" 
+    href="https://www.shainwaiyan.com/my/coding-project.html" />
+  
+  <image:image>
+    <image:loc>https://github.com/identicons/Shain-Wai-Yan.png</image:loc>
+    <image:title>GitHub Avatar</image:title>
+    <image:caption>GitHub Avatar</image:caption>
+    <image:width>800</image:width>
+    <image:height>600</image:height>
+  </image:image>
+</url>
+<url>
+  <loc>https://www.shainwaiyan.com/contact.html</loc>
+  <lastmod>2025-04-28</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+  
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="x-default" 
+    href="https://www.shainwaiyan.com/contact.html" />
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="zh" 
+    href="https://www.shainwaiyan.com/zh/contact.html" />
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="my" 
+    href="https://www.shainwaiyan.com/my/contact.html" />
+  
+  <image:image>
+    <image:loc>https://www.shainwaiyan.com/images/linkedinicon.jpeg</image:loc>
+    <image:title>LinkedIn Profile</image:title>
+    <image:caption>LinkedIn Profile</image:caption>
+    <image:width>800</image:width>
+    <image:height>600</image:height>
+  </image:image>
+  <image:image>
+    <image:loc>https://www.shainwaiyan.com/images/git.jpeg</image:loc>
+    <image:title>GitHub Profile</image:title>
+    <image:caption>GitHub Profile</image:caption>
+    <image:width>800</image:width>
+    <image:height>600</image:height>
+  </image:image>
+</url>
+<url>
+  <loc>https://www.shainwaiyan.com</loc>
+  <lastmod>2025-04-28</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>1.0</priority>
+  
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="x-default" 
+    href="https://www.shainwaiyan.com" />
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="zh" 
+    href="https://www.shainwaiyan.com/zh/" />
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="my" 
+    href="https://www.shainwaiyan.com/my/" />
+  
+</url>
+<url>
+  <loc>https://www.shainwaiyan.com/marketing-plan.html</loc>
+  <lastmod>2025-04-29</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+  
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="x-default" 
+    href="https://www.shainwaiyan.com/marketing-plan.html" />
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="zh" 
+    href="https://www.shainwaiyan.com/zh/marketing-plan.html" />
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="my" 
+    href="https://www.shainwaiyan.com/my/marketing-plan.html" />
+  
+</url>
+<url>
+  <loc>https://www.shainwaiyan.com/photography.html</loc>
+  <lastmod>2025-04-29</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+  
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="x-default" 
+    href="https://www.shainwaiyan.com/photography.html" />
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="zh" 
+    href="https://www.shainwaiyan.com/zh/photography.html" />
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="my" 
+    href="https://www.shainwaiyan.com/my/photography.html" />
+  
+</url>
+<url>
+  <loc>https://www.shainwaiyan.com/portfolio.html</loc>
+  <lastmod>2025-04-29</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+  
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="x-default" 
+    href="https://www.shainwaiyan.com/portfolio.html" />
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="zh" 
+    href="https://www.shainwaiyan.com/zh/portfolio.html" />
+  <xhtml:link 
+    rel="alternate" 
+    hreflang="my" 
+    href="https://www.shainwaiyan.com/my/portfolio.html" />
+  
+</url>
 </urlset>
