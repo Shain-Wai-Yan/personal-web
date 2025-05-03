@@ -11,22 +11,44 @@
       name="description"
       content="Explore innovative marketing plans and campaigns by Shain Wai Yan (also known as xolbine, 明元易) designed to engage audiences and boost brand visibility. View detailed marketing strategies and campaign presentations."
     />
-    <meta
-      name="keywords"
-      content="Shain Wai Yan, xolbine, 明元易, marketing plans, digital marketing, brand visibility, marketing strategy, campaign planning"
-    />
     <meta name="author" content="Shain Wai Yan" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
+
+    <!-- Theme Colors for Browser UI -->
+    <meta
+      name="theme-color"
+      content="#191970"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#a67c00"
+      media="(prefers-color-scheme: dark)"
+    />
+    <meta name="color-scheme" content="light dark" />
+
     <link
       rel="canonical"
       href="https://www.shainwaiyan.com/marketing-plan.html"
     />
 
-    <!-- Alternative Names Meta Tags -->
-    <meta name="alternate-name" content="xolbine" />
-    <meta name="alternate-name" content="明元易" />
+    <!-- Performance Hints -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
+    <link rel="preload" href="document-viewer.css" as="style" />
+    <link rel="preload" href="portfolio-nav.css" as="style" />
 
-    <!-- Language Alternatives -->
+    <!-- Language Alternatives - Complete hreflang set -->
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://www.shainwaiyan.com/marketing-plan.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="en"
+      href="https://www.shainwaiyan.com/marketing-plan.html"
+    />
     <link
       rel="alternate"
       hreflang="zh"
@@ -34,8 +56,8 @@
     />
     <link
       rel="alternate"
-      hreflang="x-default"
-      href="https://www.shainwaiyan.com/marketing-plan.html"
+      hreflang="my"
+      href="https://www.shainwaiyan.com/my/marketing-plan.html"
     />
 
     <!-- Structured data -->
@@ -109,7 +131,10 @@
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="document-viewer.css" />
     <link rel="stylesheet" href="portfolio-nav.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"
+      defer
+    ></script>
     <script>
       // Set worker path for PDF.js
       pdfjsLib.GlobalWorkerOptions.workerSrc =
@@ -130,11 +155,14 @@
       property="og:url"
       content="https://www.shainwaiyan.com/marketing-plan.html"
     />
+    <meta
+      property="og:image"
+      content="https://www.shainwaiyan.com/images/marketing-plan-preview.jpg"
+    />
     <meta property="og:site_name" content="Shain Wai Yan Portfolio" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:locale:alternate" content="zh_CN" />
-    <!-- Add an og:image if you have one -->
-    <!-- <meta property="og:image" content="https://www.shainwaiyan.com/images/marketing-plan-preview.jpg"> -->
+    <meta property="og:locale:alternate" content="my_MM" />
 
     <!-- Twitter Card tags -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -146,10 +174,27 @@
       name="twitter:description"
       content="Explore innovative marketing plans and campaigns by Shain Wai Yan (xolbine, 明元易) designed to engage audiences and boost brand visibility."
     />
-    <!-- Add a twitter:image if you have one -->
-    <!-- <meta name="twitter:image" content="https://www.shainwaiyan.com/images/marketing-plan-preview.jpg"> -->
+    <meta
+      name="twitter:url"
+      content="https://www.shainwaiyan.com/marketing-plan.html"
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.shainwaiyan.com/images/marketing-plan-preview.jpg"
+    />
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
   </head>
   <body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-to-content">Skip to content</a>
+
+    <noscript>
+      <p>Please enable JavaScript to view the marketing plan previews.</p>
+    </noscript>
+
     <!-- Header Navigation -->
     <header class="header slide-in">
       <div class="nav-container">
@@ -209,7 +254,7 @@
     </div>
 
     <!-- Main Content -->
-    <main class="document-viewer-page">
+    <main id="main-content" class="document-viewer-page">
       <a href="portfolio.html" class="back-to-portfolio">Back to Portfolio</a>
 
       <h1 class="page-title">Marketing Plans</h1>
@@ -251,26 +296,11 @@
 
     <!-- Footer -->
     <footer class="footer slide-in-up">
-      <p>&copy; 2025 Shain's Portfolio. All Rights Reserved.</p>
+      <p>
+        &copy; <span id="current-year">2025</span> Shain's Portfolio. All Rights
+        Reserved.
+      </p>
     </footer>
-
-    <!-- Hidden content for search engines -->
-    <div
-      style="
-        display: none;
-        position: absolute;
-        left: -9999px;
-        top: -9999px;
-        width: 0;
-        height: 0;
-        overflow: hidden;
-      "
-    >
-      This marketing plans collection was created by Shain Wai Yan, who is also
-      known as xolbine and 明元易 (Ming Yuan Yi). Connect with me on LinkedIn at
-      https://www.linkedin.com/in/shainwaiyan or check out my projects on GitHub
-      at https://github.com/Shain-Wai-Yan.
-    </div>
 
     <!-- Scripts -->
     <script src="script.js"></script>
@@ -279,5 +309,11 @@
     <script src="document-viewer.js"></script>
     <script src="portfolio-nav.js"></script>
     <script src="strapi-integration.js"></script>
+
+    <!-- Script to automatically update year in footer -->
+    <script>
+      document.getElementById("current-year").textContent =
+        new Date().getFullYear();
+    </script>
   </body>
 </html>
