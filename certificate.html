@@ -10,19 +10,29 @@
       name="description"
       content="Explore Shain Wai Yan's (also known as xolbine, 明元易) professional certifications in Marketing, Digital Marketing, E-Commerce, and Brand Management. View achievements and qualifications."
     />
-    <meta
-      name="keywords"
-      content="certificates, professional certifications, marketing certifications, digital marketing, Shain Wai Yan, xolbine, 明元易, portfolio"
-    />
     <meta name="author" content="Shain Wai Yan" />
     <meta name="robots" content="index, follow" />
 
-    <!-- Alternative Names Meta Tags -->
-    <meta name="alternate-name" content="xolbine" />
-    <meta name="alternate-name" content="明元易" />
+    <!-- Theme Colors for Browser UI -->
+    <meta
+      name="theme-color"
+      content="#191970"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#a67c00"
+      media="(prefers-color-scheme: dark)"
+    />
+    <meta name="color-scheme" content="light dark" />
 
     <!-- Canonical URL -->
     <link rel="canonical" href="https://www.shainwaiyan.com/certificate.html" />
+
+    <!-- Performance Hints -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="preload" href="certificate-images.css" as="style" />
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
 
     <!-- Favicon -->
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
@@ -31,6 +41,28 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="certificate-images.css" />
+
+    <!-- Language Alternatives - Complete hreflang set -->
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://www.shainwaiyan.com/certificate.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="en"
+      href="https://www.shainwaiyan.com/certificate.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="zh"
+      href="https://www.shainwaiyan.com/zh/certificate.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="my"
+      href="https://www.shainwaiyan.com/my/certificate.html"
+    />
 
     <!-- Open Graph / Social Media Meta Tags -->
     <meta
@@ -51,9 +83,16 @@
       content="https://www.shainwaiyan.com/images/certificates-preview.jpg"
     />
     <meta property="og:site_name" content="Shain's Portfolio" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="zh_CN" />
+    <meta property="og:locale:alternate" content="my_MM" />
 
     <!-- Twitter Card data -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:url"
+      content="https://www.shainwaiyan.com/certificate.html"
+    />
     <meta
       name="twitter:title"
       content="Professional Certificates & Achievements | Shain's Portfolio"
@@ -65,18 +104,6 @@
     <meta
       name="twitter:image"
       content="https://www.shainwaiyan.com/images/certificates-preview.jpg"
-    />
-
-    <!-- Language Alternatives -->
-    <link
-      rel="alternate"
-      hreflang="zh"
-      href="https://www.shainwaiyan.com/zh/certificate.html"
-    />
-    <link
-      rel="alternate"
-      hreflang="x-default"
-      href="https://www.shainwaiyan.com/certificate.html"
     />
   </head>
   <body>
@@ -164,14 +191,20 @@
     </main>
 
     <footer class="footer slide-in-up">
-      <p>&copy; 2025 Shain's Portfolio. All Rights Reserved.</p>
+      <p>
+        &copy; <span id="current-year">2025</span> Shain's Portfolio. All Rights
+        Reserved.
+      </p>
     </footer>
 
-    <!-- Structured Data for Certificates -->
+    <!-- Structured Data for Certificates - Improved with name, url, and itemListOrder -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "ItemList",
+        "name": "Shain Wai Yan's Certificates",
+        "url": "https://www.shainwaiyan.com/certificate.html",
+        "itemListOrder": "http://schema.org/ItemListOrderAscending",
         "itemListElement": [
           {
             "@type": "ListItem",
@@ -207,6 +240,39 @@
       }
     </script>
 
+    <!-- Structured Data for BreadcrumbList -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.shainwaiyan.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Certificates",
+            "item": "https://www.shainwaiyan.com/certificate.html"
+          }
+        ]
+      }
+    </script>
+
+    <!-- Structured Data for WebPage -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "url": "https://www.shainwaiyan.com/certificate.html",
+        "name": "Professional Certificates & Achievements",
+        "description": "Explore Shain Wai Yan's professional certifications in Marketing, Digital Marketing, E-Commerce, and Brand Management."
+      }
+    </script>
+
     <!-- Structured Data for Person -->
     <script type="application/ld+json">
       {
@@ -231,25 +297,15 @@
       }
     </script>
 
-    <!-- Hidden text for search engines only -->
-    <div
-      style="
-        display: none;
-        visibility: hidden;
-        height: 0;
-        width: 0;
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
-      "
-    >
-      This is the portfolio of Shain Wai Yan, also known as xolbine and 明元易
-      (Ming Yuan Yi).
-    </div>
-
     <!-- Scripts -->
     <script src="script.js" defer></script>
     <script src="certificate.js" defer></script>
     <script src="certificate-swipe-hint.js" defer></script>
+
+    <!-- Script to automatically update year in footer -->
+    <script>
+      document.getElementById("current-year").textContent =
+        new Date().getFullYear();
+    </script>
   </body>
 </html>

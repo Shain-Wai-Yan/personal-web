@@ -291,12 +291,21 @@
     </main>
 
     <footer class="footer slide-in-up">
-      <p>&copy; 2025 Shain's Portfolio. All Rights Reserved.</p>
+      <p>
+        &copy; <span id="current-year">2025</span> Shain's Portfolio. All Rights
+        Reserved.
+      </p>
     </footer>
 
     <!-- Scripts -->
     <script src="script.js"></script>
     <script src="portfolio.js"></script>
     <script src="portfolio-nav.js"></script>
+
+    <!-- Script to automatically update year in footer -->
+    <script>
+      document.getElementById("current-year").textContent =
+        new Date().getFullYear();
+    </script>
   </body>
 </html>

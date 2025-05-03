@@ -545,11 +545,20 @@
 
     <footer class="footer">
       <div class="footer-copyright">
-        <p>&copy; 2025 Shain's Portfolio. All Rights Reserved.</p>
+        <p>
+          &copy; <span id="current-year">2025</span> Shain's Portfolio. All
+          Rights Reserved.
+        </p>
       </div>
     </footer>
 
     <script src="script.js"></script>
     <script src="home.js"></script>
+
+    <!-- Script to automatically update year in footer -->
+    <script>
+      document.getElementById("current-year").textContent =
+        new Date().getFullYear();
+    </script>
   </body>
 </html>
