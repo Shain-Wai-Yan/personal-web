@@ -3,29 +3,46 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>
-      Portfolio - Shain Wai Yan (xolbine) | Professional Work & Projects
+      Portfolio | Shain Wai Yan (xolbine) — Marketing, Coding & Creative
     </title>
     <meta
       name="description"
-      content="Explore Shain Wai Yan's (also known as xolbine, 明元易) professional portfolio featuring business plans, marketing strategies, coding projects, photography, and video editing work."
-    />
-    <meta
-      name="keywords"
-      content="Shain Wai Yan, xolbine, 明元易, portfolio, business plans, marketing, coding, photography, video editing, professional work"
+      content="Explore the professional portfolio of Shain Wai Yan (xolbine). Featuring business plans, marketing strategies, coding projects, photography & video editing."
     />
     <meta name="author" content="Shain Wai Yan" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
+
+    <!-- Theme Colors for Browser UI -->
+    <meta
+      name="theme-color"
+      content="#191970"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#a67c00"
+      media="(prefers-color-scheme: dark)"
+    />
+    <meta name="color-scheme" content="light dark" />
+
     <link rel="canonical" href="https://www.shainwaiyan.com/portfolio.html" />
-
-    <!-- Alternative Names Meta Tags -->
-    <meta name="alternate-name" content="xolbine" />
-    <meta name="alternate-name" content="明元易" />
-
-    <!-- Language Alternatives -->
-    <link rel="alternate" hreflang="zh" />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="preload" href="portfolio.css" as="style" />
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
 
     <!-- Language Alternatives -->
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://www.shainwaiyan.com/portfolio.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="en"
+      href="https://www.shainwaiyan.com/portfolio.html"
+    />
     <link
       rel="alternate"
       hreflang="zh"
@@ -33,9 +50,48 @@
     />
     <link
       rel="alternate"
-      hreflang="x-default"
-      href="https://www.shainwaiyan.com/portfolio.html"
+      hreflang="my"
+      href="https://www.shainwaiyan.com/my/portfolio.html"
     />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://www.shainwaiyan.com/portfolio.html"
+    />
+    <meta
+      property="og:title"
+      content="Portfolio | Shain Wai Yan (xolbine) — Marketing, Coding & Creative"
+    />
+    <meta
+      property="og:description"
+      content="Explore the professional portfolio of Shain Wai Yan (xolbine). Business plans, marketing strategies, coding projects, photography & video editing."
+    />
+    <meta property="og:site_name" content="Shain Wai Yan Portfolio" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="zh_CN" />
+    <meta property="og:locale:alternate" content="my_MM" />
+    <!-- Add an og:image if you have one -->
+    <!-- <meta property="og:image" content="https://www.shainwaiyan.com/images/portfolio-preview.jpg"> -->
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:url"
+      content="https://www.shainwaiyan.com/portfolio.html"
+    />
+    <meta
+      name="twitter:title"
+      content="Portfolio | Shain Wai Yan (xolbine) — Marketing, Coding & Creative"
+    />
+    <meta
+      name="twitter:description"
+      content="Explore the professional portfolio of Shain Wai Yan (xolbine). Business plans, marketing strategies, coding projects, photography & video editing."
+    />
+    <!-- Add a twitter:image if you have one -->
+    <!-- <meta name="twitter:image" content="https://www.shainwaiyan.com/images/portfolio-preview.jpg"> -->
+    <!-- <meta name="twitter:site" content="@shainwaiyan" /> -->
 
     <!-- Structured data for portfolio -->
     <script type="application/ld+json">
@@ -136,39 +192,6 @@
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="portfolio-nav.css" />
     <link rel="stylesheet" href="portfolio.css" />
-
-    <!-- Open Graph tags for social sharing -->
-    <meta
-      property="og:title"
-      content="Portfolio - Shain Wai Yan | Professional Work & Projects"
-    />
-    <meta
-      property="og:description"
-      content="Explore Shain Wai Yan's (xolbine, 明元易) professional portfolio featuring business plans, marketing strategies, coding projects, photography, and video editing work."
-    />
-    <meta property="og:type" content="website" />
-    <meta
-      property="og:url"
-      content="https://www.shainwaiyan.com/portfolio.html"
-    />
-    <meta property="og:site_name" content="Shain Wai Yan Portfolio" />
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:locale:alternate" content="zh_CN" />
-    <!-- Add an og:image if you have one -->
-    <!-- <meta property="og:image" content="https://www.shainwaiyan.com/images/portfolio-preview.jpg"> -->
-
-    <!-- Twitter Card tags -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="Portfolio - Shain Wai Yan | Professional Work & Projects"
-    />
-    <meta
-      name="twitter:description"
-      content="Explore Shain Wai Yan's (xolbine, 明元易) professional portfolio featuring business plans, marketing strategies, coding projects, photography, and video editing work."
-    />
-    <!-- Add a twitter:image if you have one -->
-    <!-- <meta name="twitter:image" content="https://www.shainwaiyan.com/images/portfolio-preview.jpg"> -->
   </head>
   <body>
     <header class="header slide-in">
@@ -270,25 +293,6 @@
     <footer class="footer slide-in-up">
       <p>&copy; 2025 Shain's Portfolio. All Rights Reserved.</p>
     </footer>
-
-    <!-- Hidden content for search engines -->
-    <div
-      style="
-        display: none;
-        position: absolute;
-        left: -9999px;
-        top: -9999px;
-        width: 0;
-        height: 0;
-        overflow: hidden;
-      "
-    >
-      This is the portfolio of Shain Wai Yan, who is also known as xolbine and
-      明元易 (Ming Yuan Yi). My portfolio includes business plans, marketing
-      strategies, coding projects, photography, and video editing work. Connect
-      with me on LinkedIn at https://www.linkedin.com/in/shainwaiyan or check
-      out my projects on GitHub at https://github.com/Shain-Wai-Yan.
-    </div>
 
     <!-- Scripts -->
     <script src="script.js"></script>
