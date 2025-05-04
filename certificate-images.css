@@ -3,7 +3,6 @@
  * Version: 2.0
  */
 
-/* Modern CSS custom properties matching main site theme */
 :root {
   /* Core brand colors from main CSS */
   --certificate-primary: #191970; /* Midnight Blue */
