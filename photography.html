@@ -14,19 +14,40 @@
       name="description"
       content="Explore Shain Wai Yan's (also known as xolbine, 明元易) photography portfolio featuring stunning natural scenery, mountains, lakes, sunsets and more captured with artistic vision."
     />
-    <meta
-      name="keywords"
-      content="Shain Wai Yan, xolbine, 明元易, photography, nature photography, scenic photos, portfolio, mountains, lakes, sunset photography"
-    />
     <meta name="author" content="Shain Wai Yan" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
+
+    <!-- Theme Colors for Browser UI -->
+    <meta
+      name="theme-color"
+      content="#191970"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#a67c00"
+      media="(prefers-color-scheme: dark)"
+    />
+    <meta name="color-scheme" content="light dark" />
+
     <link rel="canonical" href="https://www.shainwaiyan.com/photography.html" />
 
-    <!-- Alternative Names Meta Tags -->
-    <meta name="alternate-name" content="xolbine" />
-    <meta name="alternate-name" content="明元易" />
+    <!-- Performance Hints -->
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
+    <link rel="preload" href="photography.css" as="style" />
+    <link rel="preload" href="/images/photography-hero.jpg" as="image" />
 
-    <!-- Language Alternatives -->
+    <!-- Language Alternatives - Complete hreflang set -->
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://www.shainwaiyan.com/photography.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="en"
+      href="https://www.shainwaiyan.com/photography.html"
+    />
     <link
       rel="alternate"
       hreflang="zh"
@@ -34,8 +55,8 @@
     />
     <link
       rel="alternate"
-      hreflang="x-default"
-      href="https://www.shainwaiyan.com/photography.html"
+      hreflang="my"
+      href="https://www.shainwaiyan.com/my/photography.html"
     />
 
     <!-- Structured data for ImageGallery -->
@@ -53,7 +74,27 @@
             "https://www.linkedin.com/in/shainwaiyan",
             "https://github.com/Shain-Wai-Yan"
           ]
-        }
+        },
+        "associatedMedia": [
+          {
+            "@type": "ImageObject",
+            "contentUrl": "https://www.shainwaiyan.com/images/mountain1.jpg",
+            "thumbnail": "https://www.shainwaiyan.com/images/mountain1-thumb.jpg",
+            "caption": "Sunrise over the Shan Hills"
+          },
+          {
+            "@type": "ImageObject",
+            "contentUrl": "https://www.shainwaiyan.com/images/lake1.jpg",
+            "thumbnail": "https://www.shainwaiyan.com/images/lake1-thumb.jpg",
+            "caption": "Sunset over Inle Lake, Myanmar"
+          },
+          {
+            "@type": "ImageObject",
+            "contentUrl": "https://www.shainwaiyan.com/images/scenic1.jpg",
+            "thumbnail": "https://www.shainwaiyan.com/images/scenic1-thumb.jpg",
+            "caption": "Misty morning in Kalaw"
+          }
+        ]
       }
     </script>
 
@@ -110,11 +151,15 @@
       }
     </script>
 
+    <!-- CSS Stylesheets - Removed duplicates -->
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="portfolio-nav.css" />
-    <link href="style.css" />
-    <link rel="stylesheet" href="portfolio-nav.css" />
     <link rel="stylesheet" href="photography.css" />
+
+    <!-- PWA Support -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
 
     <!-- Open Graph tags -->
     <meta
@@ -130,9 +175,14 @@
       property="og:url"
       content="https://www.shainwaiyan.com/photography.html"
     />
+    <meta
+      property="og:image"
+      content="https://www.shainwaiyan.com/images/photography-hero.jpg"
+    />
     <meta property="og:site_name" content="Shain Wai Yan Portfolio" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:locale:alternate" content="zh_CN" />
+    <meta property="og:locale:alternate" content="my_MM" />
 
     <!-- Twitter Card tags -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -144,12 +194,20 @@
       name="twitter:description"
       content="Explore Shain Wai Yan's (xolbine, 明元易) photography portfolio featuring stunning natural scenery, mountains, lakes, sunsets and more."
     />
-
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="mobile-web-app-capable" content="yes" />
+    <meta
+      name="twitter:image"
+      content="https://www.shainwaiyan.com/images/photography-hero.jpg"
+    />
+    <meta
+      name="twitter:url"
+      content="https://www.shainwaiyan.com/photography.html"
+    />
   </head>
 
   <body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-to-content">Skip to content</a>
+
     <header class="header slide-in">
       <div class="nav-container">
         <div class="logo">
@@ -208,7 +266,7 @@
       </div>
     </div>
 
-    <main class="landscape-container">
+    <main id="main-content" class="landscape-container" role="main">
       <div class="back-to-portfolio-container">
         <a href="portfolio.html" class="back-to-portfolio">Back to Portfolio</a>
       </div>
@@ -236,7 +294,16 @@
         <button class="filter-button" data-filter="clouds">Clouds</button>
       </section>
 
-      <div class="masonry-container">
+      <section
+        id="photo-gallery"
+        role="region"
+        aria-label="Photography gallery"
+        class="masonry-container"
+      >
+        <noscript>
+          <p>Please enable JavaScript to see the full photography gallery.</p>
+        </noscript>
+
         <div class="search-container">
           <input
             type="text"
@@ -287,7 +354,7 @@
         <button class="related-photos-close" id="related-photos-close">
           &times;
         </button>
-      </div>
+      </section>
 
       <div class="photo-lightbox" id="photo-lightbox">
         <div class="lightbox-overlay"></div>
@@ -299,32 +366,21 @@
     </main>
 
     <footer class="footer slide-in-up">
-      <p>&copy; 2025 Shain's Portfolio. All Rights Reserved.</p>
+      <p>
+        &copy; <span id="current-year">2025</span> Shain's Portfolio. All Rights
+        Reserved.
+      </p>
     </footer>
-
-    <!-- Hidden content for search engines -->
-    <div
-      style="
-        display: none;
-        position: absolute;
-        left: -9999px;
-        top: -9999px;
-        width: 0;
-        height: 0;
-        overflow: hidden;
-      "
-    >
-      This photography portfolio was created by Shain Wai Yan, who is also known
-      as xolbine and 明元易 (Ming Yuan Yi). The collection features nature and
-      landscape photography including mountains, lakes, scenic views, sunsets,
-      buildings, cafes, and cloud formations. Connect with me on LinkedIn at
-      https://www.linkedin.com/in/shainwaiyan or check out my projects on GitHub
-      at https://github.com/Shain-Wai-Yan.
-    </div>
 
     <script src="script.js"></script>
     <script src="portfolio-nav.js"></script>
     <script src="photography.js"></script>
     <script src="photography-fetch-from-strapi.js"></script>
+
+    <!-- Script to automatically update year in footer -->
+    <script>
+      document.getElementById("current-year").textContent =
+        new Date().getFullYear();
+    </script>
   </body>
 </html>
