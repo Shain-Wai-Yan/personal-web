@@ -474,6 +474,36 @@
   transition: width 0.3s ease-out, height 0.3s ease-out, opacity 0.3s ease-out;
 }
 
+/* ===== Certificate Counter ===== */
+.certificate-counter {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: var(--certificate-spacing-sm);
+  font-size: 0.9rem;
+  color: var(--certificate-text-light);
+  font-family: var(--certificate-font-primary);
+  padding: var(--certificate-spacing-xs) var(--certificate-spacing-md);
+  background-color: rgba(25, 25, 112, 0.05);
+  border-radius: var(--certificate-radius-full);
+}
+
+.certificate-counter .current {
+  font-weight: 700;
+  color: var(--certificate-primary);
+  margin: 0 var(--certificate-spacing-xs);
+}
+
+.certificate-counter .total {
+  margin: 0 var(--certificate-spacing-xs);
+}
+
+.certificate-counter .separator {
+  margin: 0 var(--certificate-spacing-xs);
+  color: var(--certificate-accent);
+  font-weight: 700;
+}
+
 /* ===== Mobile Controls Container ===== */
 .carousel-controls-container {
   display: none;
@@ -894,6 +924,10 @@
   .carousel-next {
     right: -22px;
   }
+
+  .certificate-counter {
+    font-size: 0.85rem;
+  }
 }
 
 /* ===== Mobile Styles (< 768px) ===== */
@@ -1035,6 +1069,19 @@
     margin-bottom: var(--certificate-spacing-md);
   }
 
+  /* Adjust certificate counter for mobile */
+  .certificate-counter {
+    font-size: 0.8rem;
+    padding: var(--certificate-spacing-xs) var(--certificate-spacing-md);
+    margin-top: var(--certificate-spacing-xs);
+    width: auto;
+    display: inline-flex;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    justify-content: center;
+  }
+
   /* Adjust search and filter for mobile */
   .certificate-controls {
     flex-direction: column;
@@ -1092,6 +1139,15 @@
   .certificate-image {
     max-height: 250px;
   }
+
+  /* Position counter for landscape mode */
+  .certificate-counter {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(25, 25, 112, 0.1);
+  }
 }
 
 /* ===== Accessibility ===== */
@@ -1130,6 +1186,10 @@ select:focus,
 
   .certificate-image {
     border: 2px solid currentColor;
+  }
+
+  .certificate-counter {
+    border: 1px solid currentColor;
   }
 }
 
@@ -1176,7 +1236,8 @@ select:focus,
   .image-controls,
   .toggle-description,
   .swipe-hint,
-  .certificate-controls {
+  .certificate-controls,
+  .certificate-counter {
     display: none !important;
   }
 
@@ -1298,6 +1359,19 @@ select:focus,
     animation: goldWave 12s ease infinite;
   }
 
+  /* Style certificate counter for dark mode */
+  .certificate-counter {
+    background-color: rgba(166, 124, 0, 0.2);
+  }
+
+  .certificate-counter .current {
+    color: var(--certificate-primary-light);
+  }
+
+  .certificate-counter .separator {
+    color: var(--certificate-accent-light);
+  }
+
   /* Add gold glow to interactive elements */
   .carousel-arrow:hover,
   .retry-btn:hover,
@@ -1322,6 +1396,51 @@ select:focus,
       rgba(166, 124, 0, 0.1),
       var(--certificate-bg-light)
     );
+  }
+
+  /* Fix the See more button in dark mode to use gold gradient text instead of button */
+  .toggle-description {
+    background: transparent !important;
+    background-size: 200% 200% !important;
+    background-clip: text !important;
+    -webkit-background-clip: text !important;
+    color: transparent !important;
+    border-radius: 0 !important;
+    padding: 0.25rem 0 !important;
+    text-decoration: underline !important;
+    background-image: var(--gold-gradient-simple) !important;
+    animation: goldShimmer 8s linear infinite !important;
+  }
+
+  .toggle-description:hover {
+    text-decoration: underline !important;
+    box-shadow: none !important;
+    opacity: 0.9 !important;
+  }
+
+  .toggle-description::after {
+    background-image: var(--gold-gradient-simple) !important;
+    background-clip: text !important;
+    -webkit-background-clip: text !important;
+    color: transparent !important;
+  }
+
+  /* Also fix the specific "See more" link that might be using different styling */
+  a.toggle-description,
+  .description-container a,
+  a.see-more,
+  .see-more {
+    background: transparent !important;
+    background-image: var(--gold-gradient-simple) !important;
+    background-size: 200% 200% !important;
+    background-clip: text !important;
+    -webkit-background-clip: text !important;
+    color: transparent !important;
+    border-radius: 0 !important;
+    padding: 0.25rem 0 !important;
+    text-decoration: underline !important;
+    display: inline !important;
+    animation: goldShimmer 8s linear infinite !important;
   }
 }
 
@@ -1365,5 +1484,16 @@ select:focus,
   }
   100% {
     background-position: 0% 0%;
+  }
+}
+
+@media (max-width: 767px) {
+  .certificate-counter {
+    position: relative !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important;
   }
 }

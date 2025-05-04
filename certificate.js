@@ -5,6 +5,14 @@
  * @version 2.0
  */
 
+// Declare allCertificates variable
+let allCertificates = [];
+
+// Declare generatePlaceholderImage function
+function generatePlaceholderImage(width, height, text) {
+  return `https://via.placeholder.com/${width}x${height}.png?text=${text}`;
+}
+
 // Update handleMobileAdjustments to ensure full width on mobile
 function handleMobileAdjustments() {
   const isMobile = window.innerWidth < 768;
@@ -379,9 +387,13 @@ function handleOrientationChange() {
   }
 }
 
+// Optimize image loading for faster first visit
 document.addEventListener("DOMContentLoaded", () => {
   // Initialize certificate functionality if on the certificates page
   if (document.getElementById("certificates-container")) {
+    // Preload images for faster display
+    preloadCertificateImages();
+
     fetchCertificates();
 
     // Initialize search and filter functionality
@@ -411,88 +423,65 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Function to generate placeholder image data URLs
-function generatePlaceholderImage(
-  width = 300,
-  height = 200,
-  text = "Certificate"
-) {
-  // Create a canvas element
-  const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
+// Function to preload certificate images for faster display
+function preloadCertificateImages() {
+  // Check if we have cached certificate data
+  const cachedData = localStorage.getItem("certificateData");
+  if (cachedData) {
+    try {
+      const certificates = JSON.parse(cachedData);
 
-  // Get the drawing context
-  const ctx = canvas.getContext("2d");
+      // Preload images from cache
+      certificates.forEach((cert) => {
+        const attributes = cert.attributes || cert || {};
+        const imageField = attributes.Image || attributes.image;
 
-  // Draw background
-  ctx.fillStyle = "#f0f0f0";
-  ctx.fillRect(0, 0, width, height);
+        if (imageField) {
+          let imageUrl = "";
 
-  // Draw border
-  ctx.strokeStyle = "#191970";
-  ctx.lineWidth = 5;
-  ctx.strokeRect(5, 5, width - 10, height - 10);
+          // Extract image URL based on structure
+          if (imageField.data && imageField.data.attributes) {
+            const imageData = imageField.data.attributes;
+            if (imageData.url) {
+              imageUrl = imageData.url.startsWith("http")
+                ? imageData.url
+                : `https://backend-cms-89la.onrender.com${imageData.url}`;
+            } else if (imageData.formats) {
+              const formats = ["medium", "small", "thumbnail"];
+              for (const format of formats) {
+                if (
+                  imageData.formats[format] &&
+                  imageData.formats[format].url
+                ) {
+                  const formatUrl = imageData.formats[format].url;
+                  imageUrl = formatUrl.startsWith("http")
+                    ? formatUrl
+                    : `https://backend-cms-89la.onrender.com${formatUrl}`;
+                  break;
+                }
+              }
+            }
+          } else if (imageField.url) {
+            imageUrl = imageField.url.startsWith("http")
+              ? imageField.url
+              : `https://backend-cms-89la.onrender.com${imageField.url}`;
+          }
 
-  // Draw text
-  ctx.fillStyle = "#191970";
-  ctx.font = "bold 24px Arial";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-
-  // Handle multi-line text
-  const words = text.split("+");
-  const lineHeight = 30;
-  const startY = height / 2 - ((words.length - 1) * lineHeight) / 2;
-
-  words.forEach((word, index) => {
-    ctx.fillText(word, width / 2, startY + index * lineHeight);
-  });
-
-  // Return data URL
-  return canvas.toDataURL("image/png");
-}
-
-// Debug function to test API connectivity
-async function testApiConnection() {
-  const API_URL =
-    "https://backend-cms-89la.onrender.com/api/certificates?populate=*";
-
-  try {
-    console.log("Testing API connection to:", API_URL);
-
-    const response = await fetch(API_URL, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      mode: "cors",
-      credentials: "omit",
-    });
-
-    console.log("API Response Status:", response.status);
-    console.log("API Response OK:", response.ok);
-
-    if (response.ok) {
-      const data = await response.json();
-      console.log("API Data received:", data);
-      return { success: true, data };
-    } else {
-      console.error("API returned error status:", response.status);
-      return { success: false, status: response.status };
+          // If we found an image URL, preload it
+          if (imageUrl) {
+            const img = new Image();
+            img.src = imageUrl;
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Error preloading cached images:", error);
     }
-  } catch (error) {
-    console.error("API connection test failed:", error);
-    return { success: false, error: error.message };
   }
 }
 
-// Global variable to store all certificates for filtering
-let allCertificates = [];
-
-// Improved fetchCertificates function - ALWAYS try API first
-async function fetchCertificates() {
+// Update fetchCertificates to cache data for faster subsequent loads
+function fetchCertificates() {
   const API_URL =
     "https://backend-cms-89la.onrender.com/api/certificates?populate=*";
   const container = document.getElementById("certificates-container");
@@ -510,8 +499,28 @@ async function fetchCertificates() {
   try {
     console.log("Attempting to fetch certificates from API...");
 
+    // Check if we have cached data that's less than 1 hour old
+    const cachedData = localStorage.getItem("certificateData");
+    const cachedTimestamp = localStorage.getItem("certificateTimestamp");
+    const now = new Date().getTime();
+
+    // Use cached data if it's less than 1 hour old
+    if (
+      cachedData &&
+      cachedTimestamp &&
+      now - Number.parseInt(cachedTimestamp) < 3600000
+    ) {
+      console.log("Using cached certificate data");
+      const result = JSON.parse(cachedData);
+      processApiResult(result, container);
+
+      // Fetch fresh data in the background for next time
+      fetchFreshDataInBackground(API_URL);
+      return;
+    }
+
     // Always try to fetch from API first
-    const response = await fetch(API_URL, {
+    fetch(API_URL, {
       method: "GET",
       headers: {
         Accept: "application/json",
@@ -519,114 +528,166 @@ async function fetchCertificates() {
       },
       mode: "cors",
       credentials: "omit", // Try without credentials to avoid CORS preflight issues
-    });
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`API returned status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((result) => {
+        // Cache the result for future use
+        localStorage.setItem("certificateData", JSON.stringify(result));
+        localStorage.setItem(
+          "certificateTimestamp",
+          new Date().getTime().toString()
+        );
 
-    if (!response.ok) {
-      throw new Error(`API returned status: ${response.status}`);
-    }
-
-    const result = await response.json();
-    console.log("API data received:", result);
-
-    // Validate data structure
-    if (!result || !result.data) {
-      throw new Error("Invalid API response structure");
-    }
-
-    // Check if we have certificates
-    if (!Array.isArray(result.data) || result.data.length === 0) {
-      throw new Error("No certificates found in the CMS");
-    }
-
-    // Store all certificates for filtering
-    allCertificates = result.data;
-
-    // Clear loading state
-    container.innerHTML = "";
-
-    // Process each certificate
-    renderCertificates(allCertificates, container);
-
-    // Initialize the carousel after adding all slides
-    if (container.children.length > 0) {
-      initCarousel();
-    } else {
-      container.innerHTML = `
-          <li class="error">
-            <p>⚠️ No certificates could be displayed.</p>
-            <button onclick="fetchCertificates()" class="retry-btn">Retry</button>
-          </li>
-        `;
-    }
-
-    // Add styles for the description toggle
-    addDescriptionStyles();
-
-    // Update filter options based on available certificates
-    updateFilterOptions(allCertificates);
-
-    // Apply mobile adjustments after rendering
-    handleMobileAdjustments();
+        processApiResult(result, container);
+      })
+      .catch((error) => {
+        handleApiError(error, container);
+      });
   } catch (error) {
-    console.error("Error fetching certificates:", error);
+    handleApiError(error, container);
+  }
+}
 
-    // Show detailed error information
+// Function to fetch fresh data in the background
+function fetchFreshDataInBackground(API_URL) {
+  fetch(API_URL, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    mode: "cors",
+    credentials: "omit",
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error(
+        `Background API fetch returned status: ${response.status}`
+      );
+    })
+    .then((result) => {
+      // Update the cache with fresh data
+      localStorage.setItem("certificateData", JSON.stringify(result));
+      localStorage.setItem(
+        "certificateTimestamp",
+        new Date().getTime().toString()
+      );
+      console.log("Background fetch completed, cache updated");
+    })
+    .catch((error) => {
+      console.error("Background fetch error:", error);
+    });
+}
+
+// Function to process API result
+function processApiResult(result, container) {
+  // Validate data structure
+  if (!result || !result.data) {
+    throw new Error("Invalid API response structure");
+  }
+
+  // Check if we have certificates
+  if (!Array.isArray(result.data) || result.data.length === 0) {
+    throw new Error("No certificates found in the CMS");
+  }
+
+  // Store all certificates for filtering
+  allCertificates = result.data;
+
+  // Clear loading state
+  container.innerHTML = "";
+
+  // Process each certificate
+  renderCertificates(allCertificates, container);
+
+  // Initialize the carousel after adding all slides
+  if (container.children.length > 0) {
+    initCarousel();
+  } else {
     container.innerHTML = `
         <li class="error">
-          <p>⚠️ Failed to load certificates from API</p>
-          <small>${error.message || ""}</small>
-          <div class="error-details">
-            <p>This could be due to:</p>
-            <ul>
-              <li>CORS restrictions on the Strapi server</li>
-              <li>Network connectivity issues</li>
-              <li>Strapi server being offline</li>
-            </ul>
-          </div>
-          <div class="action-buttons">
-            <button onclick="fetchCertificates()" class="retry-btn">Retry API</button>
-            <button onclick="useSampleCertificates(document.getElementById('certificates-container'))" class="sample-btn">Use Sample Data</button>
-            class="sample-btn">Use Sample Data</button>
-          </div>
+          <p>⚠️ No certificates could be displayed.</p>
+          <button onclick="fetchCertificates()" class="retry-btn">Retry</button>
         </li>
       `;
-
-    // Add style for error details
-    document.head.insertAdjacentHTML(
-      "beforeend",
-      `
-        <style>
-          .error-details {
-            margin-top: 1rem;
-            text-align: left;
-            font-size: 0.85rem;
-          }
-          .error-details ul {
-            margin-top: 0.5rem;
-            padding-left: 1.5rem;
-          }
-          .action-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 1rem;
-          }
-          .sample-btn {
-            padding: 0.5rem 1rem;
-            background-color: #6c757d;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-          }
-          .sample-btn:hover {
-            background-color: #5a6268;
-          }
-        </style>
-      `
-    );
   }
+
+  // Add styles for the description toggle
+  addDescriptionStyles();
+
+  // Update filter options based on available certificates
+  updateFilterOptions(allCertificates);
+
+  // Apply mobile adjustments after rendering
+  handleMobileAdjustments();
+}
+
+// Function to handle API errors
+function handleApiError(error, container) {
+  console.error("Error fetching certificates:", error);
+
+  // Show detailed error information
+  container.innerHTML = `
+      <li class="error">
+        <p>⚠️ Failed to load certificates from API</p>
+        <small>${error.message || ""}</small>
+        <div class="error-details">
+          <p>This could be due to:</p>
+          <ul>
+            <li>CORS restrictions on the Strapi server</li>
+            <li>Network connectivity issues</li>
+            <li>Strapi server being offline</li>
+          </ul>
+        </div>
+        <div class="action-buttons">
+          <button onclick="fetchCertificates()" class="retry-btn">Retry API</button>
+          <button onclick="useSampleCertificates(document.getElementById('certificates-container'))" class="sample-btn">Use Sample Data</button>
+        </div>
+      </li>
+    `;
+
+  // Add style for error details
+  document.head.insertAdjacentHTML(
+    "beforeend",
+    `
+      <style>
+        .error-details {
+          margin-top: 1rem;
+          text-align: left;
+          font-size: 0.85rem;
+        }
+        .error-details ul {
+          margin-top: 0.5rem;
+          padding-left: 1.5rem;
+        }
+        .action-buttons {
+          display: flex;
+          gap: 1rem;
+          justify-content: center;
+          margin-top: 1rem;
+        }
+        .sample-btn {
+          padding: 0.5rem 1rem;
+          background-color: #6c757d;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+        }
+        .sample-btn:hover {
+          background-color: #5a6268;
+        }
+      </style>
+    `
+  );
 }
 
 // Function to render certificates
@@ -1182,6 +1243,9 @@ function resetFilters() {
 
 // Enhance the initImageZoom function for better mobile experience
 function initImageZoom() {
+  // Declare currentScale variable
+  let currentScale = 1;
+
   // Create zoom modal if it doesn't exist
   if (!document.querySelector(".zoom-modal")) {
     const modal = document.createElement("div");
@@ -1269,7 +1333,7 @@ function initImageZoom() {
 
     // Add pinch-to-zoom support for mobile
     let initialDistance = 0;
-    let currentScale = 1; // Declare currentScale here
+
     const modalImg = modal.querySelector("img");
 
     modal.addEventListener(
@@ -1549,6 +1613,26 @@ function initCarousel() {
     }
   }
 
+  // Create certificate counter element
+  const counterContainer = document.createElement("div");
+  counterContainer.className = "certificate-counter";
+  counterContainer.innerHTML = `
+    <span class="current">1</span>
+    <span class="separator">/</span>
+    <span class="total">${slides.length}</span>
+  `;
+
+  // Insert counter after dot navigation
+  if (dotNav) {
+    dotNav.after(counterContainer);
+  } else {
+    // If no dot nav, append to carousel container
+    const carouselContainer = document.querySelector(".carousel");
+    if (carouselContainer) {
+      carouselContainer.appendChild(counterContainer);
+    }
+  }
+
   // Function to move to a specific slide
   function moveToSlide(index) {
     if (!slides.length || !track) return;
@@ -1568,6 +1652,15 @@ function initCarousel() {
       const activeDotIndex = safeIndex % dots.length;
       if (dots[activeDotIndex]) {
         dots[activeDotIndex].classList.add("active");
+      }
+    }
+
+    // Update certificate counter
+    const counterElement = document.querySelector(".certificate-counter");
+    if (counterElement) {
+      const currentElement = counterElement.querySelector(".current");
+      if (currentElement) {
+        currentElement.textContent = safeIndex + 1;
       }
     }
 
@@ -1819,3 +1912,42 @@ document.head.insertAdjacentHTML(
     </style>
   `
 );
+
+// Improve image loading with priority loading for visible images
+function handleImageLoadFn(img) {
+  // Get natural dimensions of the image
+  const width = img.naturalWidth;
+  const height = img.naturalHeight;
+
+  // Determine if image is landscape, portrait, or square
+  if (width > height) {
+    img.classList.add("landscape");
+  } else if (height > width) {
+    img.classList.add("portrait");
+  } else {
+    img.classList.add("square");
+  }
+
+  // Remove loading class once image is loaded
+  img.classList.remove("loading");
+  img.classList.add("loaded");
+
+  // Adjust parent container if needed
+  const slide = img.closest(".carousel-slide");
+  if (slide) {
+    slide.classList.add("image-loaded");
+  }
+
+  // Apply mobile-specific optimizations
+  if (window.innerWidth <= 768) {
+    optimizeMobileImages();
+  }
+
+  // Adjust container height based on image
+  const container = img.closest(".certificate-image-container");
+  if (container && window.innerWidth <= 768) {
+    // Ensure container is tall enough for the image
+    const minHeight = Math.max(250, img.offsetHeight + 20); // 20px for padding
+    container.style.minHeight = `${minHeight}px`;
+  }
+}
