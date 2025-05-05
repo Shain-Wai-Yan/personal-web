@@ -48,19 +48,39 @@ document.addEventListener("DOMContentLoaded", () => {
   const currentPath = window.location.pathname;
   const filename = currentPath.substring(currentPath.lastIndexOf("/") + 1);
 
+  // Fix for portfolio navigation categories
   const portfolioCategories = document.querySelectorAll(".portfolio-category");
   portfolioCategories.forEach((category) => {
     const categoryHref = category.getAttribute("href");
-    if (
-      categoryHref === filename ||
-      (categoryHref === "portfolio.html" && filename === "portfolio.html") ||
-      (categoryHref === "photography.html" &&
-        filename === "photography.html") ||
-      (categoryHref === "amv-editing.html" && filename === "amv-editing.html")
-    ) {
+    const categoryFilename = categoryHref.substring(
+      categoryHref.lastIndexOf("/") + 1
+    );
+
+    if (categoryFilename === filename) {
       category.classList.add("active");
     } else {
       category.classList.remove("active");
+    }
+  });
+
+  // Fix for dropdown navigation items
+  const dropdownItems = document.querySelectorAll(".nav-dropdown-content a");
+  dropdownItems.forEach((item) => {
+    const itemHref = item.getAttribute("href");
+    const itemFilename = itemHref.substring(itemHref.lastIndexOf("/") + 1);
+
+    if (itemFilename === filename) {
+      item.classList.add("active");
+      // Also set the parent dropdown link as active
+      const parentDropdown = item.closest(".nav-dropdown");
+      if (parentDropdown) {
+        const parentLink = parentDropdown.querySelector("a");
+        if (parentLink) {
+          parentLink.classList.add("active");
+        }
+      }
+    } else {
+      item.classList.remove("active");
     }
   });
 });

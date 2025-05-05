@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      编码项目 – GitHub 个人资料查看器 | 明元易（Shain Wai Yan | xolbine）
+    </title>
+    <meta
+      name="description"
+      content="探索明元易（亦名 Shain Wai Yan、xolbine）的编码项目，包括 GitHub 个人资料查看器和其他业余编程项目。查看基于现代设计原则构建的交互式 Web 应用程序。"
+    />
+    <meta name="author" content="明元易" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+
+    <!-- 主题色用于浏览器界面 -->
+    <meta
+      name="theme-color"
+      content="#191970"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#a67c00"
+      media="(prefers-color-scheme: dark)"
+    />
+    <meta name="color-scheme" content="light dark" />
+
+    <!-- 规范链接 -->
+    <link
+      rel="canonical"
+      href="https://www.shainwaiyan.com/zh/coding-project.html"
+    />
+
+    <!-- 性能提示 -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="preconnect" href="https://api.github.com" crossorigin />
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net" />
+    <link rel="preload" href="../coding-project.css" as="style" />
+    <link
+      rel="preload"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css"
+      as="style"
+      crossorigin
+    />
+
+    <!-- 语言备用版本 -->
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://www.shainwaiyan.com/zh/coding-project.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="en"
+      href="https://www.shainwaiyan.com/coding-project.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="zh"
+      href="https://www.shainwaiyan.com/zh/coding-project.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="my"
+      href="https://www.shainwaiyan.com/my/coding-project.html"
+    />
+
+    <!-- CSS 样式表 -->
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../portfolio-nav.css" />
+    <link rel="stylesheet" href="../coding-project.css" />
+
+    <!-- 代码高亮样式 -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css"
+    />
+
+    <!-- Markdown 渲染库 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+    <!-- Open Graph 社交分享 -->
+    <meta
+      property="og:title"
+      content="编码项目 – GitHub 个人资料查看器 | 明元易（Shain Wai Yan | xolbine）"
+    />
+    <meta
+      property="og:description"
+      content="探索明元易（Shain Wai Yan、xolbine）的编码项目，包括 GitHub 个人资料查看器和其他业余编程项目。"
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://www.shainwaiyan.com/zh/coding-project.html"
+    />
+    <meta
+      property="og:image"
+      content="https://www.shainwaiyan.com/images/coding-project-preview.jpg"
+    />
+    <meta property="og:site_name" content="明元易 作品集" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:locale:alternate" content="my_MM" />
+
+    <!-- Twitter 卡片数据 -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:url"
+      content="https://www.shainwaiyan.com/zh/coding-project.html"
+    />
+    <meta
+      name="twitter:title"
+      content="编码项目 – GitHub 个人资料查看器 | 明元易（Shain Wai Yan | xolbine）"
+    />
+    <meta
+      name="twitter:description"
+      content="探索明元易（Shain Wai Yan、xolbine）的编码项目，包括 GitHub 个人资料查看器和其他业余编程项目。"
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.shainwaiyan.com/images/coding-project-preview.jpg"
+    />
+  </head>
+  <body>
+    <!-- 跳转到主要内容 -->
+    <a href="#main-content" class="skip-to-content">跳转到主要内容</a>
+
+    <!-- 头部导航 -->
+    <header class="header slide-in">
+      <div class="nav-container">
+        <div class="logo">
+          <a href="/zh/index.html" aria-label="明元易的作品集主页"
+            >明元易的作品集</a
+          >
+        </div>
+        <button
+          class="hamburger"
+          aria-label="切换菜单"
+          aria-expanded="false"
+          aria-controls="main-navigation"
+        >
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+        <nav class="nav" id="main-navigation" aria-label="主导航">
+          <ul>
+            <li><a href="/zh/index.html">首页</a></li>
+            <li><a href="/zh/about.html">关于我</a></li>
+            <li class="nav-dropdown">
+              <a
+                href="/zh/portfolio.html"
+                class="active"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >作品集</a
+              >
+              <div class="nav-dropdown-content" role="menu">
+                <a href="/zh/business-plan.html" role="menuitem">商业计划</a>
+                <a href="/zh/marketing-plan.html" role="menuitem">营销方案</a>
+                <a
+                  href="/zh/coding-project.html"
+                  class="active"
+                  aria-current="page"
+                  role="menuitem"
+                  >编码项目</a
+                >
+                <a href="/zh/photography.html" role="menuitem">摄影作品</a>
+                <a href="/zh/amv-editing.html" role="menuitem">AMV 剪辑</a>
+              </div>
+            </li>
+            <li><a href="/zh/certificate.html">证书</a></li>
+            <li><a href="/zh/contact.html">联系我</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- 作品集导航 -->
+    <div class="portfolio-nav">
+      <div class="portfolio-nav-container">
+        <div class="portfolio-breadcrumb" aria-label="面包屑导航">
+          <a href="/zh/index.html">首页</a>
+          <span class="separator" aria-hidden="true">›</span>
+          <a href="/zh/portfolio.html">作品集</a>
+          <span class="separator" aria-hidden="true">›</span>
+          <span class="current" aria-current="page">编码项目</span>
+        </div>
+        <div class="portfolio-categories">
+          <a href="/zh/business-plan.html" class="portfolio-category"
+            >商业计划</a
+          >
+          <a href="/zh/marketing-plan.html" class="portfolio-category"
+            >营销方案</a
+          >
+          <a
+            href="/zh/coding-project.html"
+            class="portfolio-category active"
+            aria-current="page"
+            >编码项目</a
+          >
+          <a href="/zh/photography.html" class="portfolio-category">摄影作品</a>
+          <a href="/zh/amv-editing.html" class="portfolio-category">AMV 剪辑</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 主要内容 -->
+    <main id="main-content">
+      <!-- 返回作品集 -->
+      <div class="back-to-portfolio-container">
+        <a href="/zh/portfolio.html" class="back-to-portfolio">返回作品集</a>
+      </div>
+
+      <h1 class="page-title">编码项目</h1>
+      <p class="page-description">
+        作为一名数字营销和品牌策略专家，我对技术充满热情，并利用编码技能来提升我的营销能力并创建交互式工具。虽然我并非专业程序员或计算机专业毕业生，但编码已成为对我的商业和营销专长的宝贵补充，使我能够构建将策略与实施相结合的自定义解决方案。
+      </p>
+
+      <noscript>
+        <p>请启用 JavaScript 来查看编码演示和语法高亮。</p>
+      </noscript>
+
+      <section class="github-profile-section">
+        <h2>我的 Git 画廊</h2>
+
+        <div class="github-container">
+          <!-- 仓库查看器模态框 -->
+          <div id="repo-viewer-modal" class="repo-viewer-modal">
+            <div class="repo-viewer-content">
+              <div class="repo-viewer-header">
+                <h2 id="repo-viewer-title">仓库查看器</h2>
+                <button id="repo-viewer-close" class="repo-viewer-close">
+                  &times;
+                </button>
+              </div>
+              <div class="repo-viewer-body">
+                <div class="repo-viewer-sidebar">
+                  <div
+                    class="repo-viewer-breadcrumb"
+                    id="repo-viewer-breadcrumb"
+                  >
+                    <span class="breadcrumb-item">仓库</span>
+                  </div>
+                  <div class="repo-viewer-files" id="repo-viewer-files">
+                    <!-- 文件列表将在此显示 -->
+                    <div class="loading">加载文件中...</div>
+                  </div>
+                </div>
+                <div class="repo-viewer-main">
+                  <div
+                    class="repo-viewer-file-header"
+                    id="repo-viewer-file-header"
+                  >
+                    <!-- 文件信息将在此显示 -->
+                  </div>
+                  <div
+                    class="repo-viewer-file-content"
+                    id="repo-viewer-file-content"
+                  >
+                    <!-- 文件内容将在此显示 -->
+                    <div class="repo-viewer-placeholder">
+                      <div class="repo-viewer-placeholder-icon">📁</div>
+                      <p>选择一个文件以查看其内容</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-header">
+            <div class="profile-info">
+              <img
+                id="profile-avatar"
+                src="https://github.com/identicons/Shain-Wai-Yan.png"
+                alt="GitHub 头像"
+              />
+              <div>
+                <h1 id="profile-name">加载中...</h1>
+                <p id="profile-username">@username</p>
+                <p id="profile-bio"></p>
+              </div>
+            </div>
+            <div class="profile-stats">
+              <div class="stat">
+                <span id="repos-count">-</span>
+                <span>仓库</span>
+              </div>
+              <div class="stat">
+                <span id="followers-count">-</span>
+                <span>关注者</span>
+              </div>
+              <div class="stat">
+                <span id="following-count">-</span>
+                <span>正在关注</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="pinned-repos-container" class="pinned-repos-container">
+            <div class="loading">加载置顶仓库...</div>
+          </div>
+
+          <div class="contribution-section">
+            <h2>贡献</h2>
+            <div class="contribution-summary">
+              <span id="total-contributions">0</span> 次过去一年的贡献
+            </div>
+            <div class="contribution-graph" id="contribution-graph">
+              <!-- 贡献图将在此生成 -->
+            </div>
+            <div class="contribution-legend">
+              <span>较少</span>
+              <div class="legend-cells">
+                <div class="legend-cell level-0"></div>
+                <div class="legend-cell level-1"></div>
+                <div class="legend-cell level-2"></div>
+                <div class="legend-cell level-3"></div>
+                <div class="legend-cell level-4"></div>
+              </div>
+              <span>较多</span>
+            </div>
+          </div>
+
+          <div class="languages-section">
+            <h2>语言</h2>
+            <div id="languages-container" class="languages-container">
+              <!-- 语言统计将在此加载 -->
+              <div class="loading">加载语言统计...</div>
+            </div>
+          </div>
+
+          <div class="repositories-section">
+            <h2>仓库列表</h2>
+            <div id="repositories-list" class="repositories-list">
+              <!-- 仓库列表将在此显示 -->
+              <div class="loading">加载仓库...</div>
+            </div>
+          </div>
+
+          <div class="activity-section">
+            <h2>最近活动</h2>
+            <div id="activity-list" class="activity-list">
+              <!-- 活动记录将在此显示 -->
+              <div class="loading">加载活动...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-copyright">
+        <p>
+          &copy;
+          <span id="current-year">2025</span> 明元易的作品集。保留所有权利。
+        </p>
+      </div>
+    </footer>
+
+    <!-- 作品集结构化数据 -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "编码项目 – GitHub 个人资料查看器",
+        "description": "一系列编码项目，包括一个业余实践的 GitHub 个人资料查看器。",
+        "author": {
+          "@type": "Person",
+          "name": "明元易",
+          "alternateName": ["Shain Wai Yan", "xolbine"],
+          "sameAs": [
+            "https://www.linkedin.com/in/shainwaiyan",
+            "https://github.com/Shain-Wai-Yan"
+          ]
+        },
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "明元易 作品集",
+          "url": "https://www.shainwaiyan.com"
+        }
+      }
+    </script>
+
+    <!-- 面包屑结构化数据 -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "首页",
+            "item": "https://www.shainwaiyan.com/zh/index.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "作品集",
+            "item": "https://www.shainwaiyan.com/zh/portfolio.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "编码项目",
+            "item": "https://www.shainwaiyan.com/zh/coding-project.html"
+          }
+        ]
+      }
+    </script>
+
+    <!-- WebPage 结构化数据 -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "url": "https://www.shainwaiyan.com/zh/coding-project.html",
+        "name": "编码项目 – GitHub 个人资料查看器",
+        "description": "包括 GitHub 个人资料查看器在内的明元易交互式 Web 应用程序。"
+      }
+    </script>
+
+    <!-- 导航元素结构化数据 -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SiteNavigationElement",
+        "name": ["首页", "关于我", "作品集", "证书", "联系我"],
+        "url": [
+          "https://www.shainwaiyan.com/zh/index.html",
+          "https://www.shainwaiyan.com/zh/about.html",
+          "https://www.shainwaiyan.com/zh/portfolio.html",
+          "https://www.shainwaiyan.com/zh/certificate.html",
+          "https://www.shainwaiyan.com/zh/contact.html"
+        ]
+      }
+    </script>
+
+    <!-- 软件源代码结构化数据 -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        "name": "GitHub 个人资料查看器",
+        "author": {
+          "@type": "Person",
+          "name": "明元易",
+          "alternateName": ["Shain Wai Yan", "xolbine"]
+        },
+        "programmingLanguage": ["JavaScript", "HTML", "CSS"],
+        "description": "一个在简洁、响应式界面中显示 GitHub 个人资料信息、仓库和活动的 Web 应用程序。",
+        "codeRepository": "https://github.com/Shain-Wai-Yan",
+        "url": "https://www.shainwaiyan.com/zh/coding-project.html",
+        "datePublished": "2025-01-15",
+        "dateModified": "2025-05-03"
+      }
+    </script>
+
+    <!-- 脚本 -->
+    <script src="../script.js"></script>
+    <script src="../portfolio-nav.js"></script>
+    <script src="../coding-project.js"></script>
+
+    <!-- 自动更新页脚年份 -->
+    <script>
+      document.getElementById("current-year").textContent =
+        new Date().getFullYear();
+    </script>
+
+    <script>
+      // 添加此脚本以修复活动状态检测
+      document.addEventListener("DOMContentLoaded", () => {
+        // 获取所有作品集类别链接
+        const portfolioCategories = document.querySelectorAll(
+          ".portfolio-category"
+        );
+
+        // 获取当前路径并提取文件名
+        const currentPath = window.location.pathname;
+        const filename = currentPath.substring(
+          currentPath.lastIndexOf("/") + 1
+        );
+
+        // 检查每个类别链接
+        portfolioCategories.forEach((category) => {
+          const categoryHref = category.getAttribute("href");
+          // 从 href 中提取文件名
+          const categoryFilename = categoryHref.substring(
+            categoryHref.lastIndexOf("/") + 1
+          );
+
+          // 比较文件名而不是完整路径
+          if (categoryFilename === filename) {
+            category.classList.add("active");
+          } else {
+            category.classList.remove("active");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
