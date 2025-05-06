@@ -9,7 +9,7 @@
     <title>明元易摄影作品集（Shain Wai Yan | xolbine）| 自然与风景摄影</title>
     <meta
       name="description"
-      content="探索明元易（Shain Wai Yan、xolbine）的摄影作品集，呈现壮丽的自然风光、山脉、湖泊、日出日落等，尽显艺术视角。"
+      content="探索明元易（Shain Wai Yan、xolbine）的摄影作品集，呈现壮丽的自然风光、山脉、湖泊、日出日落等，通过独特的艺术视角捕捉大自然的瞬间之美。"
     />
     <meta name="author" content="明元易" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
@@ -32,12 +32,12 @@
       href="https://www.shainwaiyan.com/zh/photography.html"
     />
 
-    <!-- 性能提示 -->
+    <!-- 性能优化 -->
     <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
     <link rel="preload" href="../photography.css" as="style" />
     <link rel="preload" href="/images/photography-hero.jpg" as="image" />
 
-    <!-- 语言备用版本 - 完整 hreflang 集合 -->
+    <!-- 语言备用版本 -->
     <link
       rel="alternate"
       hreflang="x-default"
@@ -59,7 +59,7 @@
       href="https://www.shainwaiyan.com/my/photography.html"
     />
 
-    <!-- Structured data for ImageGallery -->
+    <!-- 图片画廊结构化数据 -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -98,7 +98,7 @@
       }
     </script>
 
-    <!-- Structured data for BreadcrumbList -->
+    <!-- 面包屑导航结构化数据 -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -119,14 +119,14 @@
           {
             "@type": "ListItem",
             "position": 3,
-            "name": "摄影",
+            "name": "摄影作品",
             "item": "https://www.shainwaiyan.com/zh/photography.html"
           }
         ]
       }
     </script>
 
-    <!-- Structured data for CreativeWork -->
+    <!-- 创意作品结构化数据 -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -142,7 +142,7 @@
           ]
         },
         "description": "明元易（Shain Wai Yan、xolbine）创作的自然与风景摄影合集，展现山脉、湖泊、日出日落等景致。",
-        "keywords": "摄影, 自然摄影, 风景照片, 山脉, 湖泊, 日出摄影",
+        "keywords": "摄影, 自然摄影, 风景摄影, 山脉, 湖泊, 日出日落",
         "genre": ["自然摄影", "风景摄影", "景观摄影"]
       }
     </script>
@@ -161,7 +161,7 @@
     <meta property="og:title" content="明元易摄影作品集 | 自然与风景摄影" />
     <meta
       property="og:description"
-      content="探索明元易（Shain Wai Yan、xolbine）的摄影作品集，呈现壮丽的自然风光、山脉、湖泊、日出日落等，尽显艺术视角。"
+      content="探索明元易（Shain Wai Yan、xolbine）的摄影作品集，呈现壮丽的自然风光、山脉、湖泊、日出日落等，通过独特的艺术视角捕捉大自然的瞬间之美。"
     />
     <meta property="og:type" content="website" />
     <meta
@@ -172,17 +172,17 @@
       property="og:image"
       content="https://www.shainwaiyan.com/images/photography-hero.jpg"
     />
-    <meta property="og:site_name" content="明元易 作品集" />
+    <meta property="og:site_name" content="明元易的作品集" />
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:locale:alternate" content="en_US" />
     <meta property="og:locale:alternate" content="my_MM" />
 
     <!-- Twitter Card 标签 -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="明元易摄影作品集" />
+    <meta name="twitter:title" content="明元易摄影作品集 | 自然与风景摄影" />
     <meta
       name="twitter:description"
-      content="探索明元易（Shain Wai Yan、xolbine）的摄影作品集，呈现壮丽的自然风光、山脉、湖泊、日出日落等，尽显艺术视角。"
+      content="探索明元易（Shain Wai Yan、xolbine）的摄影作品集，呈现壮丽的自然风光、山脉、湖泊、日出日落等，通过独特的艺术视角捕捉大自然的瞬间之美。"
     />
     <meta
       name="twitter:image"
@@ -195,63 +195,87 @@
   </head>
 
   <body>
-    <!-- 跳转到主要内容 -->
-    <a href="#main-content" class="skip-to-content">跳转到内容</a>
+    <!-- 无障碍跳转链接 -->
+    <a href="#main-content" class="skip-to-content">跳转至主要内容</a>
 
     <header class="header slide-in">
       <div class="nav-container">
         <div class="logo">
-          <a href="/zh/index.html">明元易的作品集</a>
+          <a href="/zh/index.html" aria-label="明元易的作品集主页"
+            >明元易的作品集</a
+          >
         </div>
-        <button class="hamburger" aria-label="切换菜单">
+        <button
+          class="hamburger"
+          aria-label="切换菜单"
+          aria-expanded="false"
+          aria-controls="main-navigation"
+        >
           <span class="bar"></span>
           <span class="bar"></span>
           <span class="bar"></span>
         </button>
-        <nav class="nav">
+        <nav class="nav" id="main-navigation" aria-label="主导航">
           <ul>
             <li><a href="/zh/index.html">首页</a></li>
             <li><a href="/zh/about.html">关于我</a></li>
             <li class="nav-dropdown">
-              <a href="/zh/portfolio.html" class="active">作品集</a>
-              <div class="nav-dropdown-content">
-                <a href="/zh/business-plan.html">商业计划</a>
-                <a href="/zh/marketing-plan.html">营销方案</a>
-                <a href="/zh/coding-project.html">编码项目</a>
-                <a href="/zh/photography.html" class="active">摄影作品</a>
-                <a href="/zh/amv-editing.html">AMV 编辑</a>
+              <a
+                href="/zh/portfolio.html"
+                class="active"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >作品集</a
+              >
+              <div class="nav-dropdown-content" role="menu">
+                <a href="/zh/business-plan.html" role="menuitem">商业战略</a>
+                <a href="/zh/marketing-plan.html" role="menuitem">营销策略</a>
+                <a href="/zh/coding-project.html" role="menuitem">编程项目</a>
+                <a
+                  href="/zh/photography.html"
+                  class="active"
+                  aria-current="page"
+                  role="menuitem"
+                  >摄影作品</a
+                >
+                <a href="/zh/amv-editing.html" role="menuitem">动漫视频剪辑</a>
               </div>
             </li>
-            <li><a href="/zh/certificate.html">证书</a></li>
+            <li><a href="/zh/certificate.html">专业证书</a></li>
             <li><a href="/zh/contact.html">联系我</a></li>
           </ul>
         </nav>
       </div>
     </header>
 
-    <div class="portfolio-nav">
+    <div class="portfolio-nav" role="navigation" aria-label="作品集分类">
       <div class="portfolio-nav-container">
-        <div class="portfolio-breadcrumb">
+        <div class="portfolio-breadcrumb" aria-label="面包屑导航">
           <a href="/zh/index.html">首页</a>
-          <span class="separator">›</span>
+          <span class="separator" aria-hidden="true">›</span>
           <a href="/zh/portfolio.html">作品集</a>
-          <span class="separator">›</span>
-          <span class="current">摄影</span>
+          <span class="separator" aria-hidden="true">›</span>
+          <span class="current" aria-current="page">摄影作品</span>
         </div>
         <div class="portfolio-categories">
           <a href="/zh/business-plan.html" class="portfolio-category"
-            >商业计划</a
+            >商业战略</a
           >
           <a href="/zh/marketing-plan.html" class="portfolio-category"
-            >营销方案</a
+            >营销策略</a
           >
           <a href="/zh/coding-project.html" class="portfolio-category"
-            >编码项目</a
+            >编程项目</a
           >
-          <a href="/zh/photography.html" class="portfolio-category active"
+          <a
+            href="/zh/photography.html"
+            class="portfolio-category active"
+            aria-current="page"
             >摄影作品</a
           >
-          <a href="/zh/amv-editing.html" class="portfolio-category">AMV 编辑</a>
+          <a href="/zh/amv-editing.html" class="portfolio-category"
+            >动漫视频剪辑</a
+          >
         </div>
       </div>
     </div>
@@ -262,36 +286,36 @@
       </div>
 
       <section class="landscape-header">
-        <h1>明元易的画廊</h1>
-        <p>通过镜头捕捉瞬间与回忆，展现摄影之美</p>
+        <h1>明元易的摄影作品</h1>
+        <p>通过镜头捕捉自然瞬间与珍贵回忆，展现摄影艺术之美</p>
       </section>
 
-      <section class="filter-controls">
-        <button class="filter-button active" data-filter="all">全部照片</button>
-        <button class="filter-button" data-filter="mountains">山脉</button>
-        <button class="filter-button" data-filter="lakes">湖泊</button>
-        <button class="filter-button" data-filter="scenic">风景</button>
-        <button class="filter-button" data-filter="sunset">日出与日落</button>
-        <button class="filter-button" data-filter="building">建筑</button>
+      <section class="filter-controls" aria-label="照片筛选控件">
+        <button class="filter-button active" data-filter="all">全部作品</button>
+        <button class="filter-button" data-filter="mountains">山脉风光</button>
+        <button class="filter-button" data-filter="lakes">湖泊景观</button>
+        <button class="filter-button" data-filter="scenic">自然风景</button>
+        <button class="filter-button" data-filter="sunset">日出日落</button>
+        <button class="filter-button" data-filter="building">建筑摄影</button>
         <button class="filter-button" data-filter="cafe">咖啡馆与酒吧</button>
-        <button class="filter-button" data-filter="clouds">云雾</button>
+        <button class="filter-button" data-filter="clouds">云彩天空</button>
       </section>
 
       <section
         id="photo-gallery"
         role="region"
-        aria-label="摄影画廊"
+        aria-label="摄影作品画廊"
         class="masonry-container"
       >
         <noscript>
-          <p>请启用 JavaScript 查看完整摄影画廊。</p>
+          <p>请启用 JavaScript 以查看完整摄影作品画廊。</p>
         </noscript>
 
         <div class="search-container">
           <input
             type="text"
             id="photo-search"
-            placeholder="按标题或地点搜索照片..."
+            placeholder="按标题或拍摄地点搜索作品..."
             aria-label="搜索照片"
           />
           <button class="refresh-button" aria-label="重置搜索">
@@ -310,7 +334,7 @@
         </div>
 
         <div class="masonry-grid" id="masonry-grid">
-          <!-- 动态内容将注入此处 -->
+          <!-- 动态内容将在此处加载 -->
           <div class="no-photos-message">
             <svg
               class="photo-warning-icon"
@@ -323,8 +347,8 @@
                 d="M11 15h2v2h-2zm0-8h2v6h-2zm1-5C6.47 2 2 6.5 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2zm0 18a8 8 0 0 1-8-8 8 8 0 0 1 8-8 8 8 0 0 1 8 8 8 8 0 0 1-8 8z"
               />
             </svg>
-            <h3>未找到照片</h3>
-            <p>请尝试调整搜索词或筛选条件</p>
+            <h3>未找到相关作品</h3>
+            <p>请尝试调整搜索关键词或筛选条件</p>
             <button class="reset-filters-btn">重置所有筛选</button>
           </div>
         </div>
@@ -334,24 +358,28 @@
           class="related-photos-container"
           id="related-photos-container"
         ></div>
-        <button class="related-photos-close" id="related-photos-close">
+        <button
+          class="related-photos-close"
+          id="related-photos-close"
+          aria-label="关闭相关作品"
+        >
           &times;
         </button>
       </section>
 
-      <div class="photo-lightbox" id="photo-lightbox">
+      <div class="photo-lightbox" id="photo-lightbox" aria-hidden="true">
         <div class="lightbox-overlay"></div>
       </div>
 
       <div class="load-more-container">
-        <button id="load-more" class="load-more-btn">加载更多</button>
+        <button id="load-more" class="load-more-btn">加载更多作品</button>
       </div>
     </main>
 
     <footer class="footer slide-in-up">
       <p>
         &copy;
-        <span id="current-year">2025</span> 明元易的作品集。保留所有权利。
+        <span id="current-year">2025</span> 明元易的作品集。版权所有。
       </p>
     </footer>
 
