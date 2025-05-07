@@ -353,7 +353,7 @@
           "https://www.linkedin.com/in/shainwaiyan",
           "https://github.com/Shain-Wai-Yan"
         ],
-        "birthDate": "2002",
+        "birthDate": "2002-06-20",
         "nationality": "缅甸",
         "knowsAbout": [
           "数字营销",
@@ -460,6 +460,48 @@
     <script>
       document.getElementById("current-year").textContent =
         new Date().getFullYear();
+    </script>
+
+    <!-- 自动计算并更新年龄脚本 -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // 出生日期：2002年6月20日
+        const birthDate = new Date(2002, 5, 20); // 注意：JavaScript中月份是从0开始的（5 = 6月）
+
+        // 计算年龄的函数
+        function calculateAge(birthDate) {
+          const today = new Date();
+          let age = today.getFullYear() - birthDate.getFullYear();
+
+          // 检查今年的生日是否已经过了
+          const hasBirthdayOccurred =
+            today.getMonth() > birthDate.getMonth() ||
+            (today.getMonth() === birthDate.getMonth() &&
+              today.getDate() >= birthDate.getDate());
+
+          // 如果今年的生日还没到，年龄减1
+          if (!hasBirthdayOccurred) {
+            age--;
+          }
+
+          return age;
+        }
+
+        // 更新个人信息部分的年龄
+        const ageElement = document.getElementById("personal-age");
+        if (ageElement) {
+          // 获取标签span
+          const labelSpan = ageElement.querySelector("span");
+
+          // 计算当前年龄
+          const age = calculateAge(birthDate);
+
+          // 设置列表项的内容，保留标签
+          ageElement.innerHTML = "";
+          ageElement.appendChild(labelSpan);
+          ageElement.appendChild(document.createTextNode(" " + age + "岁"));
+        }
+      });
     </script>
   </body>
 </html>

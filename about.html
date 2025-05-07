@@ -245,7 +245,7 @@
               <div class="info-card animate-on-scroll">
                 <h3 class="card-title">Personal Info</h3>
                 <ul class="info-list">
-                  <!-- Age is easily editable -->
+                  <!-- Age is now dynamically calculated as a single line -->
                   <li id="personal-age"><span>Age:</span> 22 years</li>
                   <!-- Education is easily editable -->
                   <li id="personal-education">
@@ -397,7 +397,7 @@
           "https://www.linkedin.com/in/shainwaiyan",
           "https://github.com/Shain-Wai-Yan"
         ],
-        "birthDate": "2002",
+        "birthDate": "2002-06-20",
         "nationality": "Myanmar",
         "knowsAbout": [
           "Digital Marketing",
@@ -504,6 +504,48 @@
     <script>
       document.getElementById("current-year").textContent =
         new Date().getFullYear();
+    </script>
+
+    <!-- Script to automatically calculate and update age based on birth date -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Birth date: June 20, 2002
+        const birthDate = new Date(2002, 5, 20); // Note: months are 0-indexed in JavaScript (5 = June)
+
+        // Function to calculate age
+        function calculateAge(birthDate) {
+          const today = new Date();
+          let age = today.getFullYear() - birthDate.getFullYear();
+
+          // Check if birthday has occurred this year
+          const hasBirthdayOccurred =
+            today.getMonth() > birthDate.getMonth() ||
+            (today.getMonth() === birthDate.getMonth() &&
+              today.getDate() >= birthDate.getDate());
+
+          // If birthday hasn't occurred yet this year, subtract 1 from age
+          if (!hasBirthdayOccurred) {
+            age--;
+          }
+
+          return age;
+        }
+
+        // Update the age in the personal info section as a single line
+        const ageElement = document.getElementById("personal-age");
+        if (ageElement) {
+          // Get the label span
+          const labelSpan = ageElement.querySelector("span");
+
+          // Calculate the current age
+          const age = calculateAge(birthDate);
+
+          // Set the content of the list item with the label preserved
+          ageElement.innerHTML = "";
+          ageElement.appendChild(labelSpan);
+          ageElement.appendChild(document.createTextNode(" " + age + " years"));
+        }
+      });
     </script>
   </body>
 </html>
