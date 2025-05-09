@@ -1,10 +1,8 @@
 /**
- * IndexNow Auto-Submission Script for www.shainwaiyan.com
- * Features:
- * - Submits all URLs every 20 days
- * - Detects page content changes and submits updated pages immediately
- * - Runs on first load if no previous submission exists
- * - Uses image ping method to avoid CORS issues
+ * Improved IndexNow Auto-Submission Script for www.shainwaiyan.com
+ * - Smarter content change detection for dynamic pages
+ * - Cooldown period to prevent excessive submissions
+ * - Ignores non-meaningful changes
  */
 
 (function () {
@@ -13,6 +11,75 @@
   const API_KEY = "25573a62d42045b487c0f9ba47fa293a";
   const STORAGE_KEY_LAST_SUBMISSION = "indexnow_last_submission";
   const STORAGE_KEY_PAGE_HASHES = "indexnow_page_hashes";
+  const STORAGE_KEY_COOLDOWNS = "indexnow_cooldowns";
+  const COOLDOWN_HOURS = 24; // Minimum hours between submissions for the same URL
+
+  // Pages that should be checked less frequently or with special rules
+  const DYNAMIC_PAGES = [
+    {
+      url: "/certificate",
+      selector: ".certificate-content",
+      ignoreElements: ".timestamp, .dynamic-data",
+    },
+    {
+      url: "/amv-editing",
+      selector: ".amv-content",
+      ignoreElements: ".view-count, .timestamp",
+    },
+    {
+      url: "/marketing-plan",
+      selector: ".marketing-content",
+      ignoreElements: ".timestamp, .dynamic-data",
+    },
+    {
+      url: "/business-plan",
+      selector: ".business-content",
+      ignoreElements: ".timestamp, .dynamic-data",
+    },
+    {
+      url: "/photography",
+      selector: ".photography-content",
+      ignoreElements: ".timestamp, .view-count",
+    },
+    {
+      url: "/coding-project",
+      selector: ".project-content",
+      ignoreElements: ".github-stats, .last-commit, .timestamp",
+    },
+    { url: "/contact", selector: "none", ignoreElements: "all" }, // Skip contact page completely
+    // Chinese versions
+    {
+      url: "/zh/certificate",
+      selector: ".certificate-content",
+      ignoreElements: ".timestamp, .dynamic-data",
+    },
+    {
+      url: "/zh/amv-editing",
+      selector: ".amv-content",
+      ignoreElements: ".view-count, .timestamp",
+    },
+    {
+      url: "/zh/marketing-plan",
+      selector: ".marketing-content",
+      ignoreElements: ".timestamp, .dynamic-data",
+    },
+    {
+      url: "/zh/business-plan",
+      selector: ".business-content",
+      ignoreElements: ".timestamp, .dynamic-data",
+    },
+    {
+      url: "/zh/photography",
+      selector: ".photography-content",
+      ignoreElements: ".timestamp, .view-count",
+    },
+    {
+      url: "/zh/coding-project",
+      selector: ".project-content",
+      ignoreElements: ".github-stats, .last-commit, .timestamp",
+    },
+    { url: "/zh/contact", selector: "none", ignoreElements: "all" }, // Skip contact page completely
+  ];
 
   // All website URLs to submit
   const ALL_URLS = [
@@ -41,42 +108,146 @@
     "https://www.shainwaiyan.com/zh/certificate.html",
   ];
 
-  // Function to generate a simple hash of the page content
+  // Check if a URL is in the dynamic pages list
+  function getDynamicPageConfig(url) {
+    const path = new URL(url).pathname;
+    return DYNAMIC_PAGES.find((page) => path.includes(page.url));
+  }
+
+  // Function to generate a smart hash of the page content
   function generatePageContentHash() {
-    // Get the main content of the page (excluding scripts, as they might have dynamic content)
-    // This targets the main content areas that would typically change during updates
-    const contentElements = document.querySelectorAll(
-      "main, article, .content, #content, .main-content"
-    );
+    const currentUrl = window.location.href;
+    const dynamicConfig = getDynamicPageConfig(currentUrl);
 
-    let contentToHash = "";
+    // If this is a dynamic page with special handling
+    if (dynamicConfig) {
+      // For pages we want to completely skip
+      if (dynamicConfig.selector === "none") {
+        console.log("Skipping content hash for excluded page:", currentUrl);
+        return "SKIP_" + Date.now(); // Always different hash to skip submission
+      }
 
-    if (contentElements.length > 0) {
-      // Use identified content areas
-      contentElements.forEach((element) => {
-        contentToHash += element.innerText || element.textContent;
-      });
+      // For pages with specific content areas to focus on
+      let contentToHash = "";
+      const contentElements = document.querySelectorAll(dynamicConfig.selector);
+
+      if (contentElements.length > 0) {
+        // Create a temporary div to manipulate content
+        const tempDiv = document.createElement("div");
+
+        contentElements.forEach((element) => {
+          // Clone the element to avoid modifying the actual page
+          const clone = element.cloneNode(true);
+          tempDiv.appendChild(clone);
+        });
+
+        // Remove elements that should be ignored
+        if (dynamicConfig.ignoreElements !== "all") {
+          const ignoreElements = tempDiv.querySelectorAll(
+            dynamicConfig.ignoreElements
+          );
+          ignoreElements.forEach((el) => {
+            if (el && el.parentNode) {
+              el.parentNode.removeChild(el);
+            }
+          });
+        }
+
+        contentToHash = tempDiv.innerText || tempDiv.textContent;
+      } else {
+        // Fallback if selector not found
+        contentToHash =
+          document.title +
+          " " +
+          document.querySelector("meta[name='description']")?.content;
+      }
+
+      // Create a hash from the filtered content
+      let hash = 0;
+      for (let i = 0; i < contentToHash.length; i++) {
+        const char = contentToHash.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+        hash = hash & hash; // Convert to 32bit integer
+      }
+
+      return hash.toString();
     } else {
-      // Fallback: use the body content but exclude scripts
-      const bodyText = document.body.innerText || document.body.textContent;
-      contentToHash = bodyText;
-    }
+      // Standard hash generation for non-dynamic pages
+      const contentElements = document.querySelectorAll(
+        "main, article, .content, #content, .main-content"
+      );
 
-    // Create a simple hash
-    let hash = 0;
-    for (let i = 0; i < contentToHash.length; i++) {
-      const char = contentToHash.charCodeAt(i);
-      hash = (hash << 5) - hash + char;
-      hash = hash & hash; // Convert to 32bit integer
-    }
+      let contentToHash = "";
 
-    return hash.toString();
+      if (contentElements.length > 0) {
+        contentElements.forEach((element) => {
+          contentToHash += element.innerText || element.textContent;
+        });
+      } else {
+        const bodyText = document.body.innerText || document.body.textContent;
+        contentToHash = bodyText;
+      }
+
+      let hash = 0;
+      for (let i = 0; i < contentToHash.length; i++) {
+        const char = contentToHash.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+        hash = hash & hash;
+      }
+
+      return hash.toString();
+    }
+  }
+
+  // Check if a URL is in cooldown period
+  function isInCooldown(url) {
+    try {
+      const cooldowns = JSON.parse(
+        localStorage.getItem(STORAGE_KEY_COOLDOWNS) || "{}"
+      );
+      const lastSubmission = cooldowns[url];
+
+      if (!lastSubmission) return false;
+
+      const hoursSinceLastSubmission =
+        (Date.now() - lastSubmission) / (1000 * 60 * 60);
+      return hoursSinceLastSubmission < COOLDOWN_HOURS;
+    } catch (e) {
+      console.error("Error checking cooldown:", e);
+      return false;
+    }
+  }
+
+  // Update cooldown timestamp for a URL
+  function updateCooldown(url) {
+    try {
+      const cooldowns = JSON.parse(
+        localStorage.getItem(STORAGE_KEY_COOLDOWNS) || "{}"
+      );
+      cooldowns[url] = Date.now();
+      localStorage.setItem(STORAGE_KEY_COOLDOWNS, JSON.stringify(cooldowns));
+    } catch (e) {
+      console.error("Error updating cooldown:", e);
+    }
   }
 
   // Function to check if the page content has changed
   function hasPageContentChanged() {
     const currentUrl = window.location.href;
+
+    // Check if URL is in cooldown period
+    if (isInCooldown(currentUrl)) {
+      console.log("URL is in cooldown period, skipping check:", currentUrl);
+      return false;
+    }
+
     const currentHash = generatePageContentHash();
+
+    // If this is a skipped page
+    if (currentHash.startsWith("SKIP_")) {
+      console.log("Skipping change detection for excluded page:", currentUrl);
+      return false;
+    }
 
     // Get stored hashes
     let storedHashes = {};
@@ -102,10 +273,8 @@
 
   // Function to check if full submission is needed
   function shouldSubmitAllUrls() {
-    // Get the last submission timestamp from localStorage
     const lastSubmission = localStorage.getItem(STORAGE_KEY_LAST_SUBMISSION);
 
-    // If no previous submission, we should submit
     if (!lastSubmission) {
       console.log(
         "No previous IndexNow submission found. Submitting all URLs..."
@@ -113,14 +282,12 @@
       return true;
     }
 
-    // Calculate time difference
     const lastSubmissionDate = new Date(parseInt(lastSubmission));
     const currentDate = new Date();
     const daysSinceLastSubmission = Math.floor(
       (currentDate - lastSubmissionDate) / (1000 * 60 * 60 * 24)
     );
 
-    // Check if enough days have passed
     if (daysSinceLastSubmission >= SUBMISSION_INTERVAL_DAYS) {
       console.log(
         `${daysSinceLastSubmission} days since last IndexNow submission. Submitting all URLs...`
@@ -140,6 +307,9 @@
   function submitUrlWithImagePing(url) {
     console.log("Submitting to IndexNow via image ping:", url);
 
+    // Update cooldown for this URL
+    updateCooldown(url);
+
     // Create a hidden image element to make the request
     const img = new Image();
     img.style.display = "none";
@@ -151,7 +321,6 @@
     };
 
     img.onerror = function () {
-      // This will usually trigger as an error, but the request still goes through
       console.log("Ping to IndexNow completed for:", url);
       document.body.removeChild(img);
     };
@@ -172,19 +341,38 @@
     // Update the last submission timestamp
     localStorage.setItem(STORAGE_KEY_LAST_SUBMISSION, Date.now().toString());
 
+    // Filter out URLs that are in cooldown
+    const urlsToSubmit = ALL_URLS.filter((url) => !isInCooldown(url));
+
+    console.log(
+      `Submitting ${urlsToSubmit.length} URLs (${
+        ALL_URLS.length - urlsToSubmit.length
+      } in cooldown)`
+    );
+
     // For bulk submission, we'll submit URLs one by one with a slight delay
-    ALL_URLS.forEach((url, index) => {
+    urlsToSubmit.forEach((url, index) => {
       setTimeout(() => {
         submitUrlWithImagePing(url);
       }, index * 300); // 300ms delay between submissions to avoid overwhelming
     });
 
-    console.log("Started submission of all URLs to IndexNow.");
+    console.log("Started submission of URLs to IndexNow.");
   }
 
   // Function to submit a single URL (current page)
   function submitCurrentPageToIndexNow() {
     const currentUrl = window.location.href;
+
+    // Skip if in cooldown
+    if (isInCooldown(currentUrl)) {
+      console.log(
+        "URL is in cooldown period, skipping submission:",
+        currentUrl
+      );
+      return;
+    }
+
     console.log("Submitting updated page to IndexNow:", currentUrl);
     submitUrlWithImagePing(currentUrl);
   }
