@@ -4,6 +4,7 @@
  * - Submits all URLs every 20 days
  * - Detects page content changes and submits updated pages immediately
  * - Runs on first load if no previous submission exists
+ * - Uses image ping method to avoid CORS issues
  */
 
 (function () {
@@ -135,70 +136,57 @@
     return false;
   }
 
-  // Function to submit all URLs to IndexNow
+  // Function to submit a URL using the image ping method (avoids CORS)
+  function submitUrlWithImagePing(url) {
+    console.log("Submitting to IndexNow via image ping:", url);
+
+    // Create a hidden image element to make the request
+    const img = new Image();
+    img.style.display = "none";
+
+    // Set up success/error handlers
+    img.onload = function () {
+      console.log("Successfully pinged IndexNow for:", url);
+      document.body.removeChild(img);
+    };
+
+    img.onerror = function () {
+      // This will usually trigger as an error, but the request still goes through
+      console.log("Ping to IndexNow completed for:", url);
+      document.body.removeChild(img);
+    };
+
+    // Set the source to the IndexNow API URL
+    img.src = `https://api.indexnow.org/indexnow?url=${encodeURIComponent(
+      url
+    )}&key=${API_KEY}`;
+
+    // Add to document to initiate the request
+    document.body.appendChild(img);
+  }
+
+  // Function to submit all URLs to IndexNow using image ping method
   function submitAllUrlsToIndexNow() {
-    fetch("https://api.indexnow.org/indexnow", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-      },
-      body: JSON.stringify({
-        host: "www.shainwaiyan.com",
-        key: API_KEY,
-        urlList: ALL_URLS,
-      }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          // Update the last submission timestamp
-          localStorage.setItem(
-            STORAGE_KEY_LAST_SUBMISSION,
-            Date.now().toString()
-          );
-          console.log("Success! All URLs submitted to IndexNow.");
-          return response.text();
-        } else {
-          throw new Error(`Error ${response.status}: ${response.statusText}`);
-        }
-      })
-      .then((data) => {
-        console.log("IndexNow response:", data);
-      })
-      .catch((error) => {
-        console.error("IndexNow submission failed:", error);
-      });
+    console.log("Submitting all URLs to IndexNow...");
+
+    // Update the last submission timestamp
+    localStorage.setItem(STORAGE_KEY_LAST_SUBMISSION, Date.now().toString());
+
+    // For bulk submission, we'll submit URLs one by one with a slight delay
+    ALL_URLS.forEach((url, index) => {
+      setTimeout(() => {
+        submitUrlWithImagePing(url);
+      }, index * 300); // 300ms delay between submissions to avoid overwhelming
+    });
+
+    console.log("Started submission of all URLs to IndexNow.");
   }
 
   // Function to submit a single URL (current page)
   function submitCurrentPageToIndexNow() {
     const currentUrl = window.location.href;
-
     console.log("Submitting updated page to IndexNow:", currentUrl);
-
-    fetch(
-      `https://api.indexnow.org/indexnow?url=${encodeURIComponent(
-        currentUrl
-      )}&key=${API_KEY}`,
-      {
-        method: "GET",
-      }
-    )
-      .then((response) => {
-        if (response.ok) {
-          console.log(
-            "Successfully submitted updated page to IndexNow:",
-            currentUrl
-          );
-        } else {
-          console.error(
-            "Failed to submit updated page to IndexNow:",
-            response.status
-          );
-        }
-      })
-      .catch((error) => {
-        console.error("Error submitting updated page to IndexNow:", error);
-      });
+    submitUrlWithImagePing(currentUrl);
   }
 
   // Main function to run when the script loads
