@@ -48,29 +48,63 @@ document.addEventListener("DOMContentLoaded", () => {
     loadNext();
   }
 
-  // Load scripts in the correct order - REMOVED strapi-integration.js
-  loadScriptsSequentially(
-    [
-      // First load PDF.js if not already loaded
-      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js",
-      // Then load our scripts in the correct order
-      "cloudinary-pdf-solution.js",
-      "document-viewer.js",
-      // "strapi-integration.js", // REMOVED this line to prevent loading the old file
-    ],
-    () => {
-      console.log("All scripts loaded successfully");
+  // First, load PDF.js directly with a script tag to ensure it's available
+  if (!window.pdfjsLib) {
+    console.log("Loading PDF.js directly...");
+    const pdfScript = document.createElement("script");
+    pdfScript.src =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js";
+    pdfScript.onload = function () {
+      console.log("PDF.js loaded successfully");
 
-      // Set PDF.js worker path
-      if (window.pdfjsLib) {
-        window.pdfjsLib.GlobalWorkerOptions.workerSrc =
-          "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
+      // Set PDF.js worker path immediately after loading
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
+
+      // Then load the rest of the scripts
+      loadRemainingScripts();
+    };
+    pdfScript.onerror = function () {
+      console.error("Failed to load PDF.js");
+      // Continue loading other scripts even if PDF.js fails
+      loadRemainingScripts();
+    };
+    document.head.appendChild(pdfScript);
+  } else {
+    // PDF.js is already loaded, just set the worker path
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
+
+    // Load the remaining scripts
+    loadRemainingScripts();
+  }
+
+  function loadRemainingScripts() {
+    // Load the rest of the scripts in the correct order
+    loadScriptsSequentially(
+      [
+        "cloudinary-pdf-solution.js",
+        "document-viewer.js",
+        // Load our integration files based on the current page
+        ...(window.location.pathname.includes("/marketing-plan")
+          ? ["marketing-plan-integration.js"]
+          : []),
+        ...(window.location.pathname.includes("/business-plan")
+          ? ["business-plan-integration.js"]
+          : []),
+      ],
+      () => {
+        console.log("All scripts loaded successfully");
+
+        // Verify PDF.js is loaded
+        if (window.pdfjsLib) {
+          console.log("PDF.js is available for use");
+        } else {
+          console.error(
+            "PDF.js library not loaded properly. Please check your network connection."
+          );
+        }
       }
-
-      // Initialize the page if not already done - REMOVED this since we're using dedicated files now
-      // if (typeof window.initPage === "function") {
-      //   window.initPage();
-      // }
-    }
-  );
+    );
+  }
 });
