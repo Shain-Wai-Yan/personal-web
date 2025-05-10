@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initScrollAnimation();
   initThemePreference();
   initAccessibility();
-  addVercelInsights();
+  // Removed: addVercelInsights();
 
   // Initialize performance monitoring
   if (window.performance && window.performance.mark) {
@@ -382,34 +382,7 @@ function initAccessibility() {
   }
 }
 
-// Add Vercel Analytics and Speed Insights
-function addVercelInsights() {
-  // Set up Analytics
-  window.va =
-    window.va ||
-    (() => {
-      (window.vaq = window.vaq || []).push(arguments);
-    });
-
-  // Create and add the Analytics script
-  const analyticsScript = document.createElement("script");
-  analyticsScript.src = "/_vercel/insights/script.js";
-  analyticsScript.defer = true;
-  document.head.appendChild(analyticsScript);
-
-  // Set up Speed Insights
-  window.vsi =
-    window.vsi ||
-    (() => {
-      (window.vsiq = window.vsiq || []).push(arguments);
-    });
-
-  // Create and add the Speed Insights script
-  const speedInsightsScript = document.createElement("script");
-  speedInsightsScript.src = "/_vercel/speed-insights/script.js";
-  speedInsightsScript.defer = true;
-  document.head.appendChild(speedInsightsScript);
-}
+// Removed: addVercelInsights() function
 
 // Add CSS styles for new features
 document.addEventListener("DOMContentLoaded", () => {
