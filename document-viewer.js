@@ -177,28 +177,6 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     toolbar.appendChild(textModeButton);
 
-    // Remove this entire block
-    // Download button (new)
-    // const downloadButton = document.createElement("button");
-    // downloadButton.className = "pdf-viewer-button download";
-    // downloadButton.innerHTML = `
-    //   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    //     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-    //     <polyline points="7 10 12 15 17 10"></polyline>
-    //     <line x1="12" y1="15" x2="12" y2="3"></line>
-    //   </svg>
-    //   <span>Download</span>
-    // `;
-    // downloadButton.addEventListener("click", () => {
-    //   // Create a temporary link to download the PDF
-    //   const link = document.createElement("a");
-    //   link.href = pdfUrl;
-    //   link.download = title || "document.pdf";
-    //   link.target = "_blank";
-    //   link.click();
-    // });
-    // toolbar.appendChild(downloadButton);
-
     viewerContainer.appendChild(toolbar);
 
     // Create frame container
@@ -1883,8 +1861,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Find all "View Document" buttons and attach click handlers
   function setupViewDocumentButtons() {
+    // FIXED: Use a more valid selector that works in all browsers
     const viewButtons = document.querySelectorAll(
-      'a[href*=".pdf"], button:contains("View Document")'
+      'a[href*=".pdf"], button.view-document-btn'
     );
 
     viewButtons.forEach((button) => {

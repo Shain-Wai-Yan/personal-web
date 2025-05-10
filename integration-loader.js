@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadNext();
   }
 
-  // Load scripts in the correct order
+  // Load scripts in the correct order - REMOVED strapi-integration.js
   loadScriptsSequentially(
     [
       // First load PDF.js if not already loaded
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Then load our scripts in the correct order
       "cloudinary-pdf-solution.js",
       "document-viewer.js",
-      "strapi-integration.js",
+      // "strapi-integration.js", // REMOVED this line to prevent loading the old file
     ],
     () => {
       console.log("All scripts loaded successfully");
@@ -67,10 +67,10 @@ document.addEventListener("DOMContentLoaded", () => {
           "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
       }
 
-      // Initialize the page if not already done
-      if (typeof window.initPage === "function") {
-        window.initPage();
-      }
+      // Initialize the page if not already done - REMOVED this since we're using dedicated files now
+      // if (typeof window.initPage === "function") {
+      //   window.initPage();
+      // }
     }
   );
 });
