@@ -1,6 +1,7 @@
 /**
- * Strapi API Integration
- * This file handles fetching and displaying documents from Strapi CMS
+ * Business Plan Strapi Integration
+ * This file handles fetching and displaying ONLY business plans from Strapi CMS
+ * To be included only on the business plan page
  */
 
 // Configuration - use window to avoid redeclaration errors if loaded multiple times
@@ -34,7 +35,7 @@ async function fetchFromStrapi(endpoint, queryParams = {}) {
     const url = `${window.STRAPI_API_URL}${endpoint}${
       queryString ? `?${queryString}` : ""
     }`;
-    console.log("Fetching from:", url);
+    console.log("[Business Plans] Fetching from:", url);
 
     // Prepare headers with authentication if token is available
     const headers = {
@@ -61,15 +62,15 @@ async function fetchFromStrapi(endpoint, queryParams = {}) {
       // Handle common HTTP error codes
       if (response.status === 403) {
         console.error(
-          "Authentication error: You need a valid API token to access this Strapi endpoint"
+          "[Business Plans] Authentication error: You need a valid API token to access this Strapi endpoint"
         );
         throw new Error(
-          "Authentication required. Please add your Strapi API token to strapi-integration.js"
+          "Authentication required. Please add your Strapi API token to business-plan-integration.js"
         );
       }
 
       if (response.status === 404) {
-        console.error("API endpoint not found:", url);
+        console.error("[Business Plans] API endpoint not found:", url);
         throw new Error(
           "API endpoint not found. Please check your Strapi collection names."
         );
@@ -80,7 +81,7 @@ async function fetchFromStrapi(endpoint, queryParams = {}) {
       }
 
       const data = await response.json();
-      console.log("API Response:", data); // Log the response for debugging
+      console.log("[Business Plans] API Response:", data); // Log the response for debugging
       return data;
     } catch (fetchError) {
       if (fetchError.name === "AbortError") {
@@ -91,7 +92,7 @@ async function fetchFromStrapi(endpoint, queryParams = {}) {
       throw fetchError;
     }
   } catch (error) {
-    console.error("Error fetching from Strapi:", error);
+    console.error("[Business Plans] Error fetching from Strapi:", error);
 
     // Show more helpful error message based on error type
     if (
@@ -100,7 +101,7 @@ async function fetchFromStrapi(endpoint, queryParams = {}) {
       error.message.includes("timed out")
     ) {
       console.error(
-        "Network error: Please check if the Strapi server is running and accessible."
+        "[Business Plans] Network error: Please check if the Strapi server is running and accessible."
       );
     }
 
@@ -108,7 +109,7 @@ async function fetchFromStrapi(endpoint, queryParams = {}) {
       return {
         data: [],
         error:
-          "Authentication required. Please add your Strapi API token to strapi-integration.js",
+          "Authentication required. Please add your Strapi API token to business-plan-integration.js",
       };
     }
 
@@ -138,11 +139,11 @@ function truncateDescription(text, lines = 2) {
  * Generates HTML for a document item based on Strapi data
  */
 function generateDocumentItemHTML(item) {
-  console.log("Processing item:", item); // Log the item for debugging
+  console.log("[Business Plans] Processing item:", item); // Log the item for debugging
 
   // Safety check - if item is not properly structured, return an error item
   if (!item || typeof item !== "object") {
-    console.error("Invalid item structure:", item);
+    console.error("[Business Plans] Invalid item structure:", item);
     return `
      <div class="document-item error-item">
        <div class="document-details">
@@ -159,7 +160,11 @@ function generateDocumentItemHTML(item) {
     const description = item.Description || "";
     const slug = item.Slug || "";
 
-    console.log("Document properties:", { title, description, slug });
+    console.log("[Business Plans] Document properties:", {
+      title,
+      description,
+      slug,
+    });
 
     // Get document file URL with fallback
     let documentUrl = "";
@@ -167,7 +172,7 @@ function generateDocumentItemHTML(item) {
 
     // Check if DocumentFile exists and extract URL
     if (item.DocumentFile) {
-      console.log("DocumentFile found:", item.DocumentFile);
+      console.log("[Business Plans] DocumentFile found:", item.DocumentFile);
 
       // Try to extract URL based on different possible structures
       if (typeof item.DocumentFile === "string") {
@@ -192,7 +197,7 @@ function generateDocumentItemHTML(item) {
         }
       }
 
-      console.log("Extracted document URL:", documentUrl);
+      console.log("[Business Plans] Extracted document URL:", documentUrl);
 
       // Determine file type from URL or mime type
       if (documentUrl) {
@@ -210,7 +215,7 @@ function generateDocumentItemHTML(item) {
 
     // Handle CoverImage extraction
     if (item.CoverImage) {
-      console.log("CoverImage found:", item.CoverImage);
+      console.log("[Business Plans] CoverImage found:", item.CoverImage);
 
       // Try to extract URL based on different possible structures
       if (typeof item.CoverImage === "string") {
@@ -232,7 +237,7 @@ function generateDocumentItemHTML(item) {
         }
       }
 
-      console.log("Extracted cover image URL:", coverImageUrl);
+      console.log("[Business Plans] Extracted cover image URL:", coverImageUrl);
     }
 
     // Format date if available
@@ -242,7 +247,7 @@ function generateDocumentItemHTML(item) {
       month: "long",
     });
 
-    console.log("Final document data:", {
+    console.log("[Business Plans] Final document data:", {
       title,
       description,
       slug,
@@ -279,7 +284,11 @@ function generateDocumentItemHTML(item) {
      </div>
    `;
   } catch (error) {
-    console.error("Error generating document HTML:", error, item);
+    console.error(
+      "[Business Plans] Error generating document HTML:",
+      error,
+      item
+    );
     return `
      <div class="document-item error-item">
        <div class="document-details">
@@ -292,13 +301,15 @@ function generateDocumentItemHTML(item) {
 }
 
 /**
- * Loads documents from Strapi and displays them on the page
+ * Loads business plans from Strapi and displays them on the page
  */
-async function loadDocumentsFromStrapi(contentType) {
+async function loadBusinessPlans() {
+  console.log("[Business Plans] Loading business plans...");
+
   const documentList = document.querySelector(".document-list");
 
   if (!documentList) {
-    console.error("Document list container not found");
+    console.error("[Business Plans] Document list container not found");
     return;
   }
 
@@ -306,29 +317,20 @@ async function loadDocumentsFromStrapi(contentType) {
   documentList.innerHTML = `
    <div class="loading-state">
      <div class="loading-spinner"></div>
-     <p>Loading documents...</p>
+     <p>Loading business plans...</p>
    </div>
  `;
 
   try {
-    // Determine the correct endpoint based on content type
-    let endpoint;
-
-    // Strapi 5.x uses pluralized collection names
-    if (contentType === "business-plans") {
-      endpoint = "business-plans";
-    } else if (contentType === "marketing-plans") {
-      endpoint = "marketing-plans";
-    } else {
-      throw new Error("Invalid content type");
-    }
+    // Always use the business-plans endpoint - no detection needed
+    const endpoint = "business-plans";
 
     // Fetch data with populated relations
     const response = await fetchFromStrapi(endpoint, {
       populate: "*", // Populate all relations (document file, cover image)
     });
 
-    console.log("Full API response:", response); // Log the full response
+    console.log("[Business Plans] Full API response:", response); // Log the full response
 
     // Check if we have an error in the response
     if (response.error) {
@@ -342,9 +344,7 @@ async function loadDocumentsFromStrapi(contentType) {
       // Add retry button functionality
       const retryBtn = documentList.querySelector(".retry-btn");
       if (retryBtn) {
-        retryBtn.addEventListener("click", () =>
-          loadDocumentsFromStrapi(contentType)
-        );
+        retryBtn.addEventListener("click", () => loadBusinessPlans());
       }
 
       return;
@@ -352,7 +352,10 @@ async function loadDocumentsFromStrapi(contentType) {
 
     // Check if we have data in the expected format
     if (!response || !response.data) {
-      console.error("Unexpected API response format:", response);
+      console.error(
+        "[Business Plans] Unexpected API response format:",
+        response
+      );
       documentList.innerHTML = `
        <div class="error-state">
          <p>Unexpected API response format.</p>
@@ -366,7 +369,7 @@ async function loadDocumentsFromStrapi(contentType) {
     if (Array.isArray(response.data) && response.data.length === 0) {
       documentList.innerHTML = `
        <div class="no-documents">
-         <p>No documents found. Please add some documents in your Strapi admin panel.</p>
+         <p>No business plans found. Please add some documents in your Strapi admin panel.</p>
        </div>
      `;
       return;
@@ -377,7 +380,7 @@ async function loadDocumentsFromStrapi(contentType) {
       documentList.innerHTML = `
        <div class="error-state">
          <p>No access to content. This might be due to permission settings in Strapi.</p>
-         <p>Please check your Strapi permissions for public access to ${contentType}.</p>
+         <p>Please check your Strapi permissions for public access to business plans.</p>
        </div>
      `;
       return;
@@ -407,10 +410,10 @@ async function loadDocumentsFromStrapi(contentType) {
     // Attach event listeners to "See more" buttons
     attachSeeMoreEvents();
   } catch (error) {
-    console.error("Error loading documents:", error);
+    console.error("[Business Plans] Error loading documents:", error);
     documentList.innerHTML = `
      <div class="error-state">
-       <p>Error loading documents: ${error.message}</p>
+       <p>Error loading business plans: ${error.message}</p>
        <p>Please check the browser console for more details.</p>
        <button class="retry-btn">Retry</button>
      </div>
@@ -419,9 +422,7 @@ async function loadDocumentsFromStrapi(contentType) {
     // Add retry button functionality
     const retryBtn = documentList.querySelector(".retry-btn");
     if (retryBtn) {
-      retryBtn.addEventListener("click", () =>
-        loadDocumentsFromStrapi(contentType)
-      );
+      retryBtn.addEventListener("click", () => loadBusinessPlans());
     }
   }
 }
@@ -467,7 +468,10 @@ function attachSeeMoreEvents() {
  */
 function attachDocumentViewerEvents() {
   const documentItems = document.querySelectorAll(".document-item");
-  console.log("Attaching events to document items:", documentItems.length);
+  console.log(
+    "[Business Plans] Attaching events to document items:",
+    documentItems.length
+  );
 
   documentItems.forEach((item) => {
     const viewBtn = item.querySelector(".view-document-btn");
@@ -479,7 +483,7 @@ function attachDocumentViewerEvents() {
         }
 
         const fileUrl = item.getAttribute("data-file");
-        console.log("Clicked view document, URL:", fileUrl);
+        console.log("[Business Plans] Clicked view document, URL:", fileUrl);
 
         if (!fileUrl) {
           alert("No document file available for this item.");
@@ -487,7 +491,7 @@ function attachDocumentViewerEvents() {
         }
 
         const title = item.querySelector("h2").textContent;
-        console.log("Opening document with title:", title);
+        console.log("[Business Plans] Opening document with title:", title);
 
         // Use the PDF utils if available, otherwise use regular openDocument
         if (
@@ -495,16 +499,22 @@ function attachDocumentViewerEvents() {
           typeof window.pdfUtils.openDocumentWithTransform === "function"
         ) {
           // Use the utility function from cloudinary-pdf-solution.js
-          console.log("Using pdfUtils.openDocumentWithTransform");
+          console.log(
+            "[Business Plans] Using pdfUtils.openDocumentWithTransform"
+          );
           window.pdfUtils.openDocumentWithTransform(fileUrl, title);
         } else {
-          console.log("pdfUtils not available, using fallback");
+          console.log(
+            "[Business Plans] pdfUtils not available, using fallback"
+          );
           // Fallback to regular openDocument
           if (typeof window.openDocument === "function") {
             window.openDocument(fileUrl, title);
           } else {
             // If openDocument is not available, offer direct download
-            console.log("openDocument not available, opening in new tab");
+            console.log(
+              "[Business Plans] openDocument not available, opening in new tab"
+            );
             window.open(fileUrl, "_blank");
           }
         }
@@ -513,33 +523,9 @@ function attachDocumentViewerEvents() {
   });
 }
 
-/**
- * Initializes the page based on the current URL
- */
-function initPage() {
-  const path = window.location.pathname;
-  console.log("Current path:", path);
-
-  if (path.includes("business-plan.html")) {
-    // Only fetch business plans for the business plan page
-    loadDocumentsFromStrapi("business-plans");
-  } else if (path.includes("marketing-plan.html")) {
-    // Only fetch marketing plans for the marketing plan page
-    loadDocumentsFromStrapi("marketing-plans");
-  } else {
-    console.log(
-      "Path doesn't match any known content type, trying business-plans as default"
-    );
-    loadDocumentsFromStrapi("business-plans");
-  }
-}
-
-// Make initPage available globally
-window.initPage = initPage;
-
 // Initialize when the DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("Strapi integration initialized");
+  console.log("[Business Plans] Business plan integration initialized");
 
   // Add custom styles for document items
   const styleElement = document.createElement("style");
@@ -638,5 +624,6 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.head.appendChild(styleElement);
 
-  initPage();
+  // Load business plans
+  loadBusinessPlans();
 });

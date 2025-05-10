@@ -131,14 +131,22 @@
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="document-viewer.css" />
     <link rel="stylesheet" href="portfolio-nav.css" />
+
+    <!-- Load PDF.js library first -->
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"
       defer
     ></script>
+    <!-- Then set worker path after the library is loaded -->
     <script>
-      // Set worker path for PDF.js
-      pdfjsLib.GlobalWorkerOptions.workerSrc =
-        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
+      document.addEventListener("DOMContentLoaded", function () {
+        if (typeof pdfjsLib !== "undefined") {
+          pdfjsLib.GlobalWorkerOptions.workerSrc =
+            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
+        } else {
+          console.error("PDF.js library not loaded correctly");
+        }
+      });
     </script>
 
     <!-- Open Graph tags for social sharing -->
@@ -308,7 +316,7 @@
     <script src="cloudinary-pdf-solution.js"></script>
     <script src="document-viewer.js"></script>
     <script src="portfolio-nav.js"></script>
-    <script src="strapi-integration.js"></script>
+    <script src="marketing-plan-integration.js"></script>
     <script src="indexnow-auto-submit.js"></script>
 
     <!-- Script to automatically update year in footer -->
