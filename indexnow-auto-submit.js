@@ -1,5 +1,6 @@
 /**
  * Improved IndexNow Auto-Submission Script for www.shainwaiyan.com
+ * - Only runs on shainwaiyan.com domain, not on localhost or other domains
  * - Smarter content change detection for dynamic pages
  * - Cooldown period to prevent excessive submissions
  * - Ignores non-meaningful changes
@@ -13,6 +14,29 @@
   const STORAGE_KEY_PAGE_HASHES = "indexnow_page_hashes";
   const STORAGE_KEY_COOLDOWNS = "indexnow_cooldowns";
   const COOLDOWN_HOURS = 24; // Minimum hours between submissions for the same URL
+  const ALLOWED_DOMAINS = ["shainwaiyan.com", "www.shainwaiyan.com"]; // Only run on these domains
+
+  // Check if we're on an allowed domain before proceeding
+  function isAllowedDomain() {
+    const currentHostname = window.location.hostname;
+
+    // Check if the current hostname is in our allowed domains list
+    return ALLOWED_DOMAINS.some(
+      (domain) =>
+        currentHostname === domain || currentHostname.endsWith("." + domain)
+    );
+  }
+
+  // Exit early if not on allowed domain
+  if (!isAllowedDomain()) {
+    console.log("IndexNow script not running: Not on shainwaiyan.com domain");
+    return; // Exit the IIFE early
+  }
+
+  console.log(
+    "IndexNow script running on allowed domain:",
+    window.location.hostname
+  );
 
   // Pages that should be checked less frequently or with special rules
   const DYNAMIC_PAGES = [

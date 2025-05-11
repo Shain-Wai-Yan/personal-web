@@ -44,43 +44,141 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Update active state in portfolio categories based on current page
-  const currentPath = window.location.pathname;
-  const filename = currentPath.substring(currentPath.lastIndexOf("/") + 1);
+  // IMPROVED: Detect current page with Cloudflare compatibility
+  function getCurrentPageIdentifier() {
+    const path = window.location.pathname;
+    console.log("Original path:", path);
 
-  // Fix for portfolio navigation categories
+    // Define all portfolio page identifiers (both with and without extensions)
+    const portfolioPages = {
+      "business-plan": [
+        "business-plan",
+        "business-plan.html",
+        "business-plan/",
+      ],
+      "marketing-plan": [
+        "marketing-plan",
+        "marketing-plan.html",
+        "marketing-plan/",
+      ],
+      "coding-project": [
+        "coding-project",
+        "coding-project.html",
+        "coding-project/",
+      ],
+      photography: ["photography", "photography.html", "photography/"],
+      "amv-editing": ["amv-editing", "amv-editing.html", "amv-editing/"],
+    };
+
+    // Extract the last part of the path
+    let pathSegment = "";
+
+    if (path === "/" || path === "/index.html" || path === "/index") {
+      return "index";
+    }
+
+    // Remove trailing slash if present
+    const normalizedPath = path.endsWith("/") ? path.slice(0, -1) : path;
+
+    // Get the last segment of the path
+    const segments = normalizedPath.split("/").filter(Boolean);
+    pathSegment = segments.length > 0 ? segments[segments.length - 1] : "";
+
+    console.log("Path segment extracted:", pathSegment);
+
+    // If the segment has an extension, remove it
+    if (pathSegment.includes(".")) {
+      pathSegment = pathSegment.substring(0, pathSegment.lastIndexOf("."));
+    }
+
+    // Check if this segment matches any of our portfolio pages
+    for (const [pageId, variations] of Object.entries(portfolioPages)) {
+      if (
+        variations.some((v) => {
+          const variation = v.endsWith("/") ? v.slice(0, -1) : v;
+          return (
+            variation.includes(pathSegment) ||
+            pathSegment.includes(variation.replace(".html", ""))
+          );
+        })
+      ) {
+        console.log("Matched portfolio page:", pageId);
+        return pageId;
+      }
+    }
+
+    // If we're here, we didn't match any specific portfolio page
+    console.log("No specific portfolio page matched, returning:", pathSegment);
+    return pathSegment;
+  }
+
+  const currentPageId = getCurrentPageIdentifier();
+  console.log("Current page identifier:", currentPageId);
+
+  // Update active state in portfolio categories
   const portfolioCategories = document.querySelectorAll(".portfolio-category");
   portfolioCategories.forEach((category) => {
     const categoryHref = category.getAttribute("href");
-    const categoryFilename = categoryHref.substring(
-      categoryHref.lastIndexOf("/") + 1
+    const categoryId = categoryHref
+      .substring(categoryHref.lastIndexOf("/") + 1)
+      .replace(".html", "");
+
+    console.log(
+      "Checking category:",
+      categoryId,
+      "against current:",
+      currentPageId
     );
 
-    if (categoryFilename === filename) {
+    if (categoryId === currentPageId) {
       category.classList.add("active");
+      console.log("Set active for category:", categoryId);
     } else {
       category.classList.remove("active");
     }
   });
 
-  // Fix for dropdown navigation items
+  // Update active state in dropdown navigation items
   const dropdownItems = document.querySelectorAll(".nav-dropdown-content a");
   dropdownItems.forEach((item) => {
     const itemHref = item.getAttribute("href");
-    const itemFilename = itemHref.substring(itemHref.lastIndexOf("/") + 1);
+    const itemId = itemHref
+      .substring(itemHref.lastIndexOf("/") + 1)
+      .replace(".html", "");
 
-    if (itemFilename === filename) {
+    console.log(
+      "Checking dropdown item:",
+      itemId,
+      "against current:",
+      currentPageId
+    );
+
+    if (itemId === currentPageId) {
       item.classList.add("active");
+      console.log("Set active for dropdown item:", itemId);
+
       // Also set the parent dropdown link as active
       const parentDropdown = item.closest(".nav-dropdown");
       if (parentDropdown) {
         const parentLink = parentDropdown.querySelector("a");
         if (parentLink) {
           parentLink.classList.add("active");
+          console.log("Set active for parent dropdown");
         }
       }
     } else {
       item.classList.remove("active");
     }
   });
+
+  // Special case for portfolio main page
+  if (currentPageId === "portfolio") {
+    const portfolioNavLink = document.querySelector(
+      '.nav a[href="portfolio.html"]'
+    );
+    if (portfolioNavLink) {
+      portfolioNavLink.classList.add("active");
+      console.log("Set active for main portfolio link");
+    }
+  }
 });
