@@ -1,6 +1,6 @@
 /**
  * Photography Fetch from Strapi
- * Optimized for performance, image quality, and mobile responsiveness
+ * Enhanced for scalability with 100+ photos
  */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentIndex = 0;
   let galleryItems = [];
   let page = 1;
-  const pageSize = 12;
+  const pageSize = 25; // Increased page size for initial load
   const activeItem = null;
   let relatedPhotosActive = false;
   let isLoading = false;
@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let hasMorePhotos = true;
   let imageObserver = null; // Store the observer reference
   const photoIdMap = new Map(); // Map to track photo IDs and prevent duplicates
+  let totalPhotos = 0; // Track total number of photos available
 
   // API Configuration
   const API_URL = "https://backend-cms-89la.onrender.com/api";
@@ -62,14 +63,21 @@ document.addEventListener("DOMContentLoaded", () => {
     xlarge: 2000,
   };
 
-  // Cache control - set TTL in milliseconds (1 hour)
-  const CACHE_TTL = 60 * 60 * 1000;
-  const CACHE_VERSION = 2; // Increment when data structure changes
-  const CACHE_KEY_PHOTOS = `v${CACHE_VERSION}_strapi_photos_cache`;
-  const CACHE_KEY_CATEGORIES = `v${CACHE_VERSION}_strapi_categories_cache`;
-  const CACHE_KEY_TAGS = `v${CACHE_VERSION}_strapi_tags_cache`;
-  const CACHE_KEY_TIMESTAMP = `v${CACHE_VERSION}_strapi_cache_timestamp`;
-  const CACHE_KEY_PROCESSED = `v${CACHE_VERSION}_strapi_processed_photos`; // Cache key for processed photos
+  // Cache control - set TTL in milliseconds (15 minutes for development, 1 hour for production)
+  const CACHE_TTL =
+    window.location.hostname === "localhost" ||
+    window.location.hostname.includes("127.0.0.1")
+      ? 15 * 60 * 1000
+      : 60 * 60 * 1000;
+
+  // Add a version number to cache keys to force refresh when code changes
+  const CACHE_VERSION = "v2.1"; // Increment when making significant changes
+  const CACHE_KEY_PHOTOS = `${CACHE_VERSION}_strapi_photos_cache`;
+  const CACHE_KEY_CATEGORIES = `${CACHE_VERSION}_strapi_categories_cache`;
+  const CACHE_KEY_TAGS = `${CACHE_VERSION}_strapi_tags_cache`;
+  const CACHE_KEY_TIMESTAMP = `${CACHE_VERSION}_strapi_cache_timestamp`;
+  const CACHE_KEY_PROCESSED = `${CACHE_VERSION}_strapi_processed_photos`; // Cache key for processed photos
+  const CACHE_KEY_TOTAL = `${CACHE_VERSION}_strapi_total_photos`; // Cache key for total photo count
 
   // Debug Strapi response structure
   function debugStrapiResponse(response) {
@@ -110,13 +118,21 @@ document.addEventListener("DOMContentLoaded", () => {
     return Math.ceil(height / ROW_HEIGHT);
   }
 
-  // Cache management
+  // Cache management with improved error handling and cache busting
   function saveToCache(key, data) {
     try {
       localStorage.setItem(key, JSON.stringify(data));
       localStorage.setItem(CACHE_KEY_TIMESTAMP, Date.now().toString());
+      return true;
     } catch (error) {
       console.warn("Cache storage failed:", error);
+      // Try to clear old cache items if storage failed
+      try {
+        clearOldCacheItems();
+      } catch (e) {
+        console.error("Failed to clear old cache items:", e);
+      }
+      return false;
     }
   }
 
@@ -142,10 +158,39 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.removeItem(CACHE_KEY_CATEGORIES);
       localStorage.removeItem(CACHE_KEY_TAGS);
       localStorage.removeItem(CACHE_KEY_TIMESTAMP);
-      localStorage.removeItem(CACHE_KEY_PROCESSED); // Clear processed photos cache
+      localStorage.removeItem(CACHE_KEY_PROCESSED);
+      localStorage.removeItem(CACHE_KEY_TOTAL);
+      console.log("Cache cleared successfully");
+      return true;
     } catch (error) {
       console.warn("Cache clearing failed:", error);
+      return false;
     }
+  }
+
+  // Clear old cache items to free up space
+  function clearOldCacheItems() {
+    try {
+      // Get all keys in localStorage
+      const keys = Object.keys(localStorage);
+
+      // Find and remove old cache versions
+      keys.forEach((key) => {
+        // Check if it's one of our cache keys but not the current version
+        if (key.includes("strapi_") && !key.includes(CACHE_VERSION)) {
+          localStorage.removeItem(key);
+          console.log(`Removed old cache item: ${key}`);
+        }
+      });
+    } catch (error) {
+      console.warn("Error clearing old cache items:", error);
+    }
+  }
+
+  // Add a function to bust cache for Safari
+  function bustCache() {
+    // Add a timestamp to URLs to prevent caching
+    return `&_cache=${Date.now()}`;
   }
 
   // Image optimization function that properly handles Cloudinary URLs
@@ -315,7 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // API Functions with improved error handling and deduplication
   const pendingRequests = new Map();
 
-  async function fetchPhotos(page = 1, pageSize = 12) {
+  async function fetchPhotos(page = 1, pageSize = 25) {
     try {
       // Create a cache key based on request parameters
       const cacheKey = `${page}-${pageSize}`;
@@ -343,7 +388,10 @@ document.addEventListener("DOMContentLoaded", () => {
         return {
           processedPhotos: cachedProcessedPhotos,
           meta: {
-            pagination: { total: cachedProcessedPhotos.length, pageCount: 1 },
+            pagination: {
+              total: cachedProcessedPhotos.length,
+              pageCount: Math.ceil(cachedProcessedPhotos.length / pageSize),
+            },
           },
         };
       }
@@ -355,8 +403,11 @@ document.addEventListener("DOMContentLoaded", () => {
         return cachedPhotos;
       }
 
+      // Add cache busting parameter for Safari
+      const cacheBuster = bustCache();
+
       // Updated for Strapi v5.12 - simplified populate syntax (no sorting for random display)
-      const url = `${API_URL}/photographies?pagination[page]=${page}&pagination[pageSize]=${pageSize}&populate=*`;
+      const url = `${API_URL}/photographies?pagination[page]=${page}&pagination[pageSize]=${pageSize}&populate=*${cacheBuster}`;
 
       console.log(`Fetching photos from: ${url} (${new Date().toISOString()})`);
 
@@ -380,6 +431,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
           // Save to cache
           saveToCache(CACHE_KEY_PHOTOS, data);
+
+          // Save total photos count
+          if (data.meta && data.meta.pagination && data.meta.pagination.total) {
+            totalPhotos = data.meta.pagination.total;
+            saveToCache(CACHE_KEY_TOTAL, totalPhotos);
+          }
 
           return data;
         })
@@ -414,12 +471,43 @@ document.addEventListener("DOMContentLoaded", () => {
           .querySelector(".retry-button")
           .addEventListener("click", () => {
             errorMessage.remove();
+            // Clear cache on retry to ensure fresh data
+            clearCache();
             loadPhotos();
           });
       }
 
       // Return empty data structure
       return { data: [], meta: { pagination: { total: 0, pageCount: 0 } } };
+    }
+  }
+
+  // Fetch more photos for pagination
+  async function fetchMorePhotos(page, pageSize) {
+    try {
+      // Add cache busting parameter for Safari
+      const cacheBuster = bustCache();
+
+      const url = `${API_URL}/photographies?pagination[page]=${page}&pagination[pageSize]=${pageSize}&populate=*${cacheBuster}`;
+      console.log(`Fetching more photos from: ${url}`);
+
+      const response = await fetch(url, {
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Additional photos response:", data);
+
+      return data;
+    } catch (error) {
+      console.error("Error fetching more photos:", error);
+      throw error;
     }
   }
 
@@ -432,8 +520,18 @@ document.addEventListener("DOMContentLoaded", () => {
         return cachedCategories;
       }
 
+      // Add cache busting parameter for Safari
+      const cacheBuster = bustCache();
+
       // Updated for Strapi v5.12
-      const response = await fetch(`${API_URL}/categories?populate=*`);
+      const response = await fetch(
+        `${API_URL}/categories?populate=*${cacheBuster}`,
+        {
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`API error: ${response.status}`);
@@ -461,8 +559,15 @@ document.addEventListener("DOMContentLoaded", () => {
         return cachedTags;
       }
 
+      // Add cache busting parameter for Safari
+      const cacheBuster = bustCache();
+
       // Updated for Strapi v5.12
-      const response = await fetch(`${API_URL}/tags?populate=*`);
+      const response = await fetch(`${API_URL}/tags?populate=*${cacheBuster}`, {
+        headers: {
+          Accept: "application/json",
+        },
+      });
 
       if (!response.ok) {
         throw new Error(`API error: ${response.status}`);
@@ -1274,6 +1379,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const pagination = response.meta?.pagination;
       hasMorePhotos = pagination && page < pagination.pageCount;
 
+      // Update total photos count
+      if (pagination && pagination.total) {
+        totalPhotos = pagination.total;
+      }
+
       // Check if we already have processed photos from cache
       let newPhotos;
       if (response.processedPhotos) {
@@ -1349,6 +1459,9 @@ document.addEventListener("DOMContentLoaded", () => {
         scrollTrigger.style.display = hasMorePhotos ? "block" : "none";
         scrollTrigger.classList.remove("loading");
       }
+
+      // Display total photos count
+      updatePhotoCounter();
     } catch (error) {
       console.error("Error loading photos:", error);
 
@@ -1380,6 +1493,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Add function to display total photos count
+  function updatePhotoCounter() {
+    // Find or create the counter element
+    let counterElement = document.querySelector(".photo-counter");
+    if (!counterElement) {
+      counterElement = document.createElement("div");
+      counterElement.className = "photo-counter";
+
+      // Insert after the filter controls
+      const filterControls = document.querySelector(".filter-controls");
+      if (filterControls) {
+        filterControls.parentNode.insertBefore(
+          counterElement,
+          filterControls.nextSibling
+        );
+      } else {
+        // Fallback - insert before the masonry grid
+        masonryGrid.parentNode.insertBefore(counterElement, masonryGrid);
+      }
+    }
+
+    // Update the counter text
+    const displayedCount = galleryItems.length;
+    counterElement.textContent = `Showing ${displayedCount} of ${totalPhotos} photos`;
+  }
+
   // Add function to recalculate grid layout
   function recalculateGrid() {
     const items = document.querySelectorAll(".masonry-item");
@@ -1396,10 +1535,111 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function loadMorePhotos() {
-    if (!isLoading && hasMorePhotos) {
+  // Enhanced loadMorePhotos function with proper pagination
+  async function loadMorePhotos() {
+    if (isLoading || !hasMorePhotos) return;
+
+    isLoading = true;
+
+    try {
+      // Show loading state in the scroll trigger
+      const scrollTrigger = document.querySelector(".scroll-trigger");
+      if (scrollTrigger) {
+        scrollTrigger.classList.add("loading");
+      }
+
+      // Increment page number
       page++;
-      loadPhotos();
+
+      // Fetch the next page of photos
+      const response = await fetchMorePhotos(page, pageSize);
+
+      // Check if we have more photos to load
+      const pagination = response.meta?.pagination;
+      hasMorePhotos = pagination && page < pagination.pageCount;
+
+      // Transform the new photos
+      const newPhotos = transformPhotoData(response.data);
+
+      // Shuffle the new photos
+      const shuffledNewPhotos = shuffleArray(newPhotos);
+
+      // Add to our collection - Use a Set to ensure uniqueness by ID
+      const uniquePhotoIds = new Set(allPhotos.map((photo) => photo.id));
+      const uniqueNewPhotos = shuffledNewPhotos.filter(
+        (photo) => !uniquePhotoIds.has(photo.id)
+      );
+
+      allPhotos = [...allPhotos, ...uniqueNewPhotos];
+
+      // If we're not filtering, add the new photos to the filtered set
+      if (
+        document.querySelector(".filter-button.active")?.dataset.filter ===
+        "all"
+      ) {
+        filteredPhotos = allPhotos;
+
+        // Create and append masonry items for the new photos
+        uniqueNewPhotos.forEach((photo) => {
+          const item = createMasonryItem(photo);
+          if (item) {
+            masonryGrid.appendChild(item);
+          }
+        });
+
+        // Update gallery items array
+        updateGalleryItems();
+
+        // Setup lazy loading for new items
+        setupLazyLoading();
+
+        // Recalculate grid layout after images load
+        setTimeout(() => {
+          recalculateGrid();
+
+          // Remove the 'new' class after animation completes
+          document.querySelectorAll(".masonry-item.new").forEach((item) => {
+            item.classList.remove("new");
+          });
+        }, 500);
+      }
+
+      // Update load more button visibility
+      if (loadMoreBtn) {
+        loadMoreBtn.style.display = hasMorePhotos ? "block" : "none";
+      }
+
+      // Update infinite scroll trigger visibility
+      if (scrollTrigger) {
+        scrollTrigger.style.display = hasMorePhotos ? "block" : "none";
+        scrollTrigger.classList.remove("loading");
+      }
+
+      // Update photo counter
+      updatePhotoCounter();
+    } catch (error) {
+      console.error("Error loading more photos:", error);
+
+      // Show error message
+      const scrollTrigger = document.querySelector(".scroll-trigger");
+      if (scrollTrigger) {
+        scrollTrigger.innerHTML = `
+          <div class="error-message">
+            <p>Error loading more photos. <button class="retry-button">Retry</button></p>
+          </div>
+        `;
+
+        // Add retry button functionality
+        scrollTrigger
+          .querySelector(".retry-button")
+          .addEventListener("click", () => {
+            scrollTrigger.innerHTML =
+              '<div class="scroll-trigger-spinner"></div>';
+            loadMorePhotos();
+          });
+      }
+    } finally {
+      isLoading = false;
     }
   }
 
@@ -1581,6 +1821,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Setup lazy loading for new items
     setupLazyLoading();
 
+    // Update photo counter
+    updatePhotoCounter();
+
     // Recalculate grid after filter
     setTimeout(recalculateGrid, 500);
   }
@@ -1637,6 +1880,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Update gallery items array
     updateGalleryItems();
+
+    // Update photo counter
+    updatePhotoCounter();
 
     // Setup lazy loading for new items
     setupLazyLoading();
@@ -1834,63 +2080,16 @@ document.addEventListener("DOMContentLoaded", () => {
         // Add rotating animation class
         this.classList.add("refreshing");
 
-        // Don't add duplicates, just shuffle the existing photos
-        if (allPhotos && allPhotos.length > 0) {
-          // Clear the ID map before shuffling
-          photoIdMap.clear();
+        // Clear cache to force a fresh fetch
+        clearCache();
 
-          // Get the current active filter
-          const activeFilter = document.querySelector(".filter-button.active");
-          const category = activeFilter ? activeFilter.dataset.filter : "all";
+        // Reset pagination
+        page = 1;
 
-          // Shuffle the existing photos without adding duplicates
-          allPhotos = shuffleArray([...allPhotos]);
-
-          // Update filtered photos based on current filter
-          if (category === "all") {
-            filteredPhotos = [...allPhotos];
-          } else {
-            filteredPhotos = allPhotos.filter(
-              (photo) =>
-                photo.category === category || photo.tags.includes(category)
-            );
-          }
-
-          // Clear the grid
-          masonryGrid.innerHTML = "";
-
-          // Use a Set to track IDs we've already added to the grid
-          const addedIds = new Set();
-
-          // Re-render the photos
-          filteredPhotos.forEach((photo) => {
-            // Skip if we've already added this photo ID
-            if (addedIds.has(photo.id)) return;
-
-            // Add this ID to our tracking set
-            addedIds.add(photo.id);
-
-            const item = createMasonryItem(photo);
-            if (item) {
-              // Only append if item was created (not a duplicate)
-              masonryGrid.appendChild(item);
-            }
-          });
-
-          // Update gallery items and setup lazy loading
-          updateGalleryItems();
-          setupLazyLoading();
-
-          // Recalculate grid layout
-          setTimeout(recalculateGrid, 300);
-        } else {
-          // If no photos are loaded yet, clear cache and reload
-          clearCache();
-          page = 1;
-          allPhotos = [];
-          filteredPhotos = [];
-          loadPhotos();
-        }
+        // Reload photos
+        allPhotos = [];
+        filteredPhotos = [];
+        loadPhotos();
 
         // Remove animation class after rotation completes
         setTimeout(() => {
@@ -1966,6 +2165,13 @@ document.addEventListener("DOMContentLoaded", () => {
         color: #856404;
         background-color: #fff3cd;
         border: 1px solid #ffeeba;
+      }
+      
+      .photo-counter {
+        text-align: center;
+        margin: 0.5rem 0;
+        font-size: 0.9rem;
+        color: #666;
       }
       
       @keyframes spin {
