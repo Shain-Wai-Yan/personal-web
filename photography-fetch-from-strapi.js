@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let totalPhotos = 0; // Track total number of photos available
 
   // API Configuration
-  const API_URL = "https://backend-cms-89la.onrender.com/api";
+  const API_URL = "https://api.shainwaiyan.com/api";
 
   // Responsive image sizes for different devices
   const IMAGE_SIZES = {

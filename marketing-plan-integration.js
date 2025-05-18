@@ -11,7 +11,7 @@ window.MarketingPlanIntegration = (function () {
 
   // Configuration - use window to avoid redeclaration errors if loaded multiple times
   if (typeof window.STRAPI_API_URL === "undefined") {
-    window.STRAPI_API_URL = "https://backend-cms-89la.onrender.com/api/";
+    window.STRAPI_API_URL = "https://api.shainwaiyan.com/api/";
   }
 
   // Add your Strapi API token here if your API requires authentication
