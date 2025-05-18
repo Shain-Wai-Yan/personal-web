@@ -2,7 +2,7 @@
 const GITHUB_USERNAME = "Shain-Wai-Yan"; // Already set to your username
 
 // Your custom server endpoint
-const SERVER_URL = "https://github-api-server.onrender.com";
+const SERVER_URL = "https://github-api-server-5d05.onrender.com";
 
 // GitHub API endpoints through your proxy server
 const PROFILE_URL = `${SERVER_URL}/api/github/users/${GITHUB_USERNAME}`;
