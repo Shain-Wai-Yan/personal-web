@@ -299,7 +299,11 @@
 
     <!-- Scripts -->
     <script src="script.js" defer></script>
-    <script src="certificate.js" defer></script>
+    <script>
+      // Set the API URL globally so all scripts can use it
+      window.strapi_api = "https://api.shainwaiyan.com";
+    </script>
+    <script src="certificate.js"></script>
     <script src="certificate-swipe-hint.js" defer></script>
     <script src="indexnow-auto-submit.js"></script>
 

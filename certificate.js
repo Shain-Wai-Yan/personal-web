@@ -2,11 +2,14 @@
  * Certificate-specific JavaScript functionality
  * Handles certificate display, API fetching, and carousel functionality
  * @author Original code by Shain, enhanced by v0
- * @version 2.0
+ * @version 3.0
  */
 
 // Declare allCertificates variable
 let allCertificates = [];
+
+// Use configurable API URL instead of hardcoded URL
+const API_BASE_URL = window.strapi_api || "https://api.shainwaiyan.com";
 
 // Declare generatePlaceholderImage function
 function generatePlaceholderImage(width, height, text) {
@@ -445,7 +448,7 @@ function preloadCertificateImages() {
             if (imageData.url) {
               imageUrl = imageData.url.startsWith("http")
                 ? imageData.url
-                : `https://backend-cms-89la.onrender.com${imageData.url}`;
+                : `${API_BASE_URL}${imageData.url}`;
             } else if (imageData.formats) {
               const formats = ["medium", "small", "thumbnail"];
               for (const format of formats) {
@@ -456,7 +459,7 @@ function preloadCertificateImages() {
                   const formatUrl = imageData.formats[format].url;
                   imageUrl = formatUrl.startsWith("http")
                     ? formatUrl
-                    : `https://backend-cms-89la.onrender.com${formatUrl}`;
+                    : `${API_BASE_URL}${formatUrl}`;
                   break;
                 }
               }
@@ -464,7 +467,7 @@ function preloadCertificateImages() {
           } else if (imageField.url) {
             imageUrl = imageField.url.startsWith("http")
               ? imageField.url
-              : `https://backend-cms-89la.onrender.com${imageField.url}`;
+              : `${API_BASE_URL}${imageField.url}`;
           }
 
           // If we found an image URL, preload it
@@ -480,10 +483,9 @@ function preloadCertificateImages() {
   }
 }
 
-// Update fetchCertificates to cache data for faster subsequent loads
+// Update fetchCertificates to use configurable API URL
 function fetchCertificates() {
-  const API_URL =
-    "https://backend-cms-89la.onrender.com/api/certificates?populate=*";
+  const API_URL = `${API_BASE_URL}/api/certificates?populate=*`;
   const container = document.getElementById("certificates-container");
 
   if (!container) return;
@@ -498,6 +500,7 @@ function fetchCertificates() {
 
   try {
     console.log("Attempting to fetch certificates from API...");
+    console.log(`Using API URL: ${API_URL}`);
 
     // Check if we have cached data that's less than 1 hour old
     const cachedData = localStorage.getItem("certificateData");
@@ -728,7 +731,7 @@ function renderCertificates(certificates, container) {
         if (imageData.url) {
           imageUrl = imageData.url.startsWith("http")
             ? imageData.url
-            : `https://backend-cms-89la.onrender.com${imageData.url}`;
+            : `${API_BASE_URL}${imageData.url}`;
         } else if (imageData.formats) {
           const formats = ["large", "medium", "small", "thumbnail"];
           for (const format of formats) {
@@ -736,7 +739,7 @@ function renderCertificates(certificates, container) {
               const formatUrl = imageData.formats[format].url;
               imageUrl = formatUrl.startsWith("http")
                 ? formatUrl
-                : `https://backend-cms-89la.onrender.com${formatUrl}`;
+                : `${API_BASE_URL}${formatUrl}`;
               break;
             }
           }
@@ -746,7 +749,7 @@ function renderCertificates(certificates, container) {
       else if (imageField.url) {
         imageUrl = imageField.url.startsWith("http")
           ? imageField.url
-          : `https://backend-cms-89la.onrender.com${imageField.url}`;
+          : `${API_BASE_URL}${imageField.url}`;
       }
       // Formats directly on the image field
       else if (imageField.formats) {
@@ -756,7 +759,7 @@ function renderCertificates(certificates, container) {
             const formatUrl = imageField.formats[format].url;
             imageUrl = formatUrl.startsWith("http")
               ? formatUrl
-              : `https://backend-cms-89la.onrender.com${formatUrl}`;
+              : `${API_BASE_URL}${formatUrl}`;
             break;
           }
         }
