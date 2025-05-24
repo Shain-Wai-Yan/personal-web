@@ -5,7 +5,7 @@
  */
 
 // Create a namespace for business plan functions to avoid global conflicts
-window.BusinessPlanIntegration = (function () {
+window.BusinessPlanIntegration = (() => {
   // Private variables and functions
   const MODULE_NAME = "Business Plans";
 
@@ -37,7 +37,7 @@ window.BusinessPlanIntegration = (function () {
     console.log(`[${MODULE_NAME}] Not on business plan page - exiting`);
     return {
       // Return empty public API if not on business plan page
-      init: function () {
+      init: () => {
         console.log(`[${MODULE_NAME}] Not initializing - wrong page`);
       },
     };
@@ -186,7 +186,7 @@ window.BusinessPlanIntegration = (function () {
         slug,
       });
 
-      // Get document file URL with fallback
+      // Get document file URL with fallback - FIXED for Strapi v5 flat structure
       let documentUrl = "";
       let fileType = ""; // Default empty
 
@@ -194,30 +194,57 @@ window.BusinessPlanIntegration = (function () {
       if (item.DocumentFile) {
         console.log(`[${MODULE_NAME}] DocumentFile found:`, item.DocumentFile);
 
-        // Try to extract URL based on different possible structures
-        if (typeof item.DocumentFile === "string") {
-          // If DocumentFile is directly a string URL
-          documentUrl = item.DocumentFile;
-        } else if (
+        // Handle Strapi v5 flat structure (direct object with url)
+        if (item.DocumentFile.url) {
+          documentUrl = item.DocumentFile.url;
+          console.log(
+            `[${MODULE_NAME}] Found direct URL in DocumentFile:`,
+            documentUrl
+          );
+        }
+        // Handle Strapi v4 nested structure (data.attributes.url)
+        else if (
+          item.DocumentFile.data &&
+          item.DocumentFile.data.attributes &&
+          item.DocumentFile.data.attributes.url
+        ) {
+          documentUrl = item.DocumentFile.data.attributes.url;
+          console.log(
+            `[${MODULE_NAME}] Found nested URL in DocumentFile:`,
+            documentUrl
+          );
+        }
+        // Handle array format
+        else if (
           Array.isArray(item.DocumentFile) &&
           item.DocumentFile.length > 0
         ) {
-          // If DocumentFile is an array of objects
           const documentFile = item.DocumentFile[0];
           if (documentFile && documentFile.url) {
             documentUrl = documentFile.url;
+          } else if (
+            documentFile &&
+            documentFile.data &&
+            documentFile.data.attributes &&
+            documentFile.data.attributes.url
+          ) {
+            documentUrl = documentFile.data.attributes.url;
           }
-        } else if (
-          typeof item.DocumentFile === "object" &&
-          item.DocumentFile !== null
-        ) {
-          // If DocumentFile is an object with a url property
-          if (item.DocumentFile.url) {
-            documentUrl = item.DocumentFile.url;
-          }
+        }
+        // Handle direct string URL
+        else if (typeof item.DocumentFile === "string") {
+          documentUrl = item.DocumentFile;
         }
 
         console.log(`[${MODULE_NAME}] Extracted document URL:`, documentUrl);
+
+        // Ensure URL is absolute
+        if (documentUrl && !documentUrl.startsWith("http")) {
+          documentUrl = `${window.STRAPI_API_URL.replace(
+            "/api/",
+            ""
+          )}${documentUrl}`;
+        }
 
         // Determine file type from URL or mime type
         if (documentUrl) {
@@ -233,31 +260,59 @@ window.BusinessPlanIntegration = (function () {
 
       let coverImageUrl = placeholderDataURI; // Default placeholder
 
-      // Handle CoverImage extraction
+      // Handle CoverImage extraction - FIXED for Strapi v5 flat structure
       if (item.CoverImage) {
         console.log(`[${MODULE_NAME}] CoverImage found:`, item.CoverImage);
 
-        // Try to extract URL based on different possible structures
-        if (typeof item.CoverImage === "string") {
-          // If CoverImage is directly a string URL
-          coverImageUrl = item.CoverImage;
-        } else if (
-          Array.isArray(item.CoverImage) &&
-          item.CoverImage.length > 0
+        // Handle Strapi v5 flat structure (direct object with url)
+        if (item.CoverImage.url) {
+          coverImageUrl = item.CoverImage.url;
+          console.log(
+            `[${MODULE_NAME}] Found direct URL in CoverImage:`,
+            coverImageUrl
+          );
+        }
+        // Handle Strapi v4 nested structure (data.attributes.url)
+        else if (
+          item.CoverImage.data &&
+          item.CoverImage.data.attributes &&
+          item.CoverImage.data.attributes.url
         ) {
-          // If CoverImage is an array of objects
+          coverImageUrl = item.CoverImage.data.attributes.url;
+          console.log(
+            `[${MODULE_NAME}] Found nested URL in CoverImage:`,
+            coverImageUrl
+          );
+        }
+        // Handle array format
+        else if (Array.isArray(item.CoverImage) && item.CoverImage.length > 0) {
           const coverImage = item.CoverImage[0];
           if (coverImage && coverImage.url) {
             coverImageUrl = coverImage.url;
+          } else if (
+            coverImage &&
+            coverImage.data &&
+            coverImage.data.attributes &&
+            coverImage.data.attributes.url
+          ) {
+            coverImageUrl = coverImage.data.attributes.url;
           }
-        } else if (
-          typeof item.CoverImage === "object" &&
-          item.CoverImage !== null
+        }
+        // Handle direct string URL
+        else if (typeof item.CoverImage === "string") {
+          coverImageUrl = item.CoverImage;
+        }
+
+        // Ensure URL is absolute
+        if (
+          coverImageUrl &&
+          !coverImageUrl.startsWith("http") &&
+          !coverImageUrl.startsWith("data:")
         ) {
-          // If CoverImage is an object with a url property
-          if (item.CoverImage.url) {
-            coverImageUrl = item.CoverImage.url;
-          }
+          coverImageUrl = `${window.STRAPI_API_URL.replace(
+            "/api/",
+            ""
+          )}${coverImageUrl}`;
         }
 
         console.log(
@@ -691,7 +746,7 @@ window.BusinessPlanIntegration = (function () {
 })();
 
 // Initialize the module when the DOM is ready
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   // Only initialize if we're on the business plan page
   if (window.location.pathname.includes("/business-plan")) {
     window.BusinessPlanIntegration.init();
