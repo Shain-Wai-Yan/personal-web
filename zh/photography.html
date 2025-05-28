@@ -6,6 +6,21 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes"
     />
+
+    <!-- Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-5QR2XCD1XY"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-5QR2XCD1XY");
+    </script>
+
     <title>明元易摄影作品集（Shain Wai Yan | xolbine）| 自然与风景摄影</title>
     <meta
       name="description"
@@ -52,11 +67,6 @@
       rel="alternate"
       hreflang="zh"
       href="https://www.shainwaiyan.com/zh/photography.html"
-    />
-    <link
-      rel="alternate"
-      hreflang="my"
-      href="https://www.shainwaiyan.com/my/photography.html"
     />
 
     <!-- 图片画廊结构化数据 -->
@@ -175,7 +185,6 @@
     <meta property="og:site_name" content="明元易的作品集" />
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:locale:alternate" content="en_US" />
-    <meta property="og:locale:alternate" content="my_MM" />
 
     <!-- Twitter Card 标签 -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -387,7 +396,7 @@
     <script src="../portfolio-nav.js"></script>
     <script src="../photography.js"></script>
     <script src="../photography-fetch-from-strapi.js"></script>
-     <script src="../masonry-grid-fix.js"></script>
+    <script src="../masonry-grid-fix.js"></script>
     <script src="../indexnow-auto-submit.js"></script>
 
     <!-- 自动更新页脚年份脚本 -->

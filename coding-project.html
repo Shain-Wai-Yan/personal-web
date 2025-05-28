@@ -3,6 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-5QR2XCD1XY"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-5QR2XCD1XY");
+    </script>
+
     <title>
       Coding Projects - GitHub Profile Viewer | Shain Wai Yan (xolbine)
     </title>
@@ -62,11 +77,6 @@
       hreflang="zh"
       href="https://www.shainwaiyan.com/zh/coding-project.html"
     />
-    <link
-      rel="alternate"
-      hreflang="my"
-      href="https://www.shainwaiyan.com/my/coding-project.html"
-    />
 
     <!-- CSS Stylesheets -->
     <link rel="stylesheet" href="style.css" />
@@ -108,7 +118,6 @@
     <meta property="og:site_name" content="Shain's Portfolio" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:locale:alternate" content="zh_CN" />
-    <meta property="og:locale:alternate" content="my_MM" />
 
     <!-- Twitter Card data -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -195,9 +204,9 @@
     </header>
 
     <!-- Portfolio Navigation -->
-    <div class="portfolio-navigation">
-      <div class="portfolio-navigation-container">
-        <div class="breadcrumb-navigation" aria-label="Breadcrumb">
+    <div class="portfolio-nav">
+      <div class="portfolio-nav-container">
+        <div class="portfolio-breadcrumb" aria-label="Breadcrumb">
           <a href="index.html">Home</a>
           <span class="separator" aria-hidden="true">›</span>
           <a href="portfolio.html">Portfolio</a>
