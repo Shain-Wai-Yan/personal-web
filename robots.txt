@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
 
+# Main sitemap
 Sitemap: https://www.shainwaiyan.com/sitemap.xml
+
+# Image sitemap  
+Sitemap: https://www.shainwaiyan.com/image-sitemap.xml
