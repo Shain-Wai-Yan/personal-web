@@ -397,33 +397,58 @@ p {
     box-shadow var(--transition-normal);
   animation: slideInDown 0.7s ease forwards;
 }
-/* Logo styling */
+/* Logo styling for all pages */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .logo a {
   display: flex;
   align-items: center;
-  gap: 12px; /* Space between logo and text */
+  gap: 0.5rem;
   text-decoration: none;
   color: inherit;
 }
 
 .logo-image {
-  width: 40px; /* Adjust size as needed */
-  height: 40px;
+  width: 45px;
+  height: 45px;
   object-fit: contain;
-  flex-shrink: 0; /* Prevents logo from shrinking */
+  border-radius: 4px;
 }
 
-/* Responsive adjustments */
+/* Responsive logo sizing */
 @media (max-width: 768px) {
   .logo-image {
     width: 35px;
     height: 35px;
   }
+}
+
+@media (max-width: 480px) {
+  .logo-image {
+    width: 30px;
+    height: 30px;
+  }
 
   .logo a {
-    gap: 8px;
+    gap: 0.3rem;
   }
 }
+
+/* Ensure logo text doesn't wrap */
+.logo a {
+  white-space: nowrap;
+}
+
+/* Logo hover effects */
+.logo a:hover .logo-image {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+}
+
 /* Remove the transparency effect when scrolled */
 .header.scrolled {
   background-color: var(

@@ -49,6 +49,34 @@
     <link rel="preload" href="../portfolio.css" as="style" />
     <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
 
+    <!-- Enhanced Favicon Support -->
+    <link rel="icon" href="../favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="../images/Shain Studio.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="96x96"
+      href="../images/Shain Studio.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="../images/Shain Studio.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="../images/Shain Studio.png"
+    />
+    <link rel="apple-touch-icon" href="../images/Shain Studio.png" />
+
     <!-- 语言备用版本 -->
     <link
       rel="alternate"
@@ -66,6 +94,27 @@
       href="https://www.shainwaiyan.com/zh/portfolio.html"
     />
 
+    <!-- Organization Schema for Logo -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "明元易的作品集",
+        "alternateName": ["Shain Portfolio", "Shain Wai Yan Portfolio"],
+        "url": "https://www.shainwaiyan.com/zh/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.shainwaiyan.com/images/Shain Studio.png",
+          "width": 512,
+          "height": 512
+        },
+        "sameAs": [
+          "https://www.linkedin.com/in/shainwaiyan",
+          "https://github.com/Shain-Wai-Yan"
+        ]
+      }
+    </script>
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta
@@ -80,11 +129,13 @@
       property="og:description"
       content="探索明元易（Shain Wai Yan、xolbine）的专业作品集。包含商业策划、营销方案、编程项目、摄影作品与视频剪辑。"
     />
-    <meta property="og:site_name" content="明元易作品集" />
+    <meta
+      property="og:image"
+      content="https://www.shainwaiyan.com/images/Shain Studio.png"
+    />
+    <meta property="og:site_name" content="明元易的作品集" />
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:locale:alternate" content="en_US" />
-
-    <!-- 如果有预览图可加 og:image -->
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -100,7 +151,10 @@
       name="twitter:description"
       content="探索明元易（Shain Wai Yan、xolbine）的专业作品集。包含商业策划、营销方案、编程项目、摄影作品与视频剪辑。"
     />
-    <!-- 如果有预览图可加 twitter:image -->
+    <meta
+      name="twitter:image"
+      content="https://www.shainwaiyan.com/images/Shain Studio.png"
+    />
 
     <!-- 结构化数据 ProfilePage -->
     <script type="application/ld+json">
@@ -202,7 +256,14 @@
     <header class="header slide-in">
       <div class="nav-container">
         <div class="logo">
-          <a href="/zh/index.html">明元易的作品集</a>
+          <a href="/zh/index.html">
+            <img
+              src="../images/Shain Studio.png"
+              alt="Shain Studio Logo"
+              class="logo-image"
+            />
+            明元易的作品集
+          </a>
         </div>
         <button class="hamburger" aria-label="切换菜单">
           <span class="bar"></span>
@@ -284,7 +345,7 @@
     <footer class="footer slide-in-up">
       <p>
         &copy;
-        <span id="current-year">2025</span> 明元易作品集。版权所有。
+        <span id="current-year">2025</span> 明元易的作品集。版权所有。
       </p>
     </footer>
 

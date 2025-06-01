@@ -49,9 +49,33 @@
     <link rel="dns-prefetch" href="//cdn.jsdelivr.net" />
     <link rel="preload" href="../contact.css" as="style" />
 
-    <!-- Favicon -->
-    <link rel="icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <!-- Enhanced Favicon Support -->
+    <link rel="icon" href="../favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="../images/Shain Studio.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="96x96"
+      href="../images/Shain Studio.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="../images/Shain Studio.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="../images/Shain Studio.png"
+    />
+    <link rel="apple-touch-icon" href="../images/Shain Studio.png" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -69,9 +93,9 @@
     />
     <meta
       property="og:image"
-      content="https://www.shainwaiyan.com/images/og-image.jpg"
+      content="https://www.shainwaiyan.com/images/Shain Studio.png"
     />
-    <meta property="og:site_name" content="明元易的作品集" />
+    <meta property="og:site_name" content="明元易的工作室" />
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:locale:alternate" content="en_US" />
     <meta property="og:locale:alternate" content="my_MM" />
@@ -92,7 +116,7 @@
     />
     <meta
       name="twitter:image"
-      content="https://www.shainwaiyan.com/images/og-image.jpg"
+      content="https://www.shainwaiyan.com/images/Shain Studio.png"
     />
 
     <!-- 语言备用版本 -->
@@ -111,6 +135,27 @@
       hreflang="zh"
       href="https://www.shainwaiyan.com/zh/contact.html"
     />
+
+    <!-- Organization Schema for Logo -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "明元易的工作室",
+        "alternateName": ["Shain Studio", "Shain Wai Yan Studio"],
+        "url": "https://www.shainwaiyan.com/zh/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.shainwaiyan.com/images/Shain Studio.png",
+          "width": 512,
+          "height": 512
+        },
+        "sameAs": [
+          "https://www.linkedin.com/in/shainwaiyan",
+          "https://github.com/Shain-Wai-Yan"
+        ]
+      }
+    </script>
 
     <!-- Structured data for Person -->
     <script type="application/ld+json">
@@ -218,9 +263,14 @@
     <header class="header slide-in">
       <div class="nav-container">
         <div class="logo">
-          <a href="/zh/index.html" aria-label="明元易的作品集主页"
-            >明元易的作品集</a
-          >
+          <a href="/zh/index.html" aria-label="明元易的工作室主页">
+            <img
+              src="../images/Shain Studio.png"
+              alt="Shain Studio Logo"
+              class="logo-image"
+            />
+            明元易的工作室
+          </a>
         </div>
         <button
           class="hamburger"
@@ -329,7 +379,7 @@
     <footer class="footer slide-in-up">
       <p>
         &copy;
-        <span id="current-year">2025</span> 明元易的作品集。版权所有。
+        <span id="current-year">2025</span> 明元易的工作室。版权所有。
       </p>
     </footer>
 
