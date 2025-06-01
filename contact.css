@@ -957,3 +957,38 @@
     }
   }
 }
+
+/* Update headings: */
+.contact h1,
+.contact-form-section h1,
+.social-links h2 {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+/* Update form elements and labels: */
+#contactForm label {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+#contactForm input,
+#contactForm textarea {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+/* Update button specifically: */
+#contactForm .cta-btn {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+/* Keep Inter for form messages and descriptions: */
+.form-message,
+.error-message,
+.loading-indicator-text,
+.validation-tooltip {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}

@@ -70,7 +70,7 @@
     />
     <meta
       property="og:image"
-      content="https://www.shainwaiyan.com/images/og-image.jpg"
+      content="https://www.shainwaiyan.com/images/Shain Studio.png"
     />
     <meta property="og:site_name" content="Shain Wai Yan Portfolio" />
     <meta property="og:locale" content="en_US" />
@@ -89,13 +89,33 @@
     />
     <meta
       name="twitter:image"
-      content="https://www.shainwaiyan.com/images/og-image.jpg"
+      content="https://www.shainwaiyan.com/images/Shain Studio.png"
     />
 
     <!-- Favicon -->
-    <link rel="icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="icon" href="images/Shain Studio.png" type="image/png" />
+    <link rel="shortcut icon" href="images/Shain Studio.png" type="image/png" />
+    <link rel="apple-touch-icon" href="images/Shain Studio.png" />
+
+    <!-- Enhanced Favicon - Multiple formats for better compatibility -->
+    <link
+      rel="icon"
+      href="images/Shain Studio.png"
+      sizes="32x32"
+      type="image/png"
+    />
+    <link
+      rel="icon"
+      href="images/Shain Studio.png"
+      sizes="96x96"
+      type="image/png"
+    />
+    <link
+      rel="icon"
+      href="images/Shain Studio.png"
+      sizes="192x192"
+      type="image/png"
+    />
 
     <!-- Structured data for Person -->
     <script type="application/ld+json">
@@ -196,6 +216,29 @@
       }
     </script>
 
+    <!-- Structured data for Organization (for logo in search results) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Shain Studio",
+        "alternateName": ["Shain Wai Yan Portfolio", "xolbine", "明元易"],
+        "url": "https://www.shainwaiyan.com",
+        "logo": "https://www.shainwaiyan.com/images/Shain Studio.png",
+        "image": "https://www.shainwaiyan.com/images/Shain Studio.png",
+        "description": "Professional portfolio of Shain Wai Yan (xolbine, 明元易), digital marketer and brand strategist.",
+        "founder": {
+          "@type": "Person",
+          "name": "Shain Wai Yan",
+          "alternateName": ["xolbine", "明元易"]
+        },
+        "sameAs": [
+          "https://www.linkedin.com/in/shainwaiyan",
+          "https://github.com/Shain-Wai-Yan"
+        ]
+      }
+    </script>
+
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="home.css" />
     <!-- Font Awesome for icons -->
@@ -208,9 +251,14 @@
     <header class="header">
       <div class="nav-container">
         <div class="logo">
-          <a href="index.html" aria-label="Shain Wai Yan's Portfolio Home"
-            >Shain's Portfolio</a
-          >
+          <a href="index.html" aria-label="Shain Studio Home">
+            <img
+              src="images/Shain Studio.png"
+              alt="Shain Studio Logo"
+              class="logo-image"
+            />
+            Shain Studio
+          </a>
         </div>
         <button class="hamburger" aria-label="Toggle Menu">
           <span class="bar"></span>
@@ -246,7 +294,7 @@
           <div class="hero-text-container">
             <h1 class="hero-title">
               Welcome to
-              <span class="text-gradient">Shain's Portfolio</span>
+              <span class="text-gradient">Shain's Studio</span>
             </h1>
             <p class="hero-tagline">Where creativity meets results.</p>
             <div class="hero-description">
@@ -521,8 +569,8 @@
             <div class="certificate-icon">
               <i class="fas fa-users-cog" aria-hidden="true"></i>
             </div>
-            <h3>Project Management</h3>
-            <p>Professional Project Manager</p>
+            <h3>Business Management</h3>
+            <p>ICM Business Management and Administration Course</p>
             <a href="certificate.html" class="certificate-link"
               >View Certificate</a
             >

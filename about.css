@@ -11,6 +11,12 @@
   --about-accent-gradient: linear-gradient(135deg, #ffd700, #ffec80);
   --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  /* Typography */
+  --font-primary: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  --font-secondary: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 /* Enhanced Dark Mode Variables with Deep, Glittery Gold */
@@ -419,6 +425,8 @@
   position: relative;
   display: inline-block;
   color: white; /* Ensure white text in both modes */
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 .about-hero h1 .highlight {
@@ -456,6 +464,8 @@
   margin-bottom: 2rem;
   font-weight: 300;
   color: white; /* Ensure white text in both modes */
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 /* Container */
@@ -580,6 +590,8 @@
   position: relative;
   display: inline-block;
   transition: color 0.3s var(--transition-smooth);
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 /* Dark mode text color override */
@@ -782,6 +794,8 @@
   position: relative;
   display: inline-block;
   transition: color 0.3s var(--transition-smooth);
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 /* Dark mode text color override */
@@ -828,6 +842,8 @@
   margin-bottom: 2rem;
   position: relative;
   transition: color 0.3s var(--transition-smooth);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 .bio-text:hover {
@@ -951,6 +967,8 @@
   margin-bottom: 0.5rem;
   color: var(--about-primary);
   transition: color 0.3s var(--transition-smooth);
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 /* Dark mode text color override */
@@ -976,6 +994,8 @@
   opacity: 0.8;
   line-height: 1.6;
   transition: color 0.3s var(--transition-smooth);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 .skill-item:hover .skill-content p {
@@ -1049,6 +1069,8 @@
   position: relative;
   display: inline-block;
   transition: color 0.3s var(--transition-smooth);
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 /* Dark mode text color override */
@@ -1149,6 +1171,8 @@ blockquote {
   position: relative;
   transition: transform 0.3s var(--transition-smooth),
     color 0.3s var(--transition-smooth);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 .quote-card:hover blockquote {
@@ -1372,6 +1396,8 @@ blockquote cite {
   margin-bottom: 0.5rem;
   transition: color 0.3s var(--transition-smooth),
     transform 0.3s var(--transition-smooth);
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 /* Dark mode text color override */
@@ -1461,6 +1487,8 @@ blockquote cite {
   margin-bottom: 1rem;
   animation: fadeInUp 1s var(--transition-smooth) both;
   color: white; /* Ensure white text in both modes */
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 .cta-text {
@@ -1469,6 +1497,8 @@ blockquote cite {
   opacity: 0.9;
   animation: fadeInUp 1s 0.2s var(--transition-smooth) both;
   color: white; /* Ensure white text in both modes */
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 /* CTA button with dark mode adjustments */
@@ -1489,6 +1519,8 @@ blockquote cite {
   transition: transform 0.4s var(--transition-bounce),
     box-shadow 0.4s var(--transition-smooth),
     color 0.3s var(--transition-smooth);
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 .cta-button::before {

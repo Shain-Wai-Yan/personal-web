@@ -108,6 +108,8 @@
   .document-type,
   .cloudinary-pdf-message h3,
   .modal-header h2 {
+    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+      sans-serif;
     background: var(--doc-gold-gradient-simple);
     background-size: 200% auto;
     -webkit-background-clip: text;
@@ -125,6 +127,8 @@
   #next-page,
   .orientation-prompt button,
   .theme-toggle {
+    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+      sans-serif;
     background: var(--doc-gold-gradient);
     background-size: 200% 200%;
     animation: goldWave 12s ease infinite;
@@ -372,6 +376,8 @@
 }
 
 .document-details h2 {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   color: var(--doc-primary);
   margin-bottom: 0.5rem;
   font-size: 1.8rem;
@@ -379,6 +385,8 @@
 }
 
 .document-meta {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   display: flex;
   gap: 1.5rem;
   margin-bottom: 1.5rem;
@@ -386,17 +394,23 @@
 }
 
 .document-type {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   font-weight: 600;
   color: var(--doc-primary);
   transition: color var(--doc-transition);
 }
 
 .document-date {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   color: var(--doc-text-light);
   transition: color var(--doc-transition);
 }
 
 .document-description {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   line-height: 1.6;
   color: var(--doc-text);
   margin-bottom: 1.5rem;
@@ -404,6 +418,8 @@
 }
 
 .view-document-btn {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   align-self: flex-start;
   background-color: var(--doc-primary);
   color: white;
@@ -454,6 +470,8 @@
 }
 
 .modal-header {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -831,6 +849,8 @@
 }
 
 .pdf-page-info {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   color: white;
   margin: 0 10px;
   font-size: 14px;
@@ -908,6 +928,8 @@
 
 #prev-page,
 #next-page {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   background-color: var(--doc-primary);
   color: white;
   border: none;
@@ -930,12 +952,16 @@
 }
 
 #page-info {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   font-size: 0.9rem;
   color: var(--doc-text-light);
   transition: color var(--doc-transition);
 }
 
 .download-btn {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   margin-left: auto;
   background-color: var(--doc-primary);
   color: white;
@@ -986,6 +1012,8 @@
 }
 
 .retry-btn {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   margin-top: 1rem;
   background-color: var(--doc-primary);
   color: white;
@@ -1407,6 +1435,8 @@
 }
 
 .orientation-prompt button {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   background-color: var(--doc-primary);
   color: white;
   border: none;
@@ -1432,6 +1462,8 @@
 }
 
 .cloudinary-pdf-message h3 {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   color: var(--doc-primary);
   margin-bottom: 15px;
   transition: color var(--doc-transition);
@@ -1641,6 +1673,8 @@
 
 /* Add theme toggle button */
 .theme-toggle {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   position: fixed;
   top: 20px;
   right: 20px;

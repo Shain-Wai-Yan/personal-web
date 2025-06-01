@@ -25,7 +25,10 @@
   --certificate-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
 
   /* Typography */
-  --certificate-font-primary: "Times New Roman", serif;
+  --certificate-font-primary: "Inter", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --certificate-font-secondary: "Poppins", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
 
   /* Transitions */
   --certificate-transition-fast: 0.2s ease;
@@ -54,8 +57,8 @@
 }
 
 .certificate-component {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   color: var(--certificate-text);
   background: var(--certificate-bg-light);
   width: 100%;
@@ -218,6 +221,8 @@
   transition: background-color var(--certificate-transition-fast),
     transform var(--certificate-transition-fast);
   box-shadow: var(--certificate-shadow-sm);
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 .zoom-btn:hover {
@@ -261,6 +266,8 @@
   width: 100%;
   position: relative;
   padding-bottom: var(--certificate-spacing-sm);
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 .certificate-title::after {
@@ -283,6 +290,8 @@
   width: 100%;
   padding: var(--certificate-spacing-sm) 0;
   border-bottom: 1px solid var(--certificate-border);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 /* Description container with improved styling */
@@ -304,6 +313,8 @@
   color: var(--certificate-text);
   text-align: left;
   font-size: 0.95rem;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 .description-short {
@@ -343,6 +354,8 @@
     transform var(--certificate-transition-fast);
   border-radius: var(--certificate-radius-sm);
   background-color: rgba(25, 25, 112, 0.1);
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 .toggle-description:hover {
@@ -481,7 +494,8 @@
   margin-top: var(--certificate-spacing-sm);
   font-size: 0.9rem;
   color: var(--certificate-text-light);
-  font-family: var(--certificate-font-primary);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   padding: var(--certificate-spacing-xs) var(--certificate-spacing-md);
   background-color: rgba(25, 25, 112, 0.05);
   border-radius: var(--certificate-radius-full);
@@ -657,6 +671,8 @@
   transition: border-color var(--certificate-transition-fast),
     box-shadow var(--certificate-transition-fast);
   background-color: var(--certificate-bg-light);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 .search-container input:focus {
@@ -698,6 +714,8 @@
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
   padding-right: 2.5rem;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 .filter-select:focus {
@@ -764,6 +782,8 @@
   transition: background-color var(--certificate-transition-fast),
     transform var(--certificate-transition-fast);
   font-weight: 500;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 .retry-btn:hover,
@@ -1013,6 +1033,8 @@
     font-weight: 500;
     align-self: center;
     width: auto;
+    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+      sans-serif;
   }
 
   .toggle-description:hover {
@@ -1025,6 +1047,8 @@
     font-size: 0.95rem;
     line-height: 1.6;
     margin-bottom: var(--certificate-spacing-md);
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+      sans-serif;
   }
 
   /* Ensure proper display of short/full descriptions */

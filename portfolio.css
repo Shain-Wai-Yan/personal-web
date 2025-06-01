@@ -95,6 +95,8 @@
   position: relative;
   display: inline-block;
   transition: color var(--transition-normal);
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 .portfolio-header h1::after {
@@ -115,6 +117,8 @@
   font-size: 1.1rem;
   line-height: 1.6;
   transition: color var(--transition-normal);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 /* Enhanced Portfolio Grid */
@@ -176,6 +180,8 @@
   position: relative;
   z-index: 2;
   transition: color 0.4s ease, transform 0.4s ease;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 .portfolio-item p {
@@ -185,6 +191,8 @@
   z-index: 2;
   position: relative;
   transition: color 0.4s ease, transform 0.4s ease;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 /* CHANGED: Text color to gold instead of white on hover for better readability */
@@ -689,4 +697,20 @@
 
 .dark-mode .portfolio-item:hover p {
   color: #ffffff !important; /* White color for better readability */
+}
+
+.portfolio-item-tag {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+.page-title {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+.page-description,
+.portfolio-item-description {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
