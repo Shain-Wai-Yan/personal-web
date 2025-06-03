@@ -1,9 +1,10 @@
 /**
- * Advanced Blog System for Shain Studio - CONFLICT-FREE VERSION
+ * Advanced Blog System for Shain Studio - FULLY COMPATIBLE VERSION
  * Production-ready blog functionality optimized for 1000+ posts
  * Features: Virtual scrolling, advanced caching, image optimization, performance monitoring
+ * Compatible with updated blog-api.js
  * @author Shain Studio
- * @version 2.0
+ * @version 2.1
  */
 
 class AdvancedBlogSystem {
@@ -48,6 +49,8 @@ class AdvancedBlogSystem {
         itemHeight: 400,
         containerHeight: 0,
       },
+      availableCategories: [],
+      availableTags: [],
     };
 
     this.cache = new Map();
@@ -138,21 +141,29 @@ class AdvancedBlogSystem {
   }
 
   /**
-   * Load initial data with caching
+   * Load initial data with caching - UPDATED FOR COMPATIBILITY
    */
   async loadInitialData() {
     this.startPerformanceTimer("dataLoad");
 
     try {
-      const [postsResponse, categoriesResponse, tagsResponse] =
-        await Promise.all([
-          this.fetchPostsWithCache(1, this.config.postsPerPage * 3), // Load more initially
-          this.fetchCategoriesWithCache(),
-          this.fetchTagsWithCache(),
-        ]);
+      // Fetch posts first
+      const postsResponse = await this.fetchPostsWithCache(
+        1,
+        this.config.postsPerPage * 3
+      );
 
+      // Process posts and extract categories/tags from them
       this.processPostsData(postsResponse);
-      this.populateFilters(categoriesResponse, tagsResponse);
+
+      // Try to fetch categories and tags from API as fallback
+      const [categoriesResponse, tagsResponse] = await Promise.all([
+        this.fetchCategoriesWithCache(),
+        this.fetchTagsWithCache(),
+      ]);
+
+      // Populate filters using extracted data from posts
+      this.populateFiltersFromPosts(categoriesResponse, tagsResponse);
 
       this.endPerformanceTimer("dataLoad");
     } catch (error) {
@@ -250,7 +261,7 @@ class AdvancedBlogSystem {
   }
 
   /**
-   * Process posts data and build efficient data structures
+   * Process posts data and build efficient data structures - UPDATED
    */
   processPostsData(response) {
     if (!response.data) return;
@@ -259,10 +270,15 @@ class AdvancedBlogSystem {
       .map(window.BlogAPI.transformPostData)
       .filter((post) => post !== null);
 
+    console.log("Transformed posts:", transformedPosts);
+
     // Store in Map for O(1) lookup
     transformedPosts.forEach((post) => {
       this.state.allPosts.set(post.id, post);
     });
+
+    // Extract categories and tags from all posts
+    this.extractCategoriesAndTagsFromPosts();
 
     this.state.filteredPosts = Array.from(this.state.allPosts.values());
     this.state.totalPages = Math.ceil(
@@ -274,34 +290,76 @@ class AdvancedBlogSystem {
   }
 
   /**
-   * Populate filter dropdowns
+   * Extract unique categories and tags from all posts - NEW METHOD
    */
-  populateFilters(categoriesResponse, tagsResponse) {
-    // Populate categories
-    if (this.elements.categoryFilter && categoriesResponse.data) {
+  extractCategoriesAndTagsFromPosts() {
+    const allPosts = Array.from(this.state.allPosts.values());
+
+    // Extract categories
+    this.state.availableCategories =
+      window.BlogAPI.extractCategoriesFromPosts(allPosts);
+
+    // Extract tags
+    this.state.availableTags = window.BlogAPI.extractTagsFromPosts(allPosts);
+
+    console.log(
+      "Extracted categories from posts:",
+      this.state.availableCategories
+    );
+    console.log("Extracted tags from posts:", this.state.availableTags);
+  }
+
+  /**
+   * Populate filter dropdowns using extracted data from posts - UPDATED
+   */
+  populateFiltersFromPosts(categoriesResponse, tagsResponse) {
+    // Populate categories - prioritize extracted from posts
+    if (this.elements.categoryFilter) {
       this.elements.categoryFilter.innerHTML =
         '<option value="">All Categories</option>';
-      categoriesResponse.data.forEach((category) => {
-        if (category.attributes?.name) {
+
+      // Use categories from posts first, fallback to API response
+      const categoriesToUse =
+        this.state.availableCategories.length > 0
+          ? this.state.availableCategories
+          : (categoriesResponse.data || [])
+              .map((cat) => cat.attributes?.name || cat.name)
+              .filter(Boolean);
+
+      categoriesToUse.forEach((categoryName) => {
+        if (categoryName && categoryName.trim()) {
           const option = document.createElement("option");
-          option.value = category.attributes.name;
-          option.textContent = category.attributes.name;
+          option.value = categoryName.trim();
+          option.textContent = categoryName.trim();
           this.elements.categoryFilter.appendChild(option);
         }
       });
+
+      console.log("Populated categories in dropdown:", categoriesToUse);
     }
 
-    // Populate tags
-    if (this.elements.tagFilter && tagsResponse.data) {
+    // Populate tags - prioritize extracted from posts
+    if (this.elements.tagFilter) {
       this.elements.tagFilter.innerHTML = '<option value="">All Tags</option>';
-      tagsResponse.data.forEach((tag) => {
-        if (tag.attributes?.name) {
+
+      // Use tags from posts first, fallback to API response
+      const tagsToUse =
+        this.state.availableTags.length > 0
+          ? this.state.availableTags
+          : (tagsResponse.data || [])
+              .map((tag) => tag.attributes?.name || tag.name)
+              .filter(Boolean);
+
+      tagsToUse.forEach((tagName) => {
+        if (tagName && tagName.trim()) {
           const option = document.createElement("option");
-          option.value = tag.attributes.name;
-          option.textContent = `#${tag.attributes.name}`;
+          option.value = tagName.trim();
+          option.textContent = `#${tagName.trim()}`;
           this.elements.tagFilter.appendChild(option);
         }
       });
+
+      console.log("Populated tags in dropdown:", tagsToUse);
     }
   }
 
@@ -522,36 +580,45 @@ class AdvancedBlogSystem {
   }
 
   /**
-   * Handle category filtering
+   * Handle category filtering - IMPROVED WITH TRIM AND CASE HANDLING
    */
   handleCategoryFilter(category) {
     this.state.activeFilters.category = category;
     this.applyFilters();
     this.updateUrl({ category });
-    this.announceToScreenReader(
-      `Filtered to ${this.state.filteredPosts.length} posts in ${category} category`
-    );
+
+    const message = category
+      ? `Filtered to ${this.state.filteredPosts.length} posts in ${category} category`
+      : `Showing all ${this.state.filteredPosts.length} posts`;
+
+    this.announceToScreenReader(message);
   }
 
   /**
-   * Handle tag filtering
+   * Handle tag filtering - IMPROVED WITH TRIM AND CASE HANDLING
    */
   handleTagFilter(tag) {
     this.state.activeFilters.tag = tag;
     this.applyFilters();
     this.updateUrl({ tag });
-    this.announceToScreenReader(
-      `Filtered to ${this.state.filteredPosts.length} posts with #${tag} tag`
-    );
+
+    const message = tag
+      ? `Filtered to ${this.state.filteredPosts.length} posts with #${tag} tag`
+      : `Showing all ${this.state.filteredPosts.length} posts`;
+
+    this.announceToScreenReader(message);
   }
 
   /**
-   * Apply all active filters efficiently
+   * Apply all active filters efficiently - IMPROVED WITH BETTER MATCHING
    */
   applyFilters() {
     this.startPerformanceTimer("filtering");
 
     let filtered = Array.from(this.state.allPosts.values());
+
+    console.log("Starting with posts:", filtered.length);
+    console.log("Active filters:", this.state.activeFilters);
 
     // Apply search filter
     if (this.state.searchQuery) {
@@ -567,27 +634,34 @@ class AdvancedBlogSystem {
             cat.toLowerCase().includes(this.state.searchQuery)
           )
       );
+      console.log("After search filter:", filtered.length);
     }
 
-    // Apply category filter
+    // Apply category filter - IMPROVED with trim and case handling
     if (this.state.activeFilters.category) {
+      const filterCategory = this.state.activeFilters.category
+        .toLowerCase()
+        .trim();
       filtered = filtered.filter((post) =>
         post.categories.some(
-          (cat) =>
-            cat.toLowerCase() ===
-            this.state.activeFilters.category.toLowerCase()
+          (cat) => cat.toLowerCase().trim() === filterCategory
         )
+      );
+      console.log(
+        "After category filter:",
+        filtered.length,
+        "for category:",
+        filterCategory
       );
     }
 
-    // Apply tag filter
+    // Apply tag filter - IMPROVED with trim and case handling
     if (this.state.activeFilters.tag) {
+      const filterTag = this.state.activeFilters.tag.toLowerCase().trim();
       filtered = filtered.filter((post) =>
-        post.tags.some(
-          (tag) =>
-            tag.toLowerCase() === this.state.activeFilters.tag.toLowerCase()
-        )
+        post.tags.some((tag) => tag.toLowerCase().trim() === filterTag)
       );
+      console.log("After tag filter:", filtered.length, "for tag:", filterTag);
     }
 
     this.state.filteredPosts = filtered;
@@ -787,7 +861,7 @@ class AdvancedBlogSystem {
   }
 
   /**
-   * Handle refresh with cache clearing
+   * Handle refresh with cache clearing - UPDATED
    */
   async handleRefresh() {
     try {
@@ -802,6 +876,8 @@ class AdvancedBlogSystem {
       this.state.currentPage = 1;
       this.state.searchQuery = "";
       this.state.activeFilters = { category: "", tag: "", dateRange: null };
+      this.state.availableCategories = [];
+      this.state.availableTags = [];
 
       // Reset UI
       if (this.elements.searchInput) this.elements.searchInput.value = "";
@@ -851,6 +927,9 @@ class AdvancedBlogSystem {
           this.state.allPosts.set(post.id, post);
         });
 
+        // Re-extract categories and tags with new posts
+        this.extractCategoriesAndTagsFromPosts();
+
         this.state.currentPage++;
         this.renderPosts(true);
       } else {
@@ -895,7 +974,7 @@ class AdvancedBlogSystem {
   }
 
   /**
-   * Handle URL parameters
+   * Handle URL parameters - IMPROVED
    */
   handleUrlParameters() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -904,13 +983,31 @@ class AdvancedBlogSystem {
     const search = urlParams.get("search");
 
     if (category && this.elements.categoryFilter) {
-      this.elements.categoryFilter.value = category;
-      this.handleCategoryFilter(category);
+      // Find the exact match in the dropdown options
+      const options = Array.from(this.elements.categoryFilter.options);
+      const matchingOption = options.find(
+        (option) =>
+          option.value.toLowerCase().trim() === category.toLowerCase().trim()
+      );
+
+      if (matchingOption) {
+        this.elements.categoryFilter.value = matchingOption.value;
+        this.handleCategoryFilter(matchingOption.value);
+      }
     }
 
     if (tag && this.elements.tagFilter) {
-      this.elements.tagFilter.value = tag;
-      this.handleTagFilter(tag);
+      // Find the exact match in the dropdown options
+      const options = Array.from(this.elements.tagFilter.options);
+      const matchingOption = options.find(
+        (option) =>
+          option.value.toLowerCase().trim() === tag.toLowerCase().trim()
+      );
+
+      if (matchingOption) {
+        this.elements.tagFilter.value = matchingOption.value;
+        this.handleTagFilter(matchingOption.value);
+      }
     }
 
     if (search && this.elements.searchInput) {

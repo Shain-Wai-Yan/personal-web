@@ -2,14 +2,14 @@
  * Blog API Integration for Shain Studio
  * Handles fetching and processing blog data from Strapi CMS
  * @author Shain Studio
- * @version 1.1
+ * @version 1.2 - Fixed category and tag extraction
  */
 
 window.BlogAPI = (() => {
   // Configuration
   const API_BASE_URL = "https://api.shainwaiyan.com/api";
   const CACHE_TTL = 15 * 60 * 1000; // 15 minutes cache
-  const CACHE_VERSION = "v1.1";
+  const CACHE_VERSION = "v1.2";
 
   // Cache keys
   const CACHE_KEYS = {
@@ -228,7 +228,7 @@ window.BlogAPI = (() => {
   }
 
   /**
-   * Transform Strapi blog post data to our format
+   * Transform Strapi blog post data to our format - FIXED VERSION
    */
   function transformPostData(strapiPost) {
     if (!strapiPost) {
@@ -283,43 +283,69 @@ window.BlogAPI = (() => {
         }
       }
 
-      // Extract categories - handle both structures
+      // Extract categories - COMPREHENSIVE HANDLING
       const postCategories = [];
-      if (data.categories?.data) {
-        // Strapi v4 structure
+
+      // Method 1: Strapi v4 structure with nested data
+      if (data.categories?.data && Array.isArray(data.categories.data)) {
         data.categories.data.forEach((cat) => {
           if (cat.attributes?.name) {
-            postCategories.push(cat.attributes.name);
+            postCategories.push(cat.attributes.name.trim());
           }
         });
-      } else if (data.category) {
-        // Single category
-        if (typeof data.category === "string") {
-          postCategories.push(data.category);
-        } else if (data.category.name) {
-          postCategories.push(data.category.name);
-        }
+      }
+      // Method 2: Direct category object (current API structure)
+      else if (
+        data.category &&
+        typeof data.category === "object" &&
+        data.category.name
+      ) {
+        postCategories.push(data.category.name.trim());
+      }
+      // Method 3: Category as string
+      else if (data.category && typeof data.category === "string") {
+        postCategories.push(data.category.trim());
+      }
+      // Method 4: Categories as direct array
+      else if (data.categories && Array.isArray(data.categories)) {
+        data.categories.forEach((cat) => {
+          if (typeof cat === "string") {
+            postCategories.push(cat.trim());
+          } else if (cat && cat.name) {
+            postCategories.push(cat.name.trim());
+          }
+        });
       }
 
-      // Extract tags - handle both structures
+      console.log("Extracted categories:", postCategories);
+
+      // Extract tags - COMPREHENSIVE HANDLING
       const postTags = [];
-      if (data.tags?.data) {
-        // Strapi v4 structure
+
+      // Method 1: Strapi v4 structure with nested data
+      if (data.tags?.data && Array.isArray(data.tags.data)) {
         data.tags.data.forEach((tag) => {
           if (tag.attributes?.name) {
-            postTags.push(tag.attributes.name);
-          }
-        });
-      } else if (Array.isArray(data.tags)) {
-        // Direct array of tags
-        data.tags.forEach((tag) => {
-          if (typeof tag === "string") {
-            postTags.push(tag);
-          } else if (tag.name) {
-            postTags.push(tag.name);
+            postTags.push(tag.attributes.name.trim());
           }
         });
       }
+      // Method 2: Direct array of tag objects
+      else if (data.tags && Array.isArray(data.tags)) {
+        data.tags.forEach((tag) => {
+          if (typeof tag === "string") {
+            postTags.push(tag.trim());
+          } else if (tag && tag.name) {
+            postTags.push(tag.name.trim());
+          }
+        });
+      }
+      // Method 3: Single tag object
+      else if (data.tag && typeof data.tag === "object" && data.tag.name) {
+        postTags.push(data.tag.name.trim());
+      }
+
+      console.log("Extracted tags:", postTags);
 
       // Extract SEO data - handle both Seo and seo
       const seo = data.Seo || data.seo || {};
@@ -346,12 +372,46 @@ window.BlogAPI = (() => {
         },
       };
 
-      console.log("Transformed post:", transformedPost);
+      console.log("Final transformed post:", transformedPost);
       return transformedPost;
     } catch (error) {
       console.error("Error transforming post data:", error, strapiPost);
       return null;
     }
+  }
+
+  /**
+   * Extract unique categories from posts data
+   */
+  function extractCategoriesFromPosts(posts) {
+    const categorySet = new Set();
+    posts.forEach((post) => {
+      if (post && post.categories) {
+        post.categories.forEach((category) => {
+          if (category && category.trim()) {
+            categorySet.add(category.trim());
+          }
+        });
+      }
+    });
+    return Array.from(categorySet).sort();
+  }
+
+  /**
+   * Extract unique tags from posts data
+   */
+  function extractTagsFromPosts(posts) {
+    const tagSet = new Set();
+    posts.forEach((post) => {
+      if (post && post.tags) {
+        post.tags.forEach((tag) => {
+          if (tag && tag.trim()) {
+            tagSet.add(tag.trim());
+          }
+        });
+      }
+    });
+    return Array.from(tagSet).sort();
   }
 
   /**
@@ -671,7 +731,8 @@ window.BlogAPI = (() => {
         return post.categories.some((category) =>
           currentPost.categories.some(
             (currentCategory) =>
-              category.toLowerCase() === currentCategory.toLowerCase()
+              category.toLowerCase().trim() ===
+              currentCategory.toLowerCase().trim()
           )
         );
       });
@@ -874,6 +935,8 @@ window.BlogAPI = (() => {
     calculateReadingTime,
     clearCache,
     initBlogPost,
+    extractCategoriesFromPosts,
+    extractTagsFromPosts,
 
     // Getters for state
     get allPosts() {
