@@ -1,13 +1,14 @@
-// Clean AMV Editing Portfolio - No Debug Functions, Auto Load All Videos
+// Clean AMV Editing Portfolio - Enhanced with Cloudflare Worker Integration
+// Preserves all custom visual elements and mobile optimizations
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("AMV Portfolio initializing...");
+  console.log("AMV Portfolio initializing with Worker...");
 
-  // YouTube API Configuration
-  const API_KEY = "AIzaSyCxxF0kdu3R4cp98bw6crgEiIVttsucb04";
+  // Worker Configuration - UPDATE THIS URL TO YOUR WORKER
+  const WORKER_BASE_URL =
+    "https://youtube-api-fetcher.shainwaiyan2002.workers.dev";
   const CHANNEL_ID = "UCV4ZLWfXF15d4tyzdJTkzpw";
-  const BASE_URL = "https://www.googleapis.com/youtube/v3";
 
-  // Elements
+  // Elements - Keep all your existing element references
   const videoGrid = document.getElementById("video-grid");
   const videoModal = document.getElementById("video-modal");
   const modalClose = document.querySelector(".modal-close");
@@ -43,11 +44,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const featuredDescriptionEl = document.getElementById("featured-description");
   const featuredTagsEl = document.getElementById("featured-tags");
 
-  // State
+  // State - Keep your existing state management
   let allVideos = [];
   let featuredVideoData = null;
 
-  // Mock video data for fallback
+  // Keep your existing mock video data for fallback
   const mockVideos = [
     {
       id: "video1",
@@ -90,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   ];
 
-  // Utility functions
+  // Keep ALL your existing utility functions exactly as they are
   function isMobile() {
     return window.innerWidth <= 768;
   }
@@ -174,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  // Simplified embed URL function - NO MORE VIDEO SUGGESTIONS
+  // Keep your existing embed URL function - NO MORE VIDEO SUGGESTIONS
   function getEmbedUrl(videoId, autoplay = true) {
     const params = new URLSearchParams({
       rel: "0", // Don't show related videos
@@ -205,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
   }
 
-  // Simplified video player - no more restriction checking or debug warnings
+  // Keep your existing video player function - no more restriction checking or debug warnings
   async function playVideo(videoId, container, autoplay = true) {
     container.innerHTML = `
       <div class="video-loading">
@@ -226,6 +227,13 @@ document.addEventListener("DOMContentLoaded", () => {
           loading="lazy">
         </iframe>
       `;
+
+      // Track video play event
+      trackEvent("video_played", {
+        video_id: videoId,
+        autoplay: autoplay,
+        container: container.id || "unknown",
+      });
     } catch (error) {
       console.error("Error playing video:", error);
       container.innerHTML = `
@@ -249,22 +257,59 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         </div>
       `;
+
+      // Track video error
+      trackEvent("video_error", {
+        video_id: videoId,
+        error: error.message,
+      });
     }
   }
 
-  // API functions
+  // NEW: Analytics tracking function
+  async function trackEvent(eventType, data = {}) {
+    try {
+      await fetch(`${WORKER_BASE_URL}/api/analytics/track`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          event: eventType,
+          data: data,
+          page: "amv-portfolio",
+          timestamp: new Date().toISOString(),
+          user_agent: navigator.userAgent,
+          screen_size: `${window.innerWidth}x${window.innerHeight}`,
+          is_mobile: isMobile(),
+        }),
+      });
+    } catch (error) {
+      console.warn("Analytics tracking failed:", error);
+    }
+  }
+
+  // UPDATED: API functions now use the Cloudflare Worker
   async function getChannelInfo() {
     try {
-      const url = `${BASE_URL}/channels?part=snippet,statistics,brandingSettings&id=${CHANNEL_ID}&key=${API_KEY}`;
+      const url = `${WORKER_BASE_URL}/api/youtube/channel?channelId=${CHANNEL_ID}`;
       const response = await fetch(url);
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`Worker error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      if (data.error) {
-        throw new Error(data.error.message);
+
+      // Check if it's fallback data
+      if (data.fallback) {
+        console.warn("Using fallback channel data from worker");
+      } else {
+        console.log(
+          "Channel data loaded from worker (cache status:",
+          response.headers.get("X-Cache"),
+          ")"
+        );
       }
 
       if (data.items && data.items.length > 0) {
@@ -272,7 +317,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       throw new Error("Channel not found");
     } catch (error) {
-      console.warn("YouTube API failed, using fallback channel info:", error);
+      console.warn(
+        "Worker channel request failed, using local fallback:",
+        error
+      );
       return {
         snippet: {
           title: "Shain Studio AMV",
@@ -296,93 +344,50 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Modified to fetch ALL videos at once
+  // UPDATED: Modified to fetch ALL videos through the worker
   async function getAllChannelVideos() {
     try {
-      const channelUrl = `${BASE_URL}/channels?part=contentDetails&id=${CHANNEL_ID}&key=${API_KEY}`;
-      const channelResponse = await fetch(channelUrl);
+      const url = `${WORKER_BASE_URL}/api/youtube/videos?channelId=${CHANNEL_ID}&maxResults=50`;
+      const response = await fetch(url);
 
-      if (!channelResponse.ok) {
-        throw new Error(`HTTP error! status: ${channelResponse.status}`);
+      if (!response.ok) {
+        throw new Error(`Worker error! status: ${response.status}`);
       }
 
-      const channelData = await channelResponse.json();
-      if (channelData.error) {
-        throw new Error(channelData.error.message);
+      const data = await response.json();
+
+      // Check if it's fallback data
+      if (data.fallback) {
+        console.warn("Using fallback video data from worker");
+      } else {
+        console.log(
+          "Videos loaded from worker (cache status:",
+          response.headers.get("X-Cache"),
+          ")"
+        );
       }
 
-      if (!channelData.items || channelData.items.length === 0) {
-        throw new Error("Channel not found");
-      }
+      // Track analytics
+      trackEvent("videos_loaded", {
+        count: data.items?.length || 0,
+        source: data.fallback ? "fallback" : "worker_api",
+        cache_status: response.headers.get("X-Cache"),
+        worker_enhanced: data.worker_enhanced || false,
+      });
 
-      const uploadsPlaylistId =
-        channelData.items[0].contentDetails.relatedPlaylists.uploads;
-      let allVideos = [];
-      let nextPageToken = "";
-
-      // Fetch ALL videos by looping through all pages
-      do {
-        let videosUrl = `${BASE_URL}/playlistItems?part=snippet&playlistId=${uploadsPlaylistId}&maxResults=50&key=${API_KEY}`;
-        if (nextPageToken) videosUrl += `&pageToken=${nextPageToken}`;
-
-        const videosResponse = await fetch(videosUrl);
-        if (!videosResponse.ok)
-          throw new Error(`HTTP error! status: ${videosResponse.status}`);
-
-        const videosData = await videosResponse.json();
-        if (videosData.error) throw new Error(videosData.error.message);
-
-        if (videosData.items && videosData.items.length > 0) {
-          allVideos = [...allVideos, ...videosData.items];
-        }
-
-        nextPageToken = videosData.nextPageToken;
-      } while (nextPageToken);
-
-      // Get detailed info for all videos
-      if (allVideos.length > 0) {
-        const videoIds = allVideos
-          .map((item) => item.snippet.resourceId.videoId)
-          .join(",");
-
-        // Split into chunks of 50 (API limit)
-        const chunks = [];
-        for (let i = 0; i < videoIds.split(",").length; i += 50) {
-          chunks.push(
-            videoIds
-              .split(",")
-              .slice(i, i + 50)
-              .join(",")
-          );
-        }
-
-        for (const chunk of chunks) {
-          const detailsUrl = `${BASE_URL}/videos?part=statistics,contentDetails,status&id=${chunk}&key=${API_KEY}`;
-          const detailsResponse = await fetch(detailsUrl);
-
-          if (detailsResponse.ok) {
-            const detailsData = await detailsResponse.json();
-
-            allVideos = allVideos.map((item) => {
-              const videoId = item.snippet.resourceId.videoId;
-              const details = detailsData.items.find(
-                (detail) => detail.id === videoId
-              );
-
-              return {
-                ...item,
-                statistics: details?.statistics || {},
-                contentDetails: details?.contentDetails || {},
-                status: details?.status || {},
-              };
-            });
-          }
-        }
-      }
-
-      return { items: allVideos };
+      return data;
     } catch (error) {
-      console.warn("YouTube API failed, using mock videos:", error);
+      console.warn(
+        "Worker videos request failed, using local mock data:",
+        error
+      );
+
+      // Track error
+      trackEvent("videos_load_error", {
+        error: error.message,
+        fallback_to: "local_mock",
+      });
+
       const mockItems = mockVideos.map((video) => ({
         snippet: {
           resourceId: { videoId: video.videoId },
@@ -408,7 +413,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Display functions
+  // Keep ALL your existing display functions exactly as they are
   function displayChannelInfo(channelData) {
     const { snippet, statistics, brandingSettings } = channelData;
 
@@ -494,9 +499,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     featuredVideo.dataset.videoId = videoId;
     featuredSection.style.display = "block";
+
+    // Track featured video set
+    trackEvent("featured_video_set", {
+      video_id: videoId,
+      video_title: snippet.title,
+    });
   }
 
-  // Simplified video item creation - NO MORE DEBUG WARNINGS
+  // Keep your existing video item creation function - NO MORE DEBUG WARNINGS
   function createVideoItem(video) {
     const videoId = video.snippet.resourceId.videoId;
     const { snippet, statistics, contentDetails } = video;
@@ -592,12 +603,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     videoModal.classList.add("active");
     document.body.style.overflow = "hidden";
+
+    // Track modal open
+    trackEvent("video_modal_opened", {
+      video_id: videoId,
+      video_title: snippet.title,
+      is_mobile: isMobile(),
+    });
   }
 
   function closeVideoModal() {
     videoModal.classList.remove("active");
     document.body.style.overflow = "";
     iframeContainer.innerHTML = "";
+
+    // Track modal close
+    trackEvent("video_modal_closed", {
+      is_mobile: isMobile(),
+    });
   }
 
   function renderVideoGrid() {
@@ -614,6 +637,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (loadMoreBtn) {
       loadMoreBtn.style.display = "none";
     }
+
+    // Track grid render
+    trackEvent("video_grid_rendered", {
+      video_count: allVideos.length,
+    });
   }
 
   function showLoading() {
@@ -636,12 +664,19 @@ document.addEventListener("DOMContentLoaded", () => {
     if (videoGrid) videoGrid.style.display = "none";
     if (channelInfo) channelInfo.style.display = "none";
     if (featuredSection) featuredSection.style.display = "none";
+
+    // Track error display
+    trackEvent("error_displayed", {
+      error_message: message,
+    });
   }
 
-  // Main load function - now loads ALL videos at once
+  // UPDATED: Main load function with enhanced analytics
   async function loadInitialData() {
-    console.log("Loading all videos...");
+    console.log("Loading all videos through worker...");
     showLoading();
+
+    const startTime = Date.now();
 
     try {
       const [channelInfoData, videosData] = await Promise.all([
@@ -649,7 +684,19 @@ document.addEventListener("DOMContentLoaded", () => {
         getAllChannelVideos(),
       ]);
 
-      console.log("Data loaded successfully:", { channelInfoData, videosData });
+      const loadTime = Date.now() - startTime;
+      console.log(`Data loaded successfully in ${loadTime}ms:`, {
+        channelInfoData,
+        videosData,
+      });
+
+      // Track successful page load
+      trackEvent("page_loaded_successfully", {
+        load_time_ms: loadTime,
+        channel_title: channelInfoData?.snippet?.title,
+        videos_count: videosData.items?.length || 0,
+        has_featured_video: !!(videosData.items && videosData.items.length > 0),
+      });
 
       displayChannelInfo(channelInfoData);
 
@@ -661,12 +708,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
       hideLoading();
     } catch (error) {
+      const loadTime = Date.now() - startTime;
       console.error("Error loading data:", error);
+
+      // Track error
+      trackEvent("page_load_failed", {
+        load_time_ms: loadTime,
+        error: error.message,
+      });
+
       showError("Failed to load videos. Please try again later.");
     }
   }
 
-  // Global functions for mobile toggle functionality
+  // Keep ALL your existing global functions for mobile toggle functionality
   window.toggleDescription = (button) => {
     const container = button.parentElement;
     const preview = container.querySelector(".description-preview");
@@ -676,10 +731,12 @@ document.addEventListener("DOMContentLoaded", () => {
       preview.style.display = "none";
       full.style.display = "inline";
       button.textContent = "Show Less";
+      trackEvent("description_expanded", { location: "featured" });
     } else {
       preview.style.display = "inline";
       full.style.display = "none";
       button.textContent = "Show More";
+      trackEvent("description_collapsed", { location: "featured" });
     }
   };
 
@@ -691,9 +748,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (full.style.display === "none") {
       preview.style.display = "none";
       full.style.display = "flex";
+      trackEvent("tags_expanded", { location: "featured" });
     } else {
       preview.style.display = "flex";
       full.style.display = "none";
+      trackEvent("tags_collapsed", { location: "featured" });
     }
   };
 
@@ -706,10 +765,12 @@ document.addEventListener("DOMContentLoaded", () => {
       preview.style.display = "none";
       full.style.display = "inline";
       button.textContent = "Show Less";
+      trackEvent("description_expanded", { location: "modal" });
     } else {
       preview.style.display = "inline";
       full.style.display = "none";
       button.textContent = "Show More";
+      trackEvent("description_collapsed", { location: "modal" });
     }
   };
 
@@ -722,13 +783,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (full.style.display === "none") {
       preview.style.display = "none";
       full.style.display = "flex";
+      trackEvent("tags_expanded", { location: "modal" });
     } else {
       preview.style.display = "flex";
       full.style.display = "none";
+      trackEvent("tags_collapsed", { location: "modal" });
     }
   };
 
-  // Event Listeners
+  // Keep ALL your existing event listeners
   if (videoGrid) {
     videoGrid.addEventListener("click", (event) => {
       const item = event.target.closest(".video-item");
@@ -740,6 +803,13 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       if (video) {
+        // Track video click
+        trackEvent("video_item_clicked", {
+          video_id: videoId,
+          video_title: video.snippet.title,
+          click_source: "grid",
+        });
+
         openVideoModal(video);
       }
     });
@@ -748,6 +818,12 @@ document.addEventListener("DOMContentLoaded", () => {
   if (featuredVideo) {
     featuredVideo.addEventListener("click", () => {
       if (featuredVideoData) {
+        // Track featured video click
+        trackEvent("featured_video_clicked", {
+          video_id: featuredVideoData.snippet.resourceId.videoId,
+          video_title: featuredVideoData.snippet.title,
+        });
+
         playVideo(
           featuredVideoData.snippet.resourceId.videoId,
           featuredPlayerContainer,
@@ -762,7 +838,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (retryBtn) {
-    retryBtn.addEventListener("click", loadInitialData);
+    retryBtn.addEventListener("click", () => {
+      trackEvent("retry_button_clicked");
+      loadInitialData();
+    });
   }
 
   if (videoModal) {
@@ -779,11 +858,20 @@ document.addEventListener("DOMContentLoaded", () => {
       videoModal &&
       videoModal.classList.contains("active")
     ) {
+      trackEvent("modal_closed_via_escape");
       closeVideoModal();
     }
   });
 
-  // Initialize
-  console.log("Starting AMV Portfolio initialization...");
+  // Track page initialization
+  trackEvent("page_initialized", {
+    user_agent: navigator.userAgent,
+    screen_size: `${window.innerWidth}x${window.innerHeight}`,
+    is_mobile: isMobile(),
+    timestamp: new Date().toISOString(),
+  });
+
+  // Initialize - Keep your existing initialization
+  console.log("Starting AMV Portfolio initialization with Worker...");
   loadInitialData();
 });
